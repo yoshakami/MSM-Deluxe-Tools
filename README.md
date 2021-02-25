@@ -7,6 +7,8 @@ You will need Wiimms SZS Tools, Wiimms ISO Tools, python 3, the module pyperclip
 the installer should install them automatically. If not, in cmd or your terminal type ```pip install pyperclip``` and ```pip install Pillow```
 
 They all have a special utility, sometimes it's just for fun, or very useful
+
+
 24/12/2020  13:55             8 561 arc.py ---------- arc extract and compress, uses Wiimms SZS Tools to create U8 archive with/without compression
 
 22/12/2020  23:39             4 083 brsar.pyw ------- Every Game Brsar Patcher
