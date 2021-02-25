@@ -25,7 +25,7 @@ def enter():  # "Run Instant App (Enter)" Button
         Popen((sys.executable.rstrip("w.exe") + ".exe", "C:\\Yosh\\c.py"))
     elif app == 'Extract files in cwd (x.py)':
         Popen((sys.executable.rstrip("w.exe") + ".exe", "C:\\Yosh\\x.py"))
-    elif app == 'Fix all textures to version 3 (f.py)':
+    elif app == 'Fix all textures to version 3 (tex3.py)':
         Popen((sys.executable.rstrip("w.exe") + ".exe", "C:\\Yosh\\f.py"))
     elif app == 'Convert decimal to hex-float (hexf.py)':
         Popen((sys.executable.rstrip("w.exe") + ".exe", "C:\\Yosh\\hexf.py"))

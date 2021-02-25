@@ -34,6 +34,8 @@ def display(picture, garbage_sent_by_bind):
 
 name = ["h", "h2", "h3", "h4", "h5", "h6", "h7", "h8", "h9", "ha", "hb", "hc", "hd", "he", "hf", "hm", "m", "m2", "m3", "m4", "m5", "m6", "m7", "how-to-run-msm", "m9", "ma", "mb", "mc", "md", "me", "mf", "mm"]
 miniatures = name[:16]  # from h to hm
+large = name[16:]  # from m to end
+
 
 with open("C:\\Yosh\\h.png", 'rb') as minipic:
     minipic.seek(16)
@@ -48,6 +50,20 @@ if (pic_width != w // 5) and (pic_height != h // 5):
         new_pic = picc.resize((w // 5, h // 5))
         picc.close()
         new_pic.save('C:\\Yosh\\' + miniatures[n] + '.png')
+
+with open("C:\\Yosh\\m.png", 'rb') as minipic:
+    minipic.seek(16)
+    byte = minipic.read(4)
+    pic_width = (byte[0] * 16777216) + (byte[1] * 65536) + (byte[2] * 256) + byte[3] - 64  # 4 bytes integer
+    byte = minipic.read(4)
+    pic_height = (byte[0] * 16777216) + (byte[1] * 65536) + (byte[2] * 256) + byte[3] - 64  # 4 bytes integer
+
+if (pic_width != w) and (pic_height != h):
+    for p in range(len(miniatures)):
+        picc = Image.open('C:\\Yosh\\' + miniatures[p] + '.png')
+        new_pic = picc.resize((w, h))
+        picc.close()
+        new_pic.save('C:\\Yosh\\' + miniatures[p] + '.png')
 
 image_list = []
 for j in range(0, 32):
