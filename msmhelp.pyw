@@ -59,7 +59,7 @@ with open("C:\\Yosh\\m.png", 'rb') as minipic:
     pic_height = (byte[0] * 16777216) + (byte[1] * 65536) + (byte[2] * 256) + byte[3] - 64  # 4 bytes integer
 
 if (pic_width != w) and (pic_height != h):
-    for p in range(len(miniatures)):
+    for p in range(16, len(miniatures)):
         picc = Image.open('C:\\Yosh\\' + miniatures[p] + '.png')
         new_pic = picc.resize((w, h))
         picc.close()
