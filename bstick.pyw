@@ -205,6 +205,7 @@ def change_bmp():
                 bmp.write(RB)
     bstick_image = Image.open('C:\\Yosh\\bstick.bmp')
     bstick_image.save('C:\\Yosh\\bstick.png')
+    bstick_image.close()
     preview.destroy()
 
 

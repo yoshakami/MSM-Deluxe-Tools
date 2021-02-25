@@ -46,24 +46,23 @@ with open(file, 'r+b') as arc:  # though arc could have been named brres as it's
     else:
         short = file  # short has high probabilities to be the name used in the filesystem of the game
     print('Spotting all texture offsets in the file, please wait...')  # in case it's long
-    for z in range(0, size-17, 16):
+    for z in range(0, size - 17, 16):
         arc.seek(z)
         header = arc.read(4)
         if header == b'TEX0':
             tex0.append(z)  # list of all the textures offsets
         if header == b'bres':
-            bres_list.append(z)   # list of all the brres offsets
+            bres_list.append(z)  # list of all the brres offsets
     bres_list.append(0)
-    bres_list.reverse()   # make 0 the last element of the last if it's empty and the first brres offset if not empty
-    with open('encode_textures.bat', 'w') as bat:
-        bat.write('@echo off')
-        if compress:
-            for indice in range(3):
-                if f"{short}{extensions[indice]}" == file:  # don't delete the file this script is editing
-                    short += extensions[indice]
-                    break
-                else:  # os.remove crashes the script if the file doesn't exists while del doesn't
-                    bat.write(f'del "{short}{extensions[indice]}"\n')  # overwrite files if compressing
+    bres_list.reverse()  # make 0 the last element of the last if it's empty and the first brres offset if not empty
+    cmd_list = []
+    if compress:
+        for indice in range(3):
+            if f"{short}{extensions[indice]}" == file:  # don't delete the file this script is editing
+                short += extensions[indice]
+                break
+            else:  # os.remove crashes the script if the file doesn't exists while del doesn't
+                cmd_list.append(f'del "{short}{extensions[indice]}"')  # overwrite files if compressing
     while add_png != '1':  # while user enters a wrong name
         picture = input('png name without extension : ')
         if not os.path.exists(f'{picture}.png'):
@@ -89,17 +88,17 @@ with open(file, 'r+b') as arc:  # though arc could have been named brres as it's
         name.append(picture)
         position.append(pos)
         print()  # creates a blank line in cmd, else it looks too compressed
-        offset = tex0[pos] + 39       # the 39th byte of a tex0 file is the number of mipmaps +1
-        arc.seek(offset)              # a mipmap is a duplicate of a texture downscaled by 2, used when far away
-        nmipmap = arc.read(1)[0] - 1  #  to use less RAM, and also looks better visually when far away (not distorted)
+        offset = tex0[pos] + 39  # the 39th byte of a tex0 file is the number of mipmaps +1
+        arc.seek(offset)  # a mipmap is a duplicate of a texture downscaled by 2, used when far away
+        nmipmap = arc.read(1)[0] - 1  # to use less RAM, and also looks better visually when far away (not distorted)
         arc.seek(offset - 4)
-        colour = arc.read(1)[0]       # the 35th byte of a tex0 file is the colour encoding, see colourenc for full list
-        with open('encode_textures.bat', 'a') as bat:
-            bat.write(f'wimgt encode "{picture}" -x {colourenc[colour]} --n-mm {nmipmap} -o\n')
+        colour = arc.read(1)[0]  # the 35th byte of a tex0 file is the colour encoding, see colourenc for full list
+        cmd_list.append(f'wimgt encode "{picture}" -x {colourenc[colour]} --n-mm {nmipmap} -o')
         print('press 1 then enter to encode all textures')
         add_png = input('or type anything else to add another png\n')
         if add_png == '1':
-            os.system('encode_textures.bat')
+            for command in cmd_list:
+                os.system(command)
     # ^ while add_png != 1 ^
     # wimgt will convert all png to encoded texture files called tex0 because their header is tex0
 
@@ -137,16 +136,15 @@ with open(file, 'r+b') as arc:  # though arc could have been named brres as it's
             continue
         arc.seek(arc_tex0_data_pos)
         arc.write(tex)  # custom texture data
-with open('encode_textures.bat', 'r') as bat:
-    commands = bat.readlines()[1:]
+
+commands = cmd_list[1:]
 if not keep:
-    for line in commands:
-        if line.startswith("del "):
+    for instruction in commands:
+        if instruction.startswith("del "):
             continue
-        texname = line.split('wimgt encode ')[1]
+        texname = instruction.split('wimgt encode ')[1]
         texname = texname.split('.png')[0]
         os.system(f'del {texname}"')
-os.system('del encode_textures.bat')
 if compress:
     with open(file, 'rb') as check_mdl:
         check_mdl.seek(4)

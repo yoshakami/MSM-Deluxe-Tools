@@ -1,5 +1,6 @@
 from tkinter import Tk, Canvas, PhotoImage, Button, Label
 from functools import partial
+from PIL import Image
 
 a = Tk()
 a.title("Mario Sports Mix Modding App Help")
@@ -25,13 +26,29 @@ def menu(garbage):  # goes back to the menu with 16 little pictures
 
 
 def display(picture, garbage_sent_by_bind):
-    c = Canvas(a, width=w, height=h, bd=-2)
+    c = Canvas(a, width=w, height=h, bd=-2, bg="#ff9696")
     c.bind("<Button-1>", menu)
     c.create_image(w / 2, h / 2, image=image_list[picture])
     c.grid(row=0, column=0, rowspan=100, columnspan=100)
 
 
 name = ["h", "h2", "h3", "h4", "h5", "h6", "h7", "h8", "h9", "ha", "hb", "hc", "hd", "he", "hf", "hm", "m", "m2", "m3", "m4", "m5", "m6", "m7", "how-to-run-msm", "m9", "ma", "mb", "mc", "md", "me", "mf", "mm"]
+miniatures = name[:16]  # from h to hm
+
+with open("C:\\Yosh\\h.png", 'rb') as minipic:
+    minipic.seek(16)
+    byte = minipic.read(4)
+    pic_width = (byte[0] * 16777216) + (byte[1] * 65536) + (byte[2] * 256) + byte[3] - 64  # 4 bytes integer
+    byte = minipic.read(4)
+    pic_height = (byte[0] * 16777216) + (byte[1] * 65536) + (byte[2] * 256) + byte[3] - 64  # 4 bytes integer
+
+if (pic_width != w // 5) and (pic_height != h // 5):
+    for n in range(len(miniatures)):
+        picc = Image.open('C:\\Yosh\\' + miniatures[n] + '.png')
+        new_pic = picc.resize((w // 5, h // 5))
+        picc.close()
+        new_pic.save('C:\\Yosh\\' + miniatures[n] + '.png')
+
 image_list = []
 for j in range(0, 32):
     pic = PhotoImage(file=f"C:\\Yosh\\{name[j]}.png")
@@ -41,9 +58,9 @@ static = [title, txt, exitbu]
 ListeNulle = [3, 7, 11]
 rao = [4, 4, 4, 4, 10, 10, 10, 10, 15, 15, 15, 15, 20, 20, 20, 20]
 
-for i in range(0, 16):  # displays the 16 little pictures + bind left clic to the fullscreen ones
-    f = Canvas(a, width=w / 4, height=h / 5, bd=-2)
-    func = partial(display, i+16)
+for i in range(0, 16):  # displays the 16 little pictures + bind left click to the full-screen ones
+    f = Canvas(a, width=w / 4, height=h / 5, bd=-2, bg="#ff9696")
+    func = partial(display, i + 16)
     f.bind("<Button-1>", func)
     f.create_image(w / 8, h / 10, image=image_list[i])
     f.grid(row=rao[i], column=col)
