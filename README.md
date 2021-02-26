@@ -3,8 +3,8 @@ Set of more than 20 python scripts used to edit Mario Sports Mix files or any Wi
 
 I wrote these scripts alone and keep maintaining them up to date by adding new scripts/fixing bugs/adding features/cleaning code
 
-You will need Wiimms SZS Tools, Wiimms ISO Tools, python 3, the module pyperclip and Pillow.
-the installer should install them automatically. If not, in cmd or your terminal type ```pip install pyperclip``` and ```pip install Pillow```
+You will need Wiimms SZS Tools, Wiimms ISO Tools, and python 3.
+for the modules pyperclip and Pillow, the installer should install them automatically. If not, in cmd or your terminal type ```pip install pyperclip``` and ```pip install Pillow```
 
 They all have a special utility, sometimes it's just for fun, or very useful
 
