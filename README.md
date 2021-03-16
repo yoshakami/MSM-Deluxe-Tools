@@ -3,7 +3,7 @@ Set of more than 20 python scripts used to edit Mario Sports Mix files or any Wi
 
 I wrote these scripts alone and keep maintaining them up to date by adding new scripts/fixing bugs/adding features/cleaning code
 
-You will need Wiimms SZS Tools, Wiimms ISO Tools, and python 3.
+You will need <a href="https://szs.wiimm.de/download.html#vers">Wiimms SZS Tools</a>, <a href="https://wit.wiimm.de/download.html#vers">Wiimms ISO Tools</a>, and <a href="https://www.python.org/downloads/release/python-392#files">python 3.X</a>
 for the modules pyperclip and Pillow, the installer should install them automatically. If not, in cmd or your terminal type ```pip install pyperclip``` and ```pip install Pillow```
 
 They all have a special utility, sometimes it's just for fun, or very useful
@@ -11,7 +11,7 @@ They all have a special utility, sometimes it's just for fun, or very useful
 they are all independent scripts, they just need to access the config file named 'a' (bstick + checkbuttons), or some png (especially for msmhelp, I made all these png)
 
 
-24/12/2020  13:55             8 561 arc.py ---------- arc extract and compress, uses Wiimms SZS Tools to create U8 archive with/without compression
+24/12/2020  13:55             8 561 arc.py ---------- arc extract and compress, creates U8 archive with/without compression
 
 22/12/2020  23:39             4 083 brsar.pyw ------- Every Game Brsar Patcher
 
@@ -31,9 +31,9 @@ they are all independent scripts, they just need to access the config file named
 
 24/01/2021  19:04            13 606 msm.pyw --------- Mario Sports Mix Modding App Menu
 
-25/02/2021  13:52             2 793 msmhelp.pyw ----- Help
+25/02/2021  13:52             2 793 msmhelp.pyw ----- Help pictures I made
 
-23/12/2020  00:00               887 msmshortcuts.pyw- Shortcuts
+23/12/2020  00:00               887 msmshortcuts.pyw- Shortcuts (file name and full title)
 
 25/02/2021  15:16             8 746 p.py ------------ Png texture replace (CLI no png extension)
 
