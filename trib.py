@@ -2,8 +2,11 @@ import os
 import struct
 import subprocess
 from functools import partial
-from tkinter import Tk, Label, Button, END, Entry
+from tkinter import Tk, Label, Button, Entry
 from tkinter.filedialog import askdirectory
+
+if ':\\Windows' in os.getcwd():
+    os.chdir(os.environ['userprofile'] + '\\Desktop')
 
 a = Tk()
 a.title('Mario Sports Mix Modding Change root bone attributes')
@@ -17,9 +20,8 @@ def hex_float(number):
     num = b''
     value = 0
     w = hex(struct.unpack('<I', struct.pack('<f', float(number)))[0])[2:]
-    while len(w) < 8:  # add zeros to always make the value length to 8
-        value += 1
-    w = '0' * value + w
+    # add zeros to always make the value length to 8
+    w = '0' * (8-len(w)) + w
     for octet in range(0, 8, 2):  # transform for example "3f800000" to b'\x3f\x80\x00\x00'
         num += bytes(chr(int(w[octet:(octet + 2)], 16)), 'latin-1')
     return num
@@ -76,7 +78,9 @@ def scan_directory():
         if mdl > 800:
             break
         size = os.path.getsize(files)
-        if os.path.isfile(files) and size > 4:
+        if not os.path.isfile(files) or size < 10:
+            continue
+        try:
             with open(files, 'rb') as bfile:
                 cursor = 0
                 header = bfile.read(4)
@@ -126,6 +130,10 @@ def scan_directory():
                             button_list.append(filebu)
                             mdl += 1
                             mdln += 1
+        except PermissionError as error:
+            print(error)
+            continue
+
     if mdln > 7:  # if there are too many buttons for the small windows then put it on fullscreen
         exitbu2 = Button(a, text='Exit', command=a.quit, activebackground='#d9ff8c', bg='#d9ff8c', fg='#ff2222', width=58, height=3, font=100)
         exitbu2.grid(row=0, column=4, rowspan=2, columnspan=3)
@@ -138,7 +146,7 @@ def change_directory():  # enter button to change directory (take the entry cont
         cwd = os.getcwd()
     else:
         forstuff[1].configure(text=cwd)
-    entry_dir.delete(0, END)
+    entry_dir.delete(0, 'end')
     os.chdir(cwd)
     scan_directory()
 
@@ -150,14 +158,17 @@ def open_explorer():  # change directory with C:\Windows\explorer.exe GUI
     scan_directory()
 
 
-ltxt = ['Current working directory is', os.getcwd(), 'default scale', 'custom scale', 'custom rotation',
-        'custom translation']
+ltxt = ['Current working directory is : ', os.getcwd(), 'default scale', 'custom scale', 'custom rotation', 'custom translation']
 forstuff = []
 entries = []
 entrow = [2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5]
 for n in range(6):  # create the 6 labels in ltxt
-    text = Label(a, text=ltxt[n], bg='#bfaaff', width=30)
-    text.grid(row=n, column=0)
+    if n == 1:
+        text = Label(a, text=ltxt[n], bg='#bfaaff', width=60, anchor='w')
+        text.grid(row=0, column=1)
+    else:
+        text = Label(a, text=ltxt[n], bg='#bfaaff', width=30)
+        text.grid(row=n, column=0)
     forstuff.append(text)
 for indice in range(12):  # create 12 entries
     entree = Entry(a, width=15)
@@ -173,14 +184,12 @@ entry_dir = Entry(a, width=30)
 entry_dir.grid(row=1, column=1)
 refreshbu = Button(a, text='Enter', command=change_directory, activebackground='#ff9999', width=30)
 refreshbu.grid(row=1, column=2)
-exitbu = Button(a, text='Exit', command=a.quit, activebackground='#d9ff8c', width=15)
-exitbu.grid(row=0, column=2)
 open_explorerbu = Button(a, text='Open file Explorer', command=open_explorer, activebackground='#96c7ff', width=15)
-open_explorerbu.grid(row=0, column=1)
+open_explorerbu.grid(row=1, column=0)
 slash_n = Label(a, text='', bg='#bfaaff')
 slash_n.grid(row=6)
 dot = Label(a, text='Negative values\nare allowed', bg='#bfaaff', font=2, fg='#ff2222')
 dot.grid(row=0, column=3, rowspan=2)
-forstuff += [entry_dir, refreshbu, exitbu, open_explorerbu, slash_n, dot]
+forstuff += [entry_dir, refreshbu, open_explorerbu, slash_n, dot]
 scan_directory()
 a.mainloop()
