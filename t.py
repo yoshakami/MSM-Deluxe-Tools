@@ -17,10 +17,16 @@ def external():
 
 
 for file in os.listdir('./'):
-    if not os.path.isfile(file) or os.path.getsize(file) < 4:
+    if not os.path.isfile(file) or os.path.getsize(file) < 10:
         continue
-    with open(file, 'rb') as stuff:
-        header = stuff.read(4)
+    try:
+        with open(file, 'rb') as stuff:
+            header = stuff.read(4)
+
+    except PermissionError as error:
+        # print(error)
+        continue
+
     if header in bresarc:
         break
 if header not in bresarc:  # the for can ends after browsing a complete directory without finding any brres or arc file.
@@ -142,7 +148,7 @@ with open(file, 'r+b') as arc:  # though arc could have been named brres as it's
 
 if compress:
     with open(file, 'rb') as check_mdl:
-        check_mdl.seek(4)
+        check_mdl.seek(0)
         if check_mdl.read(1) == b'\x00':
             filetype = 2  # .cmp
         while cursor > size - 2222:
@@ -151,4 +157,4 @@ if compress:
             if check_mdl.read(6) == b'body_h':
                 filetype = 1  # .mdl
                 break
-    os.system(f'n "{file}" -lh -o "{short}{extensions[filetype]}"')
+    os.system(f'C:\\Yosh\\n.exe "{file}" -lh -o "{short}{extensions[filetype]}"')

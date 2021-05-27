@@ -15,15 +15,20 @@ def message():
 for file in os.listdir('./'):
     if not os.path.isfile(file) or os.path.getsize(file) < 4:
         continue
-    with open(file, 'rb') as stuff:
-        header = stuff.read(4)
+    try:
+        with open(file, 'rb') as stuff:
+            header = stuff.read(4)
+
+    except PermissionError as error:
+        # print(error)
+        continue
     if header in bresarc:
         break
 if header not in bresarc:  # the for can ends after browsing a complete directory without finding any brres or arc file.
     input('no brres or arc file found.\npress enter to exit.')
     exit()
 compress = True
-mode = input(f"replacing in {file}\npress enter to continue (compress + don't keep encoded textures) or\n- type 1 if that's not the file you want\n- type 2 to continue and keep the encoded textures when the program ends\n- type 3 if that's not the file you want and you want to keep the encoded textures\n-type 4 if you don't want to compress the edited file\n-type 5 don't compress + keep encoded textures\n-type 6 don't compress + keep encoded textures + that's not the file you want\nYour choice : ")
+mode = input(f"replacing in {file}\npress enter to continue (compress + don't keep encoded textures) or\n- type 1 if that's not the file you want\n- type 2 to continue and keep the encoded textures when the program ends\n- type 3 if that's not the file you want and you want to keep the encoded textures\n-type 4 don't compress the edited file\n-type 5 don't compress + keep encoded textures\n-type 6 don't compress + keep encoded textures + that's not the file you want\nYour choice : ")
 if mode in ['2', '3', '5', '6']:  # keep encoded textures
     keep = True
 if mode in ['4', '5', '6']:  # don't compress
@@ -62,7 +67,7 @@ with open(file, 'r+b') as arc:  # though arc could have been named brres as it's
                 short += extensions[indice]
                 break
             else:  # os.remove crashes the script if the file doesn't exists while del doesn't
-                cmd_list.append(f'del "{short}{extensions[indice]}"')  # overwrite files if compressing
+                os.system(f'del "{short}{extensions[indice]}"')  # overwrite files if compressing
     while add_png != '1':  # while user enters a wrong name
         picture = input('png name with extension : ')  # remember quote is a forbidden character in windows
         picture = picture.strip('"')     # if you drag and drop it adds quotes and create a name that doesn't exists
@@ -138,17 +143,16 @@ with open(file, 'r+b') as arc:  # though arc could have been named brres as it's
         arc.seek(arc_tex0_data_pos)
         arc.write(tex)  # custom texture data
 
-commands = cmd_list[1:]
 if not keep:
-    for line in commands:
+    for line in cmd_list:
         if line.startswith("del "):
             continue
         texname = line.split('wimgt encode ')[1]
         texname = texname.split('.png')[0]
-        os.system(f'del {texname}"')
+        os.system(f'del "{texname}"')
 if compress:
     with open(file, 'rb') as check_mdl:
-        check_mdl.seek(4)
+        check_mdl.seek(0)
         if check_mdl.read(1) == b'\x00':
             filetype = 2  # .cmp
         while cursor > size - 2222:
@@ -157,4 +161,4 @@ if compress:
             if check_mdl.read(6) == b'body_h':
                 filetype = 1  # .mdl
                 break
-    os.system(f'n "{file}" -lh -o "{short}{extensions[filetype]}"')
+    os.system(f'C:\\Yosh\\n.exe "{file}" -lh -o "{short}{extensions[filetype]}"')

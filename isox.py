@@ -1,8 +1,11 @@
 import os
 import shutil
-from tkinter import Tk, Label, Button, END, Entry, Checkbutton, OptionMenu, StringVar
+from tkinter import Tk, Label, Button, Entry, Checkbutton, OptionMenu, StringVar
 from tkinter.filedialog import askdirectory
 from functools import partial
+
+if ':\\Windows' in os.getcwd():
+    os.chdir(os.environ['userprofile'] + '\\Desktop')
 
 extract_row = []
 for j in range(5, 16):
@@ -32,7 +35,7 @@ def extract(file, index):
         config1.seek(15)
         rm_update = config1.read(1)
     file2 = os.path.splitext(file)[0]
-    os.system(f'wit extract "{file}" "{file2}"')
+    os.system(f'wit extract "{file}" "{file2}" -o')
     if rm_update == b'1':
         shutil.rmtree(f'{file2}\\UPDATE')
         shutil.move(f'{file2}\\DATA', f'{file2}')
@@ -45,7 +48,7 @@ def extract(file, index):
 
 def create(name, ref):
     filetype = COMPRESSION.get()
-    os.system(f'wit copy "{name}" "{name}.{filetype}"')
+    os.system(f'wit copy "{name}" "{name}.{filetype}" -o')
 
     create_list[ref].destroy()
     if os.path.exists(f"{name}.{filetype}"):
@@ -58,22 +61,31 @@ def create(name, ref):
 def scan_directory():  # triggered each time Enter button / Open File Explorer button is pressed (or when you launch the script)
     i = n = 0
     for tkstuff in a.winfo_children():
-        if tkstuff not in [text_label, cwd_label, entry_dir, refreshbu, exitbu, open_explorerbu, cb_rm_update, lextract, lcompression, Compression, lcreate]:
+        if tkstuff not in [text_label, cwd_label, entry_dir, refreshbu, open_explorerbu, cb_rm_update, lextract, lcompression, Compression, lcreate]:
             tkstuff.destroy()
 
     for files in os.listdir('./'):  # display a button for each iso, ciso or wbfs found
+        # print(os.listdir('./'))
         size = os.path.getsize(files)
-        if os.path.isfile(files) and size > 4 and i < 88:
+        if not os.path.isfile(files) or size < 4 or i > 88:
+            continue
+        try:
             with open(files, 'rb') as check_file:
                 header = check_file.read(4)
                 check_file.seek(24)
                 iso = check_file.read(4)
-            if header in [b'WBFS', b'CISO'] or iso == b']\x1c\x9e\xa3':
+                iso2 = check_file.read(4)
+
+            if header in [b'WBFS', b'CISO'] or iso == b']\x1c\x9e\xa3' or iso2 == b'\xc23\x9f=':
                 launch_func = partial(extract, files, i)
                 extractbu = Button(a, text=files, command=launch_func, activebackground='#a9ff99', width=30)
                 extractbu.grid(row=extract_row[i], column=extract_col[i])
                 extract_list.append(extractbu)
                 i += 1
+
+        except PermissionError as error:
+            print(error)
+            continue
 
     for folder in os.listdir('./'):  # display a button for each folder found
         if os.path.isdir(folder) and n < 120:
@@ -95,7 +107,7 @@ def change_directory():  # enter button to change directory (take the entry cont
         cwd = os.getcwd()
     else:
         cwd_label.configure(text=cwd)
-    entry_dir.delete(0, END)
+    entry_dir.delete(0, 'end')
     os.chdir(cwd)
     scan_directory()
 
@@ -118,11 +130,11 @@ def checkbu_rm_update():  # trigerred each time the checkbutton is pressed
             conf.write(b'1')
 
 
-text_label = Label(a, text='Current working directory is', bg='#aaffaa', width=30)
+text_label = Label(a, text='Current working directory is : ', bg='#aaffaa', width=30)
 text_label.grid(row=0, column=0)
 
-cwd_label = Label(a, text=os.getcwd(), bg='#aaffaa', width=30)
-cwd_label.grid(row=1, column=0)
+cwd_label = Label(a, text=os.getcwd(), bg='#aaffaa', width=60, anchor='w')
+cwd_label.grid(row=0, column=1, columnspan=2)
 
 entry_dir = Entry(a, width=30)
 entry_dir.grid(row=1, column=1)
@@ -130,11 +142,8 @@ entry_dir.grid(row=1, column=1)
 refreshbu = Button(a, text='Enter', command=change_directory, activebackground='#ff9999', width=30)
 refreshbu.grid(row=1, column=2)
 
-exitbu = Button(a, text='Exit', command=a.quit, activebackground='#d9ff8c', width=15)
-exitbu.grid(row=0, column=2)
-
 open_explorerbu = Button(a, text='Open file Explorer', command=open_explorer, activebackground='#96c7ff', width=15)
-open_explorerbu.grid(row=0, column=1)
+open_explorerbu.grid(row=1, column=0)
 
 cb_rm_update = Checkbutton(a, text="Remove Update Folder", command=checkbu_rm_update, bg="#aaffaa", width=20)
 cb_rm_update.grid(row=0, column=3)
