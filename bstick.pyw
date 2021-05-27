@@ -1,12 +1,17 @@
 # coding: latin-1
 # ^ else every byte above 0x7f will be encoded in utf-8 (oof)
-import os, webbrowser, sys
-from PIL import Image
-from tkinter import Tk, Canvas, PhotoImage, Label, Button, Entry, Checkbutton, END
-from tkinter.filedialog import askdirectory
-from tkinter.colorchooser import askcolor
-from subprocess import Popen
+import os
+import sys
+import webbrowser
 from functools import partial
+from subprocess import Popen
+from tkinter import Tk, Canvas, PhotoImage, Label, Button, Entry, Checkbutton
+from tkinter.colorchooser import askcolor
+from tkinter.filedialog import askdirectory
+from PIL import Image
+
+if ':\\Windows' in os.getcwd():
+    os.chdir(os.environ['userprofile'] + '\\Desktop')
 
 a = Tk()
 a.title('Mario Sports Mix Modding Change bstick colour')
@@ -20,66 +25,68 @@ for j in range(12, 26):
 button_col = [0, 1, 2] * 14
 button_list = []
 
-def fill_bytes_RGVB():
+
+def fill_bytes_rgvb():
     with open('C:\\Yosh\\a', 'r+b') as ca:
         hex_colour = str(ca.read(7))[2:9]
 
-        R = hex_colour[1:3]
-        num = int(R, 16)
+        r = hex_colour[1:3]
+        num = int(r, 16)
         temp = num - 128
         if temp < 0:
             temp = 0
-        R8 = bytes(chr(temp), 'latin-1')
-        R7 = bytes(hex(temp)[2:], 'latin-1')
-        if len(R7) < 2:
-            R7 = b'0'+R7
-        R = bytes(chr(num), 'latin-1')
+        r8 = bytes(chr(temp), 'latin-1')
+        r7 = bytes(hex(temp)[2:], 'latin-1')
+        if len(r7) < 2:
+            r7 = b'0' + r7
+        r = bytes(chr(num), 'latin-1')
 
-        G = hex_colour[3:4]
-        temp = int(G, 16) - 8
+        g = hex_colour[3:4]
+        temp = int(g, 16) - 8
         if temp < 0:
             temp = 0
-        FA = bytes(str(temp), 'latin-1')
-        W = bytes(chr(temp), 'latin-1')
-        G = bytes(chr(int(G, 16)), 'latin-1')
+        fa = bytes(str(temp), 'latin-1')
+        w = bytes(chr(temp), 'latin-1')
+        g = bytes(chr(int(g, 16)), 'latin-1')
 
-        V = hex_colour[4:5]
-        temp = int(V, 16) - 7
+        v = hex_colour[4:5]
+        temp = int(v, 16) - 7
         if temp < 0:
             temp = 0
-        FB = bytes(str(int(V, 16)), 'latin-1')
-        U = bytes(chr(temp * 16), 'latin-1')
-        V = bytes(chr(int(V, 16) * 16), 'latin-1')
+        fb = bytes(str(int(v, 16)), 'latin-1')
+        u = bytes(chr(temp * 16), 'latin-1')
+        v = bytes(chr(int(v, 16) * 16), 'latin-1')
 
-        B = hex_colour[5:7]
-        num = int(B, 16)
+        b = hex_colour[5:7]
+        num = int(b, 16)
         temp = num - 128
         if temp < 0:
             temp = 0
-        B8 = bytes(chr(temp), 'latin-1')
-        B7 = bytes(hex(temp)[2:], 'latin-1')
-        if len(B7) < 2:
-            B7 = b'0'+B7
-        B = bytes(chr(num), 'latin-1')
+        b8 = bytes(chr(temp), 'latin-1')
+        b7 = bytes(hex(temp)[2:], 'latin-1')
+        if len(b7) < 2:
+            b7 = b'0' + b7
+        b = bytes(chr(num), 'latin-1')
         ca.seek(12)
         cd = ca.read(1)
         if cd == b'1':
-            R = R8
-            G = W
-            V = U
-            B = B8
-            hex_colour = f'#{R7}{FA}{FB}{B7}'
+            r = r8
+            g = w
+            v = u
+            b = b8
+            hex_colour = f'#{r7}{fa}{fb}{b7}'
             ca.seek(1)
-            ca.write(R7)
-            ca.write(FA)
-            ca.write(FB)
-            ca.write(B7)
+            ca.write(r7)
+            ca.write(fa)
+            ca.write(fb)
+            ca.write(b7)
         ca.seek(7)
-        ca.write(R)
-        ca.write(G)
-        ca.write(V)
-        ca.write(B)
+        ca.write(r)
+        ca.write(g)
+        ca.write(v)
+        ca.write(b)
     colourbu.configure(text=hex_colour)
+
 
 def change_file(name, index):  # changes the color in the brres or mdl0 given in argument
     with open(name, "r+b") as h:
@@ -87,8 +94,8 @@ def change_file(name, index):  # changes the color in the brres or mdl0 given in
         cursor = 0
         with open('C:\\Yosh\\a', 'r+b') as conf:
             conf.seek(7)
-            R = conf.read(1)
-            G = conf.read(3)
+            r = conf.read(1)
+            g = conf.read(3)
         while y - 49 > cursor:
             cursor = cursor + 16
             h.seek(cursor)
@@ -98,28 +105,28 @@ def change_file(name, index):  # changes the color in the brres or mdl0 given in
                 if data == b'\x00\x00\x00a\xe3\x00\x00':
                     continue
                 h.seek(cursor + 36)
-                h.write(R)
+                h.write(r)
                 h.seek(cursor + 39)
-                h.write(G)
+                h.write(g)
                 h.seek(cursor + 44)
-                h.write(G)
+                h.write(g)
                 h.seek(cursor + 49)
-                h.write(G)
+                h.write(g)
                 break
     button_list[index].destroy()
     patched = Label(a, text='done :) !', bg='#aaaaff')
     patched.grid(row=button_row[index], column=button_col[index])
 
+
 def scan_directory():
-    do_not_delete = [entry_dir, text_label, cwd_label, refreshbu, exitbu, open_explorerbu, title, lcolour,
+    do_not_delete = [entry_dir, text_label, cwd_label, refreshbu, open_explorerbu, title, lcolour,
                      colour_entry, colourbu, google_colourbu, preview, lred, lorange, lyellow, lchartreuse,
                      llight_green, lgreen, lgreen_cyan, lblue_cyan, lblue, lpurple, lfushia, lred_fushia,
                      empty, fix_colourcb, previewbu, lrestart, lwin,
-                     lpreview1, lpreview2, lpreview3,  lpreview4, lpreview5, lpreview6, lpreview7]
+                     lpreview1, lpreview2, lpreview3, lpreview4, lpreview5, lpreview6, lpreview7]
     for o in a.winfo_children():
         if o not in do_not_delete:
             o.destroy()
-
 
     i = -1
     for file in os.listdir('./'):
@@ -129,55 +136,58 @@ def scan_directory():
         if size < 2222:
             continue
         cursor -= 7
-        with open(file, 'r+b') as binary:
-            header = binary.read(4)
-            if header in [b'bres', b'MDL0']:
-                while cursor > size - 2222:
-                    cursor -= 1
-                    binary.seek(cursor)
-                    r = binary.read(7)
-                    if r == b'\x06bstick':
-                        i += 1
-                        change_color = partial(change_file, file, i)
-                        filebu = Button(a, text=file, command=change_color, activebackground='#a9ff91', width=30)
-                        filebu.grid(row=button_row[i], column=button_col[i])
-                        button_list.append(filebu)
+        try:
+            with open(file, 'r+b') as binary:
+                header = binary.read(4)
+                if header in [b'bres', b'MDL0']:
+                    while cursor > size - 2222:
+                        cursor -= 1
+                        binary.seek(cursor)
+                        r = binary.read(7)
+                        if r == b'\x06bstick':
+                            i += 1
+                            change_color = partial(change_file, file, i)
+                            filebu = Button(a, text=file, command=change_color, activebackground='#a9ff91', width=30)
+                            filebu.grid(row=button_row[i], column=button_col[i])
+                            button_list.append(filebu)
 
+        except PermissionError:
+            continue
 
 
 def change_bmp():
     with open('C:\\Yosh\\a', 'r+b') as conf:
         hex_colour = str(conf.read(7))[2:9]
 
-    Rt = hex_colour[1:3]
-    temp = int(Rt, 16) + 128
+    rt = hex_colour[1:3]
+    temp = int(rt, 16) + 128
     if temp > 255:
         temp = 255
-    R = bytes(chr(temp), 'latin-1')
+    r = bytes(chr(temp), 'latin-1')
     temp = int(199 + (temp - 128) * 39 / 127)
     if temp > 238:
         temp = 238
-    RB = bytes(chr(temp), 'latin-1')
+    rb = bytes(chr(temp), 'latin-1')
 
-    Gt = hex_colour[3:5]
-    temp = int(Gt, 16) + 128
+    gt = hex_colour[3:5]
+    temp = int(gt, 16) + 128
     if temp > 255:
         temp = 255
-    G = bytes(chr(temp), 'latin-1')
+    g = bytes(chr(temp), 'latin-1')
     temp = int(199 + (temp - 128) * 39 / 127)
     if temp > 238:
         temp = 238
-    GB = bytes(chr(temp), 'latin-1')
+    gb = bytes(chr(temp), 'latin-1')
 
-    Bt = hex_colour[5:7]
-    temp = int(Bt, 16) + 128
+    bt = hex_colour[5:7]
+    temp = int(bt, 16) + 128
     if temp > 255:
         temp = 255
-    B = bytes(chr(temp), 'latin-1')
+    b = bytes(chr(temp), 'latin-1')
     temp = int(199 + (temp - 128) * 39 / 127)
     if temp > 238:
         temp = 238
-    BB = bytes(chr(temp), 'latin-1')
+    bb = bytes(chr(temp), 'latin-1')
 
     colourbu.configure(text=hex_colour)
     with open('C:\\Yosh\\bstick.bmp', 'r+b') as bmp:
@@ -196,13 +206,13 @@ def change_bmp():
                 ab = ab - 2
                 continue
             elif ac == af:
-                bmp.write(B)
-                bmp.write(G)
-                bmp.write(R)
+                bmp.write(b)
+                bmp.write(g)
+                bmp.write(r)
             else:
-                bmp.write(BB)
-                bmp.write(GB)
-                bmp.write(RB)
+                bmp.write(bb)
+                bmp.write(gb)
+                bmp.write(rb)
     bstick_image = Image.open('C:\\Yosh\\bstick.bmp')
     bstick_image.save('C:\\Yosh\\bstick.png')
     bstick_image.close()
@@ -215,7 +225,7 @@ def change_directory():  # enter button to change directory (take the entry cont
         cwd = os.getcwd()
     else:
         cwd_label.configure(text=cwd)
-    entry_dir.delete(0, END)
+    entry_dir.delete(0, 'end')
     os.chdir(cwd)
     scan_directory()
 
@@ -238,10 +248,10 @@ def take_entry_hex():
     if len(hex_colour) == 6:
         with open('C:\\Yosh\\a', 'r+b') as ca:
             ca.seek(1)
-            N = bytes(hex_colour, 'latin-1')
-            ca.write(N)
-    colour_entry.delete(0, END)
-    fill_bytes_RGVB()
+            n = bytes(hex_colour, 'latin-1')
+            ca.write(n)
+    colour_entry.delete(0, 'end')
+    fill_bytes_rgvb()
     change_bmp()
 
 
@@ -333,7 +343,9 @@ def launch_photo():
 
 
 def bstick():
-    Popen((sys.executable, "C:\\Yosh\\bstick.pyw"))
+    Popen('C:\\Yosh\\bstick.exe')
+    # Popen(("wscript.exe", "C:\\Yosh\\bstick.vbs"))
+    # Popen((sys.executable, "C:\\Yosh\\bstick.pyw"))
     a.quit()
 
 
@@ -343,18 +355,16 @@ def win_colour_picker():
     with open('C:\\Yosh\\a', 'r+b') as conf:
         conf.seek(0)
         conf.write(hex_colour)
-    fill_bytes_RGVB()
+    fill_bytes_rgvb()
     change_bmp()
 
 
-text_label = Label(a, text='Current working directory is', bg='#aaaaff', width=30)
+text_label = Label(a, text='Current working directory is : ', bg='#aaaaff', width=30)
 text_label.grid(row=0, column=0)
 open_explorerbu = Button(a, text='Open file Explorer', command=open_explorer, activebackground='#96c7ff', width=15)
-open_explorerbu.grid(row=0, column=1)
-exitbu = Button(a, text='Exit', command=a.quit, activebackground='#d9ff8c', width=15)
-exitbu.grid(row=0, column=2)
-cwd_label = Label(a, text=os.getcwd(), bg='#aaaaff', width=30)
-cwd_label.grid(row=1, column=0)
+open_explorerbu.grid(row=1, column=0)
+cwd_label = Label(a, text=os.getcwd(), bg='#aaaaff', width=60, anchor='w')
+cwd_label.grid(row=0, column=1, columnspan=2)
 entry_dir = Entry(a, width=30)
 entry_dir.grid(row=1, column=1)
 refreshbu = Button(a, text='Enter', command=change_directory, activebackground='#ff9999', width=30)
@@ -367,7 +377,8 @@ colour_entry = Entry(a, width=30)
 colour_entry.grid(row=5, column=1)
 colourbu = Button(a, text='no custom colour', command=take_entry_hex, activebackground='#96c7ff', width=30)
 colourbu.grid(row=5, column=2)
-google_colourbu = Button(a, text='Launch Google colour picker (online)', command=google_colour_picker, activebackground='#96c7ff', width=98)
+google_colourbu = Button(a, text='Launch Google colour picker (online)', command=google_colour_picker,
+                         activebackground='#96c7ff', width=98)
 google_colourbu.grid(row=6, column=0, columnspan=3)
 lred = Button(a, text="Red", command=red, bg="#ff7f7f", activebackground="#ff7f7f", width=30)
 lred.grid(row=7, column=0)

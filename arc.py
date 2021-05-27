@@ -3,6 +3,9 @@ from tkinter import Tk, Label, Button, END, Entry, OptionMenu, StringVar
 from tkinter.filedialog import askdirectory, askopenfilename
 from functools import partial
 
+if ':\\Windows' in os.getcwd():
+    os.chdir(os.environ['userprofile'] + '\\Desktop')
+
 extract_row = []
 for j in range(6, 18):
     extract_row += [j, j, j, j]
@@ -26,13 +29,6 @@ a.config(bg='#aacfff')
 a.iconbitmap('C:\\Yosh\\arc.ico')
 
 
-def extract(file, index):
-    os.system(f'wszst x "{file}" -o')
-    extract_list[index].destroy()
-    patched = Label(a, text='done! :)', bg='#aacfff', width=30)
-    patched.grid(row=extract_row[index], column=extract_col[index])
-
-
 def extract_all():
     for stuff in os.listdir('./'):
         os.system(f'wszst x "{stuff}" -o')
@@ -45,33 +41,6 @@ def explorer_extract():
     binary_file = askopenfilename(initialdir=os.getcwd())  # explorer.exe file selection GUI
     binary_file = binary_file.replace('/', '\\')
     os.system(f'wszst x "{binary_file}" -o')
-
-
-def create(name, ref):
-    compr = COMPRESSION.get()
-    archi = ARCHIVE.get()
-    name2 = os.path.splitext(name)[0]
-    if compr == ' ' and archi == 'u8':
-        os.system(f'wszst c "{name}" -d "{name2}.arc" --u8 --no-compress -o')
-
-    elif compr == 'bz' and archi == 'wu8':
-        os.system(f'wszst c "{name}" -d "{name2}.wbz" --wbz -o')
-
-    elif compr == 'yaz0' and archi == 'u8':
-        os.system(f'wszst c "{name}" -d "{name2}.szs" --szs -o')
-
-    elif compr == ' ':
-        os.system(f'wszst c "{name}" -d "{name2}.{archi}" --{archi} --no-compress -o')
-
-    else:
-        os.system(f'wszst c "{name}" -d "{name2}.{archi}" --{archi} --{compr} -o')
-
-    create_list[ref].destroy()
-    if os.path.exists(f"{name2}.{archi}") or os.path.exists(f"{name2}.arc") or os.path.exists(f"{name2}.wbz") or os.path.exists(f"{name2}.szs"):
-        patched = Label(a, text='done! :)', bg='#aacfff', width=30)
-    else:
-        patched = Label(a, text='oof! check folder permissions', bg='#aacfff', width=30)
-    patched.grid(row=create_row[ref], column=create_col[ref])
 
 
 def explorer_create():  # triggered by the "Open File Explorer" button
@@ -97,22 +66,59 @@ def explorer_create():  # triggered by the "Open File Explorer" button
 
 
 def scan_directory():  # triggered each time Enter button / Open File Explorer button is pressed (or when you launch the script)
+    def create(name, ref):
+        compr = COMPRESSION.get()
+        archi = ARCHIVE.get()
+        name2 = os.path.splitext(name)[0]
+        if compr == ' ' and archi == 'u8':
+            os.system(f'wszst c "{name}" -d "{name2}.arc" --u8 --no-compress -o')
+
+        elif compr == 'bz' and archi == 'wu8':
+            os.system(f'wszst c "{name}" -d "{name2}.wbz" --wbz -o')
+
+        elif compr == 'yaz0' and archi == 'u8':
+            os.system(f'wszst c "{name}" -d "{name2}.szs" --szs -o')
+
+        elif compr == ' ':
+            os.system(f'wszst c "{name}" -d "{name2}.{archi}" --{archi} --no-compress -o')
+
+        else:
+            os.system(f'wszst c "{name}" -d "{name2}.{archi}" --{archi} --{compr} -o')
+
+        create_list[ref].destroy()
+        if os.path.exists(f"{name2}.{archi}") or os.path.exists(f"{name2}.arc") or os.path.exists(f"{name2}.wbz") or os.path.exists(f"{name2}.szs"):
+            patched = Label(a, text='done! :)', bg='#aacfff', width=30)
+        else:
+            patched = Label(a, text='oof! check folder permissions', bg='#aacfff', width=30)
+        patched.grid(row=create_row[ref], column=create_col[ref])
+
+    def extract(file, index):
+        os.system(f'wszst x "{file}" -o')
+        extract_list[index].destroy()
+        patched = Label(a, text='done! :)', bg='#aacfff', width=30)
+        patched.grid(row=extract_row[index], column=extract_col[index])
+
     i = n = 0
     for tkstuff in a.winfo_children():
         if tkstuff not in [text_label, exitbu, open_explorerbu, brawlcrate, cwd_label, entry_dir, refreshbu, lextract, extract_allbu, expextract, lcreate, larchive, lcompression, Compression, Archive, expcreate, lfiletypes]:
             tkstuff.destroy()
 
     for files in os.listdir('./'):  # display a button for each yaz0, yaz1, pack, breff, breft, arc or brres found
-        size = os.path.getsize(files)
-        if os.path.isfile(files) and size > 4 and i < 96:
-            with open(files, 'rb') as check_file:
-                header = check_file.read(4)
-            if header in [b'Yaz0', b'Yaz1', b'PACK', b'REFF', b'REFT', b'U\xaa8-', b'bres']:
-                launch_func = partial(extract, files, i)
-                extractbu = Button(a, text=files, command=launch_func, activebackground='#a9ff99', width=30)
-                extractbu.grid(row=extract_row[i], column=extract_col[i])
-                extract_list.append(extractbu)
-                i += 1
+        try:
+            size = os.path.getsize(files)
+            if os.path.isfile(files) and size > 4 and i < 96:
+                with open(files, 'rb') as check_file:
+                    header = check_file.read(4)
+                if header in [b'Yaz0', b'Yaz1', b'PACK', b'REFF', b'REFT', b'U\xaa8-', b'bres']:
+                    launch_func = partial(extract, files, i)
+                    extractbu = Button(a, text=files, command=launch_func, activebackground='#a9ff99', width=30)
+                    extractbu.grid(row=extract_row[i], column=extract_col[i])
+                    extract_list.append(extractbu)
+                    i += 1
+
+        except PermissionError as error:
+            print(error)
+            continue
 
     for folder in os.listdir('./'):  # display a button for each folder found
         if os.path.isdir(folder) and n < 96:

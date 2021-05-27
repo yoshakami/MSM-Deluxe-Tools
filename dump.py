@@ -1,7 +1,10 @@
 import os
-from tkinter import Tk, Label, Button, END, Entry, Checkbutton
+from tkinter import Tk, Label, Button, END, Entry, Checkbutton, W
 from tkinter.filedialog import askdirectory
 from functools import partial
+
+if ':\\Windows' in os.getcwd():
+    os.chdir(os.environ['userprofile'] + '\\Desktop')
 
 button_row = []
 for j in range(8, 20):
@@ -74,12 +77,14 @@ def dump(file, index):
 def scan_directory():
     i = 0
     for tkstuff in a.winfo_children():
-        if tkstuff not in [text_label, cwd_label, entry_dir, refreshbu, exitbu, open_explorerbu, keep_tex0, dump_mipmaps, T, title]:
+        if tkstuff not in [text_label, cwd_label, entry_dir, refreshbu, open_explorerbu, keep_tex0, dump_mipmaps, T, title]:
             tkstuff.destroy()
 
     for files in os.listdir('./'):
         size = os.path.getsize(files)
-        if os.path.isfile(files) and size > 4 and i < 192:
+        if not os.path.isfile(files) or size < 10 or i > 192:
+            continue
+        try:
             with open(files, 'rb') as check_file:
                 header = check_file.read(4)
             if header in [b'bres', b'U\xaa8-', b'TEX0']:
@@ -88,6 +93,11 @@ def scan_directory():
                 dumpbu.grid(row=button_row[i], column=button_col[i])
                 button_list.append(dumpbu)
                 i += 1
+
+        except PermissionError as error:
+            print(error)
+            continue
+
     if i > 50:  # if many brres, arc, or tex0 are found, then it puts the window on fullscreen and create a big exit button
         exitbu2 = Button(a, text='Exit', command=a.quit, activebackground='#d9ff8c', bg='#d9ff8c', fg='#ff2222', width=58, height=3, font=100)
         exitbu2.grid(row=0, column=4, rowspan=2, columnspan=3)
@@ -112,11 +122,11 @@ def open_explorer():  # change directory with C:\Windows\explorer.exe GUI
     scan_directory()
 
 
-text_label = Label(a, text='Current working directory is', bg='#aaffbf', width=30)
+text_label = Label(a, text='Current working directory is : ', bg='#aaffbf', width=30)
 text_label.grid(row=0, column=0)
 
-cwd_label = Label(a, text=os.getcwd(), bg='#aaffbf', width=30)
-cwd_label.grid(row=1, column=0)
+cwd_label = Label(a, text=os.getcwd(), bg='#aaffbf', width=70, anchor=W)
+cwd_label.grid(row=0, column=1, columnspan=2)
 
 entry_dir = Entry(a, width=30)
 entry_dir.grid(row=1, column=1)
@@ -124,11 +134,8 @@ entry_dir.grid(row=1, column=1)
 refreshbu = Button(a, text='Enter', command=change_directory, activebackground='#ff9999', width=30)
 refreshbu.grid(row=1, column=2)
 
-exitbu = Button(a, text='Exit', command=a.quit, activebackground='#d9ff8c', width=15)
-exitbu.grid(row=0, column=2)
-
 open_explorerbu = Button(a, text='Open file Explorer', command=open_explorer, activebackground='#96c7ff', width=15)
-open_explorerbu.grid(row=0, column=1)
+open_explorerbu.grid(row=1, column=0)
 
 
 def keep():  # each time the checkbutton keep_tex0 is triggered

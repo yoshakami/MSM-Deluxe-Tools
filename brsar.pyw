@@ -1,7 +1,10 @@
 import os
-from tkinter import Tk, Label, Button, END, Entry
+from tkinter import Tk, Label, Button, Entry
 from tkinter.filedialog import askdirectory
 from functools import partial
+
+if ':\\Windows' in os.getcwd():
+    os.chdir(os.environ['userprofile'] + '\\Desktop')
 
 brstm_max_size = b"\x7f\xff\xff\xff"  # above is negative values (so sounds won't play) as it's a signed hex float
 button_row = []
@@ -47,20 +50,26 @@ def patch_brsar(file, index):
 def scan_directory():
     i = 0
     for tkstuff in a.winfo_children():
-        if tkstuff not in [text_label, cwd_label, entry_dir, refreshbu, exitbu, open_explorerbu, title]:
+        if tkstuff not in [text_label, cwd_label, entry_dir, refreshbu, open_explorerbu, title]:
             tkstuff.destroy()
 
     for files in os.listdir('./'):  # display a button for each brsar found
         size = os.path.getsize(files)
-        if os.path.isfile(files) and size > 4 and i < 192:
+        if not os.path.isfile(files) or size < 10 or i > 192:
+            continue
+        try:
             with open(files, 'rb') as check_file:
                 header = check_file.read(4)
-            if header == b'RSAR':
-                patch = partial(patch_brsar, files, i)
-                brsarbu = Button(a, text=files, command=patch, activebackground='#a9ff99', width=30)
-                brsarbu.grid(row=button_row[i], column=button_col[i])
-                button_list.append(brsarbu)
-                i += 1
+
+        except PermissionError:
+            continue
+
+        if header == b'RSAR':
+            patch = partial(patch_brsar, files, i)
+            brsarbu = Button(a, text=files, command=patch, activebackground='#a9ff99', width=30)
+            brsarbu.grid(row=button_row[i], column=button_col[i])
+            button_list.append(brsarbu)
+            i += 1
     if i > 50:  # creates a big exit button and make the window fullscreen as it was too tiny to display all buttons
         exitbu2 = Button(a, text='Exit', command=a.quit, activebackground='#d9ff8c', bg='#d9ff8c', fg='#ff2222', width=58, height=3, font=100)
         exitbu2.grid(row=0, column=4, rowspan=2, columnspan=3)
@@ -73,7 +82,7 @@ def change_directory():  # enter button to change directory (take the entry cont
         cwd = os.getcwd()
     else:
         cwd_label.configure(text=cwd)
-    entry_dir.delete(0, END)
+    entry_dir.delete(0, "end")
     os.chdir(cwd)
     scan_directory()
 
@@ -85,11 +94,11 @@ def open_explorer():  # change directory with C:\Windows\explorer.exe GUI
     scan_directory()
 
 
-text_label = Label(a, text='Current working directory is', bg='#ffffaa', width=30)
+text_label = Label(a, text='Current working directory is : ', bg='#ffffaa', width=30)
 text_label.grid(row=0, column=0)
 
-cwd_label = Label(a, text=os.getcwd(), bg='#ffffaa', width=30)
-cwd_label.grid(row=1, column=0)
+cwd_label = Label(a, text=os.getcwd(), bg='#ffffaa', width=60, anchor='w')
+cwd_label.grid(row=0, column=1, columnspan=2)
 
 entry_dir = Entry(a, width=30)
 entry_dir.grid(row=1, column=1)
@@ -97,11 +106,8 @@ entry_dir.grid(row=1, column=1)
 refreshbu = Button(a, text='Enter', command=change_directory, activebackground='#ff9999', width=30)
 refreshbu.grid(row=1, column=2)
 
-exitbu = Button(a, text='Exit', command=a.quit, activebackground='#d9ff8c', width=15)
-exitbu.grid(row=0, column=2)
-
 open_explorerbu = Button(a, text='Open file Explorer', command=open_explorer, activebackground='#96c7ff', width=15)
-open_explorerbu.grid(row=0, column=1)
+open_explorerbu.grid(row=1, column=0)
 
 title = Label(a, text='Every Game Brsar Patcher', font=500, bg='#ffffaa', height=3)
 title.grid(row=2, columnspan=9)

@@ -6,13 +6,16 @@ for cfile in os.listdir('./'):
         continue
     ismodel = iscmp = False
     size = cursor = os.path.getsize(cfile)
-    if size > 8:
+    if size < 8:
+        continue
+    try:
         if size < 2222:  # if the size is very little, don't trigger the while, it's definitely not a mdl file
             cursor = -3333
         cursor -= 8  # cursor = size - 8
         with open(cfile, 'rb') as mdl_check:
             if mdl_check.read(4) not in [b'U\xaa8-', b'bres', b'\x00 \xaf0']:
                 continue
+            mdl_check.seek(0)
             if mdl_check.read(1) == b'\x00':
                 iscmp = True
             if not iscmp:  # if it's not a cmp, check whether it is a mdl or else a bin.
@@ -23,6 +26,11 @@ for cfile in os.listdir('./'):
                     if data == b'\x06body_h':  # all mdl does have this text before their end (a mdl0 named body_h)
                         ismodel = True
                         break
+
+    except PermissionError as error:
+        print(error)
+        continue
+
     if '_' in cfile:
         shortname = cfile.rsplit('_', 1)[0]  # if there is a _ in the file name, everything after is just the extension
     elif '.' in cfile:
