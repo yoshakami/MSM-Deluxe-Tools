@@ -2,6 +2,9 @@ import os
 from tkinter import Tk, Label, Button
 from tkinter.filedialog import askdirectory
 
+if ':\\Windows' in os.getcwd():
+    os.chdir(os.environ['userprofile'] + '\\Desktop')
+
 a = Tk()
 a.title('Mario Sports Mix Modding Symbol Map Viewer')
 a.minsize(439, 222)

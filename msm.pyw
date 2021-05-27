@@ -1,8 +1,14 @@
 import os
 import sys
+from random import randint
 from subprocess import Popen
-from tkinter import Tk, Button, Label, END, Entry, Canvas, PhotoImage, DISABLED, OptionMenu, StringVar
+from tkinter import Tk, Button, Label, Entry, Canvas, PhotoImage, DISABLED, OptionMenu, StringVar
 from tkinter.filedialog import askdirectory
+from winsound import PlaySound
+import webbrowser
+
+if ':\\Windows' in os.getcwd():
+    os.chdir(os.environ['userprofile'] + '\\Desktop')
 
 a = Tk()
 a.title("Mario Sports Mix Modding App")
@@ -11,34 +17,103 @@ a.maxsize(680, 495)
 a.config(bg="#aecfee")
 a.iconbitmap('C:\\Yosh\\msm.ico')
 
-run = ('Compress files in cwd (c.py)', 'Extract files in cwd (x.py)', 'Fix all textures to version 3 (f.py)',
-       'Convert decimal to hex-float (hexf.py)', "CaPiTaLiSe (rEtUrN-tExT.py)", "V a p o r w a v e (vaporwave.py)")
+run = ('Compress files in cwd (c.py)', 'Extract files in cwd (x.py)', 'Fix textures in cwd to v3 (tex3.py)',
+       'Decimal to hex-float (hexf.py)', "Hex-float to decimal (dec.py)", 'Read hex integer (int.py)',
+       "CaPiTaLiSe (rEtUrN-tExT.py)", "V a p o r w a v e (vaporwave.py)",
+       'Png texture replace no ext (p.py)', 'Encoded texture replace (t.py)', 'Png texture replace ext (png.py)'
+       )
 RUN = StringVar()
 RUN.set("Instant Run Apps (no UI)")
 Run = OptionMenu(a, RUN, *run)
 Run["menu"].config(bg="#000000", fg='#ffffff')
+random = (
+    'question_mark_coin.wav', 'gnomed.wav',
+    'C:\\Program Files\\Internet Explorer\\iexplore.exe',
+    "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    'https://cdn.discordapp.com/attachments/604971224040472577/831235648886407188/rick.gif',
+    'https://www.youtube.com/watch?v=hJxFfeyyIXE',
+    'https://cdn.discordapp.com/attachments/604971224040472577/831238407971274853/rick.png',
+    'https://gamepadviewer.com/', 'https://www.youtube.com/watch?v=vCbwXQuHAIE',  # Waluigi sounds
+    'https://www.youtube.com/watch?v=GPMq_PxMTUI&list=PLGr95qH5dmjDiy8NZ8xNA7HE57JyMSU7y&index=18',
+    'https://www.youtube.com/watch?v=tHjwySePzH0&list=PLk28dkfJOGjBWGTK6MP6m3qNRIc88VES9&index=37',
+    'https://www.youtube.com/watch?v=kE8xdRjxuIs', 'https://www.youtube.com/watch?v=4X4DAg9K-co',  # Wario sounds
+    'https://www.youtube.com/watch?v=t7qdHQRJjeE', 'https://www.youtube.com/watch?v=ZS8FLG3kLQc',  # Pizza Pasta
+    'https://www.youtube.com/watch?v=Mr8h_T4UPEA', 'https://www.youtube.com/watch?v=utRC8rZSiBI',  # Wii Sports
+    'https://www.youtube.com/watch?v=U2SpYoH2GDY', 'https://www.youtube.com/watch?v=K0kvlULMBQ8',  # Pizza Pasta and SMBWii meme
+    'https://www.youtube.com/watch?v=Fc1P-AEaEp8&list=PL_90hJucBAcPmFxcbTea81OKGkQevH2F9&index=5',  # meme playlist
+    'https://www.youtube.com/watch?v=Til6kcoY0Yk', 'https://www.youtube.com/watch?v=Ps-XsGP5QO4',  # nyanya and vector U
+    'https://www.youtube.com/watch?v=fyoH_EH4QHI', 'https://www.youtube.com/watch?v=CinHish38Lc',  # noteblock and guesswhatmusic
+    'https://www.youtube.com/watch?v=IgA4AeaG1Cg', 'https://www.youtube.com/watch?v=Xdr2mTHS_Sc',  # Player2 and VGR
+    'https://www.youtube.com/watch?v=getEE8cDlGM', 'https://www.youtube.com/watch?v=hZzwIdaRQwk',  # Thomniverse and NintegaDario
+    'https://www.youtube.com/watch?v=nNMfGLMvc14', 'https://www.youtube.com/watch?v=-GNMe6kF0j0',  # CG5 and Goblin From Mars
+    'https://www.youtube.com/watch?v=YqrxIimmiqs', 'https://www.youtube.com/watch?v=WInN2ljOnSU',  # TheFatRat and Alan Walker
+    'https://www.youtube.com/watch?v=wbYM2Ax3gS8', 'https://www.youtube.com/watch?v=EAvYUm57vI8',  # pepensow and sheddy Splatoon
+    'https://www.youtube.com/watch?v=C_fA9JQJj1M', 'https://www.youtube.com/watch?v=4NLD6NDcs_k',  # Gametrack Remixes and Mayro alt
+    'https://www.youtube.com/watch?v=7D9MwBW5VaQ', 'https://www.youtube.com/watch?v=39enH5NI2zY',  # Amazing Gaming Music and Yume
+    'https://www.youtube.com/watch?v=x8eu2YzTKh4', 'https://www.youtube.com/watch?v=hxjkUzFzshE',  # Acid-Notation and Dominic Ninmark
+    'https://www.youtube.com/watch?v=NpC9BRVx-Oc', 'https://www.youtube.com/watch?v=AU1TvJ124w0',  # Qumu and guesswhatmusic
+    'https://www.youtube.com/watch?v=W0h6c7Lbfdc', 'https://www.youtube.com/watch?v=D984mRYiBkw',  # Raymusique and EliteMeats Music
+    'https://www.youtube.com/watch?v=ywXf_sENMYY', 'https://www.youtube.com/watch?v=t3Hz36cPIJA')  # NOQQYSC
+
+
+def question_mark():
+    rewrite = False
+    with open('C:\\Yosh\\a', 'r+b') as config:
+        size = os.path.getsize('C:\\Yosh\\a')
+        for n in range(size, 17):
+            config.write(b'\x00')
+        # ints = []
+        config.seek(17)
+        data = config.read()
+        if len(data) != len(random):
+            config.seek(17 + len(data))
+            if not data:
+                play(0)
+                config.write(b'\x00')
+            else:
+                play(data[-1] + 1)
+                config.write(bytes(chr(data[-1] + 1), 'latin-1'))
+            # tu regardes le dernier octet écrit et tu lances random[octet+1]
+        else:
+            config.seek(16)
+            count = config.read(1)[0]
+            config.seek(16)
+            config.write(bytes(chr(count + 1), 'latin-1'))
+            if count > 50:
+                config.seek(0)
+                content = config.read(16)
+                rewrite = True
+            # for j in range(len(data)):
+            #    ints.append(data[j])
+            i = randint(0, len(data))
+            while i == data[0]:
+                i = randint(0, len(data))
+            config.write(bytes(chr(i), 'latin-1'))
+            play(i)
+    if rewrite:
+        with open('C:\\Yosh\\a', 'wb') as config2:
+            config2.write(content)
+
+
+def play(num):
+    if num in [0, 1]:
+        PlaySound(random[num], 1)
+    elif num in [2]:
+        Popen(random[num])
+    else:
+        webbrowser.open(random[num])
 
 
 def enter():  # "Run Instant App (Enter)" Button
     app = RUN.get()
-    if app == 'Compress files in cwd (c.py)':
-        Popen((sys.executable.rstrip("w.exe") + ".exe", "C:\\Yosh\\c.py"))
-    elif app == 'Extract files in cwd (x.py)':
-        Popen((sys.executable.rstrip("w.exe") + ".exe", "C:\\Yosh\\x.py"))
-    elif app == 'Fix all textures to version 3 (tex3.py)':
-        Popen((sys.executable.rstrip("w.exe") + ".exe", "C:\\Yosh\\f.py"))
-    elif app == 'Convert decimal to hex-float (hexf.py)':
-        Popen((sys.executable.rstrip("w.exe") + ".exe", "C:\\Yosh\\hexf.py"))
-    elif app == "CaPiTaLiSe (rEtUrN-tExT.py)":
-        Popen((sys.executable.rstrip("w.exe") + ".exe", "C:\\Yosh\\rEtUrN-tExT.py"))
-    elif app == "V a p o r w a v e (vaporwave.py)":
-        Popen((sys.executable.rstrip("w.exe") + ".exe", "C:\\Yosh\\vaporwave.py"))
+    if app != "Instant Run Apps (no UI)":
+        Popen(('wscript.exe', f"C:\\Yosh\\{os.path.splitext(app.split('(')[-1])[0]}.vbs"))
     cwd = cwd_entry.get()
     if cwd == '':
         cwd = os.getcwd()  # returns current working directory
     else:
         current_cwd.configure(text=cwd)
-    cwd_entry.delete(0, END)  # empties the entry and change current working directory if it exists
+    cwd_entry.delete(0, 'end')  # empties the entry and change current working directory if it exists
     os.chdir(cwd)
 
 
@@ -48,75 +123,71 @@ def change_directory():  # executed when you press "Open FIle Explorer" button
     current_cwd.configure(text=new_cwd)
 
 
-def p():
-    Popen((sys.executable.rstrip("w.exe") + ".exe", "C:\\Yosh\\p.py"))
+def pack():
+    Popen(('wscript.exe', "C:\\Yosh\\pack.vbs"))
 
 
-def t():
-    Popen((sys.executable.rstrip("w.exe") + ".exe", "C:\\Yosh\\t.py"))
+def thp():
+    Popen(('wscript.exe', "C:\\Yosh\\thp.vbs"))
 
 
 def brsar():  # run with the current executable (pythonw.exe full path)
-    Popen((sys.executable, "C:\\Yosh\\brsar.pyw"))
+    Popen(('wscript.exe', "C:\\Yosh\\brsar.vbs"))
 
 
 def lh():  # run with command line window (else wszst opens too many windows and closes them instantly too frequently)
-    Popen((sys.executable.rstrip("w.exe") + ".exe", "C:\\Yosh\\lh.py"))
+    Popen(('wscript.exe', "C:\\Yosh\\lh.vbs"))
 
 
 def web():
-    Popen((sys.executable, "C:\\Yosh\\web.pyw"))
+    Popen(('wscript.exe', "C:\\Yosh\\web.vbs"))
 
 
 def isox():
-    Popen((sys.executable, "C:\\Yosh\\isox.pyw"))
+    Popen(('wscript.exe', "C:\\Yosh\\isox.vbs"))
 
 
 def dump():
-    Popen((sys.executable.rstrip("w.exe") + ".exe", "C:\\Yosh\\dump.py"))
+    Popen(('wscript.exe', "C:\\Yosh\\dump.vbs"))
 
 
 def iso():
-    Popen((sys.executable.rstrip("w.exe") + ".exe", "C:\\Yosh\\iso.py"))
+    Popen(('wscript.exe', "C:\\Yosh\\iso.vbs"))
 
 
 def arc():
-    Popen((sys.executable.rstrip("w.exe") + ".exe", "C:\\Yosh\\arc.py"))
+    Popen(('wscript.exe', "C:\\Yosh\\arc.vbs"))
 
 
 def bstick():
-    Popen((sys.executable, "C:\\Yosh\\bstick.pyw"))
+    Popen(('wscript.exe', "C:\\Yosh\\bstick.vbs"))
 
 
 def tex():
-    Popen((sys.executable.rstrip("w.exe") + ".exe", "C:\\Yosh\\tex.py"))
+    Popen(('wscript.exe', "C:\\Yosh\\tex.vbs"))
 
 
 def mappyw():
-    Popen((sys.executable, "C:\\Yosh\\map.pyw"))
-
-
-def png():
-    Popen((sys.executable.rstrip("w.exe") + ".exe", "C:\\Yosh\\png.py"))
+    Popen(('wscript.exe', "C:\\Yosh\\map.vbs"))
 
 
 def trib():
-    Popen((sys.executable.rstrip("w.exe") + ".exe", "C:\\Yosh\\trib.py"))
+    Popen(('wscript.exe', "C:\\Yosh\\trib.vbs"))
 
 
 def msmhelp():
-    Popen((sys.executable, "C:\\Yosh\\msmhelp.pyw"))
+    Popen(('wscript.exe', "C:\\Yosh\\msmhelp.vbs"))
 
 
 def shortcuts():
-    Popen((sys.executable, "C:\\Yosh\\msmshortcuts.pyw"))
+    Popen(('wscript.exe', "C:\\Yosh\\msmshortcuts.vbs"))
 
 
 ltitle = Label(a, text="Mario Sports Mix Modding App Menu", font=300, bg="#aecfee", height=3)
 ltitle.grid(row=0, columnspan=3)
-lp = Button(a, text="Png texture replace (CLI no ex)", command=p, width=30)
+lp = Button(a, text="Pack (Dump Textures before)", state=DISABLED, command=pack, width=30)
 lp.grid(row=3, column=0)
-lt = Button(a, text="Encoded texture replace (CLI)", command=t, width=30)
+lt = Button(a, text="THP Compressor", state=DISABLED, command=thp, width=30)
 lt.grid(row=3, column=1)
 lbrsar = Button(a, text="Every Game Brsar Patcher", command=brsar, width=30)
 lbrsar.grid(row=3, column=2)
@@ -130,7 +201,7 @@ lisox = Button(a, text="MSM iso/wbfs extract and compress", command=isox, width=
 lisox.grid(row=5, column=2)
 l2 = Label(a, text="", bg="#aecfee")
 l2.grid(row=6)
-ldump = Button(a, text="Texture dump to png", command=dump, width=30)
+ldump = Button(a, text="Dump Textures", command=dump, width=30)
 ldump.grid(row=7, column=0)
 liso = Button(a, text="MSM iso patcher (soon)", state=DISABLED, command=iso, width=30)
 liso.grid(row=7, column=1)
@@ -146,8 +217,8 @@ lmappyw = Button(a, text="MSM Symbol Map Viewer", command=mappyw, width=30)
 lmappyw.grid(row=9, column=2)
 l4 = Label(a, text="", bg="#aecfee")
 l4.grid(row=10)
-lpng = Button(a, text="Png texture replace (CLI ex)", command=png, width=30)
-lpng.grid(row=11, column=0)
+lrandom = Button(a, text="????", command=question_mark, width=30)
+lrandom.grid(row=11, column=0)
 Run.config(width=30)
 Run.grid(row=11, column=1)
 ltrib = Button(a, text="Change root bone attributes", command=trib, width=30)
@@ -179,7 +250,7 @@ def no_color():
 
     lmappyw.config(activebackground="#d999ff", bg="#f0f0f0")
 
-    lpng.config(activebackground="#ff99ff", bg="#f0f0f0")
+    lrandom.config(activebackground="#ff99ff", bg="#f0f0f0")
 
     Run.config(bg="#f0f0f0", activebackground="#f0f0f0")
 
@@ -211,7 +282,7 @@ def color_bb():
 
     lmappyw.config(bg="#ebbbff", activebackground="#ebbbff")
 
-    lpng.config(bg="#ffbbff", activebackground="#ffbbff")
+    lrandom.config(bg="#ffbbff", activebackground="#ffbbff")
 
     Run.config(bg="#ffbbe4", activebackground="#ffbbe4")
 
@@ -243,7 +314,7 @@ def color_aa():
 
     lmappyw.config(bg="#dfaaff", activebackground="#dfaaff")
 
-    lpng.config(bg="#ffaaff", activebackground="#ffaaff")
+    lrandom.config(bg="#ffaaff", activebackground="#ffaaff")
 
     Run.config(bg="#ffaadf", activebackground="#ffaadf")
 
@@ -275,7 +346,7 @@ def color_99():
 
     lmappyw.config(bg="#d999ff", activebackground="#d999ff")
 
-    lpng.config(bg="#ff99ff", activebackground="#ff99ff")
+    lrandom.config(bg="#ff99ff", activebackground="#ff99ff")
 
     Run.config(bg="#ff99d9", activebackground="#ff99d9")
 
@@ -307,7 +378,7 @@ def color_90():
 
     lmappyw.config(bg="#d090ff", activebackground="#d090ff")
 
-    lpng.config(bg="#ff90ff", activebackground="#ff90ff")
+    lrandom.config(bg="#ff90ff", activebackground="#ff90ff")
 
     Run.config(bg="#ff90d0", activebackground="#ff90d0")
 
@@ -339,7 +410,7 @@ def color_7f():
 
     lmappyw.config(bg="#cc7fff", activebackground="#cc7fff")
 
-    lpng.config(bg="#ff7fff", activebackground="#ff7fff")
+    lrandom.config(bg="#ff7fff", activebackground="#ff7fff")
 
     Run.config(bg="#ff7fc4", activebackground="#ff7fc4")
 
@@ -388,31 +459,29 @@ else:
     no_color()
 l5 = Label(a, text="", bg="#aecfee")
 l5.grid(row=12)
-lcwd = Label(a, text="Current working directory is", bg="#aecfee")
+lcwd = Label(a, text="Current working directory is :", bg="#aecfee")
 lcwd.grid(row=13, column=0)
-current_cwd = Label(a, text=os.getcwd(), bg="#aecfee", width=29)
-current_cwd.grid(row=14, column=0)
+current_cwd = Label(a, text=os.getcwd(), bg="#aecfee", width=70, anchor='w')
+current_cwd.grid(row=13, column=1, columnspan=3)
 cwd_entry = Entry(a, width=30)
 cwd_entry.grid(row=14, column=1)
-me = Label(a, text="Made by Yosh", bg="#aecfee")
-me.grid(row=13, column=1)
 dirbutton = Button(a, text='Open file Explorer', command=change_directory, activebackground='#96c7ff', width=30)
-dirbutton.grid(row=13, column=2)
+dirbutton.grid(row=14, column=0)
 lenter = Button(a, text="Run Instant App (Enter)", command=enter, activebackground="#a9ff91")
 lenter.grid(row=14, column=2)
-l6 = Label(a, text="", bg="#aecfee")
-l6.grid(row=15)
+me = Label(a, text="Made by Yosh", bg="#aecfee")
+me.grid(row=15, column=1)
 lhelp = Button(a, text="Help", activebackground="#a9ff91", command=msmhelp, width=25)
 lhelp.grid(row=16, column=1)
 lshortcuts = Button(a, text="Shortcuts", activebackground="#a9ff91", command=shortcuts, width=25)
 lshortcuts.grid(row=17, column=1)
 lconfig = Button(a, text="Config", activebackground="#ff9999", command=change_config, width=25)
 lconfig.grid(row=18, column=1)
-msm1 = Canvas(a, width=216, height=148, bg="#aecfee")
+msm1 = Canvas(a, width=216, height=148, bd=-2, bg="#aecfee")
 msm_msm = PhotoImage(file="C:\\Yosh\\msm.png")
 msm1.create_image(110, 90, image=msm_msm)
 msm1.grid(row=15, column=0, rowspan=6)
-msm2 = Canvas(a, width=216, height=148, bg="#aecfee")
+msm2 = Canvas(a, width=216, height=148, bd=-2, bg="#aecfee")
 msm_png = PhotoImage(file="C:\\Yosh\\png.png")
 msm2.create_image(100, 100, image=msm_png)
 msm2.grid(row=15, column=2, rowspan=6)
