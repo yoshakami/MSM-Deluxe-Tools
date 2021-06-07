@@ -11,13 +11,13 @@ They all have a special utility, sometimes it's just for fun, or very useful
 they are all independent scripts, they just need to access the config file named 'a' (bstick + checkbuttons), or some png (especially for msmhelp, I made all these png)
 
 
-arc.py ---------- arc extract and compress, creates U8 archive with/without compression
+arc.py ----------- arc extract and compress, creates U8 archive with/without compression
 
 brsar.pyw ------- Every Game Brsar Patcher
 
 bstick.pyw ------ Change bstick colour
 
-c.py ------------ Compress files in cwd
+c.py ------------- Compress files in cwd
 
 dump.py --------- Dump all textures to png
 
