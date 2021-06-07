@@ -142,14 +142,6 @@ def bat(instal_path):  # this func is only called if the user choose to use bat 
 
 
 def step4_drive(letter, clean_inst):
-    #with open('./Yosh/bstick.pyw', 'r+') as bstick:
-        #data = bstick.read()
-        #data = data.splitlines()
-        #position = 0
-        #for line in data:
-        #    position += len(line)
-        #    if line == '    Popen(("wscript.exe", "C:\\Yosh\\bstick.vbs"))':
-        #        print(position)
     for element in os.listdir('./Yosh/'):
         if os.path.splitext(element)[-1] not in ['.pyw', '.py', '.vbs', '.bat']:
             continue
@@ -161,7 +153,6 @@ def step4_drive(letter, clean_inst):
                     continue
                 file.seek(i)  # by default everything in Common.zip is for C:\\Yosh
                 file.write(bytes(letter, 'latin-1'))  # this changes it to the drive letter :\\Yosh
-    # os.system(f'xcopy Yosh "{letter}:\\Yosh" /i /y /q /s')
 
     no_exe = False
     mode = RUN.get()
@@ -177,8 +168,6 @@ def step4_drive(letter, clean_inst):
         shutil.copytree('Yosh', f"{letter}:\\Yosh")
     else:
         os.system(f'xcopy Yosh "{letter}:\\Yosh" /i /y /q /s')
-    # for el in png:
-    #    os.system(f'xcopy "{el}" "{letter}:\\Yosh" /i /y /q')
     path = os.environ["PATH"]
     if "\\Yosh" in path or f'{letter}:\\Yosh' not in path:
         list_path = path.split(';')
@@ -196,34 +185,7 @@ def step4_drive(letter, clean_inst):
         with open('MSM-tools-installer.bat', 'w') as bat_file:
             bat_file.write(bat_code() + f'"{path};{letter}:\\Yosh;" /M')
         os.system('MSM-tools-installer.bat')
-        #for character in string.ascii_uppercase:
-        #    if character + ':\\Yosh' == path[:7]:
-        #        path = path[7:]
-        #    if character != letter and f'{character}:\\Yosh' in path:
-        #        for i in range(len(path)):
-        #            while f';{character}:\\Yosh' == path[i:i + 8]:
-        #                path = path[0:i] + path[i + 8:]
-                    # path = path.split(f';{character}:\\Yosh') doesn't work if there is twice the same value, as older versions added each time you install
-                    # path = path[0] + path[1]
-        #appdata = f'{os.environ["APPDATA"]}\\Yosh'
-        #if appdata in path:
-        #    size = len(appdata)
-        #    if appdata == path[:size]:
-        #        path = path[size:]
-        #    z = 0
-        #    while z < len(path):
-        #        while ';' + appdata == path[z:z + size + 1]:
-        #            # print('fixed 1 value in path')
-        #            path = path[0:z] + path[z + size + 1:]
-        #        # print(path[z:z+size+1])
-        #        z += 1
-                # path = path.split(f';{os.environ["APPDATA"]}\\Yosh')
-                # path = path[0] + path[1]
-            # os.system('pause')
-    # if f'{letter}:\\Yosh' not in path:
     shutil.rmtree('Yosh')
-    # for el in png:
-    #    os.system(f'del "{el}"')
     for el in delete:
         os.system(f'del "{el}"')
     if no_exe:
@@ -233,24 +195,8 @@ def step4_drive(letter, clean_inst):
 
 
 def step4_appdata(clean_inst):
-    #with open('./Yosh/bstick.pyw', 'r+') as bstick:
-    #    data = bstick.read()
-    #    data = data.splitlines()
-    #    position = 0
-    #    for line in data:
-    #        position += len(line)
-    #        if line == '    Popen(("wscript.exe", "C:\\Yosh\\bstick.vbs"))':
-    #            print(position)
-    # for el in png:
-    #    os.system(f'xcopy "{el}" "{os.environ["APPDATA"]}\\Yosh" /i /y /q')
-    # for el in png:
-    #    os.system(f'del "{el}"')
     for el in delete:
         os.system(f'del "{el}"')
-    # with open('./Yosh/lh.py', 'rb') as default_file:
-    #    default_file.seek(0x132)
-    #    path = default_file.read(10)  # C:\\\\Yosh doesn't work so instead I'll take it directly from lh.py as this script is at its final state
-    #    print(path)
     path = b'C:\\\\Yosh\\\\'
     for filee in os.listdir('./Yosh/'):
         if os.path.splitext(filee)[-1] in ['.pyw', '.py']:
@@ -277,7 +223,6 @@ def step4_appdata(clean_inst):
                         else:
                             i = 1
                     py.write(content[index:])
-    # os.system(f'xcopy Yosh "{os.environ["APPDATA"]}\\Yosh" /i /y /q /s')
     no_exe = False
     mode = RUN.get()
     if mode == run[0] and exe:  # if user choosed to use exe
@@ -310,15 +255,6 @@ def step4_appdata(clean_inst):
         with open('MSM-tools-installer.bat', 'w') as bat_file:
             bat_file.write(bat_code() + f'"{path};{os.environ["APPDATA"]}\\Yosh;" /M')
         os.system('MSM-tools-installer.bat')
-            #if character + ':\\Yosh' == path[:7]:
-            #    path = path[7:]
-            #if f'{character}:\\Yosh' in path:
-            #    for i in range(len(path)):
-            #        while f';{character}:\\Yosh' == path[i:i + 9]:
-            #            path = path[0:i] + path[i + 9:]
-                    # path = path.split(f';{character}:\\Yosh') doesn't work if there is twice the same value, as older versions added each time you install
-                    # path = path[0] + path[1]
-    #if f'{os.environ["APPDATA"]}\\Yosh' not in path or edit_path:
 
     shutil.rmtree('Yosh')
     if no_exe:
@@ -341,25 +277,12 @@ def step4_local():
                 new_data += line + '\n'
         bstick.seek(0)
         bstick.write(new_data)
-
-    #        position += len(line)
-    #        if line == '    Popen(("wscript.exe", "C:\\Yosh\\bstick.vbs"))':
-    #            print(position)
-    # for el in png:
-    #    os.system(f'xcopy "{el}" Yosh /i /y /q')
-    # for el in png:
-    #    os.system(f'del "{el}"')
     try:
         for el in delete:
             os.remove(el)
     except:
         'do nothing'
         pass
-
-    # with open('./Yosh/lh.py', 'rb') as default_file:
-    #    default_file.seek(0x187)
-    #    path = default_file.read(10)  # C:\\Yosh\\
-    #    print(path)
     path = 'C:\\\\Yosh\\\\'
     with open('./Yosh/msm.pyw', 'r+') as msmp:
         msm_data = msmp.read()
@@ -394,30 +317,9 @@ def step4_local():
                         new_data += line.split(path)[0] + line.split(path)[-1] + '\n'
                     else:
                         new_data += line + '\n'
-                filoc.seek(0)
-                filoc.write(new_data)
 
-                """ignore = [] # there's an easier method above
-                for i in range(len(content) - 9):
-                    filoc.seek(i)
-                    if filoc.read(10) != path:
-                        continue
-                    ignore.append(i)
-                    ignore.append(i + 10)
-            if ignore != []:
-                with open(f'./Yosh/{filee}', 'wb') as py:
-                    i = 0
-                    py.write(content[:ignore[0]])
-                    for index in ignore:
-                        if i == 1:
-                            i = 2
-                            offset = index
-                        elif i == 2:
-                            i = 1
-                            py.write(content[offset:index])
-                        else:
-                            i = 1
-                    py.write(content[index:])"""
+            with open(f'./Yosh/{filee}', 'w') as py:
+                py.write(new_data)
     a.quit()
 
 
@@ -435,22 +337,12 @@ def step4_other(remove_ico):
                 new_data += line + '\n'
         bstick.seek(0)
         bstick.write(new_data)
-            # position += len(line)
-            #    print(position)
-    # for el in png:
-    #    os.system(f'xcopy "{el}" Yosh /i /y /q')
-    # for el in png:
-    #    os.system(f'del "{el}"')
     try:
         for el in delete:
             os.remove(el)
     except:
         'do nothing'
         pass
-    # with open('./Yosh/lh.py', 'rb') as default_file:
-    #    default_file.seek(0x132)
-    #    path = default_file.read(10)
-    #    print(path)
     path = 'C://Yosh//'
     with open('./Yosh/msm.pyw', 'r+') as msmp:
         msm_data = msmp.read()
@@ -484,12 +376,13 @@ def step4_other(remove_ico):
                         if "a.iconbitmap(" in line:
                             continue
                         new_data += line + '\n'
-                    filoc.seek(0)
-                    filoc.write(new_data)
+
+                with open(f'./Yosh/{filee}', 'w') as py:
+                    py.write(new_data)
 
     for filee in os.listdir('./Yosh/'):  # replaces opening paths
         if os.path.splitext(filee)[-1] in ['.pyw', '.py']:
-            print(filee)
+            #print(filee)
             with open(f'./Yosh/{filee}', 'r+') as filoc:
                 content = filoc.read()
                 content = content.replace('\\', '/')  # unix systems only support front slashes
@@ -504,36 +397,10 @@ def step4_other(remove_ico):
                         new_data += line.split(path)[0] + line.split(path)[-1] + '\n'
                     else:
                         new_data += line + '\n'
-                filoc.seek(0)
-                filoc.write(new_data)
 
-                """ignore = [] 
-                for i in range(len(content) - 9): # for some reason, the two last lines of each file get duplicated while it's the same code as local, WTF.
-                    filoc.seek(i)
-                    #if filoc.read(10) != path:
-                    #    continue
-                    if filoc.read(10) == path:
-                        filoc.seek(i)
-                        print(i, filoc.read(10))
-                        ignore.append(i)
-                        ignore.append(i + 10)
-            if ignore != []:
-                with open(f'./Yosh/{filee}', 'wb') as py:
-                    i = 0
-                    py.write(content[:ignore[0]])
-                    for index in ignore:
-                        if i == 1:
-                            i = 2
-                            offset = index
-                        elif i == 2:
-                            i = 1
-                            py.write(content[offset:index])
-                        else:
-                            i = 1
-                    py.write(content[index:])
-                    print(content[index:])
-                    print(content[offset:])
-                    print(content[offset:index])"""
+            with open(f'./Yosh/{filee}', 'w') as py:
+                py.write(new_data)
+
         if os.path.splitext(filee)[-1] == '.ico' and remove_ico:
             os.remove(f"./Yosh/{filee}")
         if os.path.splitext(filee)[-1] in ['.exe', '.bat', '.vbs', '.lnk']:
@@ -567,9 +434,12 @@ def step3_drive(letter, clean_inst):
 
 
 def step3_appdata(clean_inst):
+    print('clean_inst = ' + clean_inst + clean_inst == True)
     a.config(bg="#aecfee")
-    if not os.path.exists(f'{os.environ["APPDATA"]}\\Yosh'):
-        os.mkdir(f'{os.environ["APPDATA"]}\\Yosh')
+    appdata = f'{os.environ["APPDATA"]}\\Yosh'
+    print(f"installing to {appdata}")
+    if not os.path.exists(appdata):
+        os.mkdir(appdata)
 
     for everything in a.winfo_children():
         everything.destroy()
@@ -580,7 +450,7 @@ def step3_appdata(clean_inst):
         o.destroy()
     path = os.environ["PATH"]
     admin = ""
-    if ":\\Yosh" in path or f'{os.environ["APPDATA"]}\\Yosh' not in path:
+    if ":\\Yosh" in path or appdata not in path:
         admin = " click yes to cmd admin perm"
     title3 = Label(a, text=f"Click on this button to finish installation :){admin}.\nonce it's done you can delete the installer and enjoy the tools :D\n", bg="#aecfee", font=100)
     title3.grid(row=0)
@@ -608,6 +478,7 @@ def step3_local():
 
 
 def step3_other(remove_ico):
+    print('remove_ico =' + remove_ico + remove_ico == True)
     a.config(bg="#aecfee")
     for everything in a.winfo_children():
         everything.destroy()
@@ -627,8 +498,6 @@ def step3_other(remove_ico):
 
 
 def step2():
-    # def check():
-    #     toogle(clean_cb)
     a.config(bg="#ff9b69")
     for everything in a.winfo_children():
         everything.destroy()
@@ -661,22 +530,27 @@ def step2():
         new_pic.save(f"./Yosh/{png[i]}")
         pic.close()
 
-    appdata = partial(step3_appdata, clean.get)
+    def return_clean():
+        return clean.get()
+    getclean = partial(return_clean)
+
+    appdata = partial(step3_appdata, getclean)
     path_appdata2 = Button(a, text="%AppData%\\Yosh", command=appdata, bg="#91ffc8", activebackground="#91ffc8", width=30)
     path_appdata2.grid(row=7, column=0)
     path_local2 = Button(a, text="Local (movable directory)\\Yosh", command=step3_local, bg="#ff9999", activebackground="#ff7f7f", width=30)
     path_local2.grid(row=7, column=1)
-    other = partial(step3_other, ico.get)
+
+    def return_ico():
+        return ico.get()
+    getico = partial(return_ico)
+    other = partial(step3_other, getico)
     path_other2 = Button(a, text="Other OS than Windows", command=other, width=30)
     path_other2.grid(row=7, column=2)
-    #for i in range(2):  # creates C and D drive buttons
-    #    inva = Label(a, text="Invalid Drive", bg="#ff9b69", width=20)
-    #    inva.grid(row=8, column=i, columnspan=2)
 
     def verify(drive_letter, index):
         if os.path.exists(f'{drive_letter}:\\'):
             a.config(bg="#aecfee")
-            step3_drive(drive_letter, clean.get)
+            step3_drive(drive_letter, getclean)
         else:
             button_list[index].destroy()
 
@@ -686,19 +560,10 @@ def step2():
     #verif = partial(verify, 'C', 0)
     empty2 = Label(a, text="  ", font=(None, 2), bg="#ff9b69")
     empty2.grid(row=8, column=0)
-    #path_drive = Button(a, text=f"C:\\Yosh", command=verif, bg="#69ebff", activebackground="#69ebff", width=25)
-    #path_drive.grid(row=8, column=0, columnspan=2)
-    #button_list.append(path_drive)
-    #verif = partial(verify, 'D', 1)
-    #path_drive = Button(a, text=f"D:\\Yosh", command=verif, bg="#69ebff", activebackground="#69ebff", width=25)
-    #path_drive.grid(row=8, column=1, columnspan=2)
-    #button_list.append(path_drive)
     Checkbutton.deselect(clean_cb)
     Checkbutton.deselect(no_ico)
     for i in range(26):
         letter = string.ascii_uppercase[i]
-        #if letter in ['C', 'D']:  # making C and D again would confuse the user
-        #    continue
         verif = partial(verify, letter, i)
         inva = Label(a, text="Invalid Drive", bg="#ff9b69", width=30)
         inva.grid(row=row[i], column=col[i % 3])
