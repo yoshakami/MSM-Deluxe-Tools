@@ -49,8 +49,8 @@ tex3.py -------------- Fix all textures to version 3
 
 trib.py --------------- Change root bone attributes
 
-vaporwave.py -------- V a p o r w a v e
+vaporwave.py ------- V a p o r w a v e
 
-web.pyw ------------- Website
+web.pyw ------------ Website
 
-x.py ---------------- Extract files in cwd
+x.py ----------------- Extract files in cwd
