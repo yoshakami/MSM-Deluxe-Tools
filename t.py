@@ -1,5 +1,9 @@
 import os
 
+with open('#language.txt', 'r') as txt:
+    language = txt.read()
+    language = [''] + language.splitlines()
+
 tex0 = [0]
 bres_list = []
 add_tex0 = filetype = file = header = 0
@@ -9,11 +13,11 @@ bresarc = [b'U\xaa8-', b'bres']
 
 
 def message():
-    print("\n\na number was intended or there are less textures than your number,\ncount the texture position in BrawlCrate\nBrawlCrate doesn't only edit the texture data as this app does, but rebuild the whole brres when saving\nthat can damage the file (like destroy bind skin in Mario Sports Mix)\n\nthe number can be negative if you start counting by the bottom\n")
+    print(f"\n\n{language[122]},\n{language[123]}\n{language[124]}\n{language[125]}\n\n{language[126]}\n")
 
 
 def external():
-    print('Did you opened external folder ???\n\nNote also that all textures are counted for all brres in an arc or brres file.\npress enter to go try again...')
+    print(f'{language[152]}\n\n{language[153]}\n{language[154]}')
 
 
 for file in os.listdir('./'):
@@ -30,19 +34,19 @@ for file in os.listdir('./'):
     if header in bresarc:
         break
 if header not in bresarc:  # the for can ends after browsing a complete directory without finding any brres or arc file.
-    input('no brres or arc file found.\npress enter to exit.')
+    input(f'{language[127]}.\n{language[128]}.')
     exit()
 compress = True
-mode = input(f"replacing in {file}\npress enter to continue (compress at the end) or\n- type 1 if that's not the file you want\n- type 2 if that's not the file you want + don't compress\n- type 3 if you don't want to compress your file when the program ends\nYour choice : ")
+mode = input(f"{language[129]} : {file}\n{language[155]}\n{language[131]}\n{language[156]}\n{language[157]}\n{language[137]} : ")
 if mode in ['2', '3']:  # don't compress
     compress = False
 while mode in ["1", "2"]:  # that's not the file you want, so type manually the filename
-    file = input('file name with extension : ')
+    file = input(f'{language[138]} : ')
     if not os.path.exists(file):
         continue
     with open(file, 'rb') as check:
         if check.read(4) not in bresarc:
-            print('this file is not a brres or an arc file.')
+            print(f'{language[139]}.')
         else:
             mode = '0'
 with open(file, 'r+b') as arc:  # though arc could have been named brres as it's the same process for both files
@@ -53,7 +57,7 @@ with open(file, 'r+b') as arc:  # though arc could have been named brres as it's
         short = os.path.splitext(file)[0]
     else:
         short = file  # short has high probabilities to be the name used in the filesystem of the game
-    print('Spotting all texture offsets in the file, please wait...')  # in case it's long
+    print(language[140])  # in case it's long
 
     for z in range(0, size - 17, 16):
         arc.seek(z)
@@ -69,17 +73,17 @@ with open(file, 'r+b') as arc:  # though arc could have been named brres as it's
         tex_name = input('texture name with extension : ')  # remember quote is a forbidden character in windows
         tex_name = tex_name.strip('"')  # if you drag and drop it adds quotes and create a name that doesn't exists
         if not os.path.exists(tex_name):  # yes, python considers quotes as part of a file name
-            print(f'{tex_name} was not found in the current working directory.\na texture is intended.')
+            print(f'{tex_name} {language[142]}.\n{language[158]}.')
             continue
         with open(f'{tex_name}', 'r+b') as check_tex0:
             header = check_tex0.read(4)
         if header != b'TEX0':
-            print("You didn't used a tex0 on this app that only works with already encoded textures.\ntry again")
+            print(f"{language[159]}\n{language[160]}")
             continue
         while header != 1:  # while user enters a wrong number
-            pos = input('texture position : ')
+            pos = input(f'{language[145]} : ')
             if pos in ['0', '-0', '']:
-                print("Error: the number can't be 0 (it can be -1 or -2 and more if you start counting by the bottom)")
+                print(language[146])
             elif pos.lstrip('-').isdigit():
                 if int(pos.lstrip('-')) > len(tex0):  # if position entered is greater than the max number of tex0 found
                     message()
@@ -123,11 +127,11 @@ with open(file, 'r+b') as arc:  # though arc could have been named brres as it's
         arc_color = arc.read(1)[0]  # the 35th byte of a tex0 file is the colour encoding, see colourenc for full list
 
         if tex_mips != arc_mips:
-            print(f'{file} texture has {arc_mips} mipmaps while {tex_name} has {tex_mips}')
+            print(file + language[161].split("x")[1] + arc_mips + language[161].split("x")[2] + tex_name + language[161].split("x")[3] + tex_mips)
             external()
             continue
         if arc_color != tex_color:
-            print(f'{file} texture is in {colourenc[arc_color]} colourenc while {tex_name} is in {colourenc[tex_color]}')
+            print(file + language[162].split("x")[1] + colourenc[arc_color] + language[162].split("x")[2] + tex_name + language[162].split("x")[3] + colourenc[tex_color])
             external()
             continue
 
@@ -138,10 +142,10 @@ with open(file, 'r+b') as arc:  # though arc could have been named brres as it's
         header = arc.read(4)
         brres = bres_list[-1]  # equals zero if the list is empty or the first brres offset if not empty
         if (brres == 0 or next_tex0_pos < brres) and header != b'TEX0':
-            print('replacing texture will override next header, this happens when you use twice the same png.')
+            print(language[149])
             print(f'dev info : current file = {file} ; picture name = {tex_name} ; tex0 data size = {data_size}')
             print(f'offset of next tex0 = {next_tex0_pos} ; next brres offset = {brres}')
-            input('this texture will not be replaced, press enter to replace all other textures...')
+            input(language[150])
             continue
         arc.seek(arc_tex0_data_pos)
         arc.write(tex)  # custom texture data

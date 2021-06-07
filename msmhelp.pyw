@@ -2,19 +2,23 @@ from tkinter import Tk, Canvas, PhotoImage, Button, Label
 from functools import partial
 from PIL import Image
 
+with open('#language.txt', 'r') as txt:
+    language = txt.read()
+    language = [''] + language.splitlines()
+
 a = Tk()
-a.title("Mario Sports Mix Modding App Help")
+a.title(language[198])
 a.attributes('-fullscreen', True)
 a.config(bg="#ff9696")
 a.iconbitmap('C:\\Yosh\\msmhelp.ico')
-title = Label(a, text="Mario Sports Mix Modding Help Menu", font=300, bg="#ff9696", height=3)
+title = Label(a, text=language[199], font=300, bg="#ff9696", height=3)
 title.grid(row=0, columnspan=30)
-txt = Label(a, text="Click on the pictures to view on fullscreen", font=300, bg="#ff9696", height=3)
+txt = Label(a, text=language[200], font=300, bg="#ff9696", height=3)
 txt.grid(row=3, columnspan=30)
 w = a.winfo_screenwidth()
 h = a.winfo_screenheight()
 
-exitbu = Button(a, text='Exit', command=a.quit, bg="#7fff7f", font=2, activebackground='#7fff7f', width=30, height=2)
+exitbu = Button(a, text=language[38], command=a.quit, bg="#7fff7f", font=2, activebackground='#7fff7f', width=30, height=2)
 exitbu.grid(row=2, column=6, rowspan=2)
 
 

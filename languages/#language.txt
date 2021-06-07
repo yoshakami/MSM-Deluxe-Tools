@@ -1,0 +1,200 @@
+Mario Sports Mix Modding App
+Compress files in cwd
+Extract files in cwd
+Fix textures in cwd to v3
+Decimal to hex-float
+Hex-float to decimal
+Read hex integer
+CaPiTaLiSe
+V a p o r w a v e
+Png texture replace no ext
+Encoded texture replace
+Png texture replace ext
+Instant Run Apps (no UI)
+Mario Sports Mix Modding App Menu
+Pack (Dump Textures before)
+THP Compressor
+Every Game Brsar Patcher
+MSM files extract and compress
+Website
+MSM iso/wbfs extract and compress
+Dump Textures
+MSM iso patcher (soon)
+MSM arc extract and compress
+Change bstick colour
+Encode png to tex0
+MSM Symbol Map Viewer
+????
+Change root bone attributes
+Current working directory is :
+Open file Explorer
+Run Instant App (Enter)
+Hello World !
+Help
+Shortcuts
+Config
+MSM Tools : arc extract and compress
+done! :)
+Exit
+patched
+Enter
+Extract
+Process can take up to 1 minute
+Extract all files
+Create
+output file archive type
+compression
+default
+Every Game Brsar Patcher
+MSM Tools : Every game brsar patch
+Brawlcrate is recommended
+to edit brres (especially in MSM)
+Mario Sports Mix Modding Change bstick colour
+done :) !
+MSM Change bstick colour
+Bypass windows colour picker
+no custom colour
+Launch Google colour picker (online)
+Red
+Orange
+Yellow
+Chartreuse
+Light Green
+Green
+Green Cyan
+Blue Cyan
+Blue
+Purple (Blue Fushia)
+Fushia
+Red Fushia
+fix colour
+Preview picture
+Close and open
+the app to see
+preview again
+or click here
+this will
+start this app
+again and close
+this current one
+Windows Colour Picker
+Welcome ! this app is used to convert hexadecimal float values to decimal float
+hex-float : 
+copied to clipboard the value below
+this app display max 192 brres or arc in your current working directory.
+It'll dump all raw tex0 of the file then will convert them to png
+Mario Sports Mix Modding Deluxe Tool : Textures Dump to png
+deleting
+dumped
+textures
+Keep tex0
+Dump mipmaps
+Dumping can take up to 2 minutes
+MSM Textures Dump
+Welcome ! this app is used to convert any number to hexadecimal float, size fixed to 4 bytes
+decimal value : 
+Hi there ! This script converts any hexadecimal values like '7F FF  ffa0' into a decimal integer value, size free
+hex values : 
+MSM Tools : iso/wbfs extract and compress
+oof! folder not recognized as a game
+Remove Update Folder
+filetype output format
+Process can take up to 5 minutes
+Mario Sports Mix Modding mdl/bin/cmp/mot files extract and compress
+file extract
+extract all files
+extract all mdl
+extract all bin
+extract all cmp
+extract all mot
+file compress
+Manual Compress
+Compress
+compress all files
+Mario Sports Mix Modding Symbol Map Viewer
+Mario Sports Mix Main.dol Symbol Map
+Symbol Map Help
+Save all Symbol Map
+PAL Symbol Map
+NTSC-U Symbol Map
+NTSC-J Symbol Map
+Save all Symbol Map (no filter)
+a number was intended or there are less textures than your number
+count the texture position in BrawlCrate
+BrawlCrate doesn't only edit the texture data as this app does, but rebuild the whole brres when saving
+that can damage the file (like destroy bind skin in Mario Sports Mix)
+the number can be negative if you start counting by the bottom
+no brres or arc file found
+press enter to exit
+this script will be replacing textures in this file
+press enter to continue (compress + don't keep encoded textures) or
+- type 1 if that's not the file you want
+- type 2 to continue and keep the encoded textures when the program ends
+- type 3 if that's not the file you want and you want to keep the encoded textures
+-type 4 don't compress the edited file
+-type 5 don't compress + keep encoded textures
+-type 6 don't compress + keep encoded textures + that's not the file you want
+Your choice
+file name with extension
+this file is not a brres or an arc file
+Spotting all texture offsets in the file, please wait...
+png name without extension
+was not found in the current working directory
+a png picture is intended
+This file isn't a png
+texture position
+Error: the number can't be 0 (it can be -1 or -2 and more if you start counting by the bottom)
+press 1 then enter to encode all textures
+or type anything else to add another png
+replacing texture will override next header, this happens when you use twice the same png.
+this texture will not be replaced, press enter to replace all other textures...
+png name with extension
+Did you opened external folder ???
+Note also that all textures are counted for all brres in an arc or brres file.
+press enter to go try again...
+press enter to continue (compress at the end) or
+- type 2 if that's not the file you want + don't compress
+- type 3 if you don't want to compress your file when the program ends
+a texture is intended
+You didn't used a tex0 on this app that only works with already encoded textures.
+try again
+##change between the crosses##    x texture has x mipmaps while x has x
+##change between the crosses##    x texture is in x colour encoding format while x is in x
+text = 
+fixed x textures
+on x files
+Mario Sports Mix Modding Tool : Encode png to tex0
+this app display max 192 png in your current working directory.
+if you don't set an output name, it will by default be the name of the png
+Done! :)
+Encode png to tex0
+Colour Encoding
+Number of Mipmaps
+Output File Name (without extension)
+Mario Sports Mix Modding Change root bone attributes
+oof! check help
+default scale
+custom scale
+custom rotation
+custom translation
+Negative values
+are allowed
+Mario Sports Mix Modding Website
+Getting Started
+Texture Hack Tutorial
+Red_Star.brsar index
+French ID-List
+French Texture Hack Tutorial
+English ID-List
+Characters Info
+Filesystem
+Custom Character Tutorial
+Showcased Mods
+Msbt text index
+The Cutting Room Floor Webpage
+Google Sheet with all Custom Characters, Stages Texture Hacks, and pack 2 Character List
+Join our Discord
+Yosh's YouTube Channel
+Mario Sports Mix Modding App Help
+Mario Sports Mix Modding Help Menu
+Click on the pictures to view on fullscreen

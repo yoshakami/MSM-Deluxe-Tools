@@ -1,10 +1,14 @@
 import os
-from tkinter import Tk, Label, Button, END, Entry, Checkbutton, W
+from tkinter import Tk, Label, Button, END, Entry, Checkbutton
 from tkinter.filedialog import askdirectory
 from functools import partial
 
 if ':\\Windows' in os.getcwd():
     os.chdir(os.environ['userprofile'] + '\\Desktop')
+
+with open('#language.txt', 'r') as txt:
+    language = txt.read()
+    language = [''] + language.splitlines()
 
 button_row = []
 for j in range(8, 20):
@@ -14,12 +18,12 @@ for j in range(8, 20):
 for j in range(20, 32):
     button_row += [j, j, j, j, j, j, j, j]
 
-print("this app display max 192 brres or arc in your current working directory.\nif you don't set an output name, it will by default be the name of the png\n")
+print(f"{language[84]}\n{language[85]}\n")
 
 button_col = [0, 1, 2] * 12 + [3, 4, 5, 6, 7] * 12 + [0, 1, 2, 3, 4, 5, 6, 7] * 12
 button_list = []
 a = Tk()
-a.title('Mario Sports Mix Modding Deluxe Tool : Textures Dump to png')
+a.title(language[86])
 a.minsize(660, 440)
 a.config(bg='#aaffbf')
 a.iconbitmap('C:\\Yosh\\dump.ico')
@@ -68,9 +72,9 @@ def dump(file, index):
         for element in os.listdir(folder):
             if os.path.splitext(element)[-1] == '.tex0':
                 os.system(f'del ".\\{folder[2:]}\\{element}"')
-                print('deleting ', element)
+                print(language[87] + ' ' + element)
     button_list[index].destroy()
-    patched = Label(a, text=f'dumped {counter} textures :)', bg='#aaffbf', width=30)
+    patched = Label(a, text=f'{language[88]} {counter} {language[89]} :)', bg='#aaffbf', width=30)
     patched.grid(row=button_row[index], column=button_col[index])
 
 
@@ -99,7 +103,7 @@ def scan_directory():
             continue
 
     if i > 50:  # if many brres, arc, or tex0 are found, then it puts the window on fullscreen and create a big exit button
-        exitbu2 = Button(a, text='Exit', command=a.quit, activebackground='#d9ff8c', bg='#d9ff8c', fg='#ff2222', width=58, height=3, font=100)
+        exitbu2 = Button(a, text=language[38], command=a.quit, activebackground='#d9ff8c', bg='#d9ff8c', fg='#ff2222', width=58, height=3, font=100)
         exitbu2.grid(row=0, column=4, rowspan=2, columnspan=3)
         a.attributes('-fullscreen', True)
 
@@ -122,11 +126,11 @@ def open_explorer():  # change directory with C:\Windows\explorer.exe GUI
     scan_directory()
 
 
-text_label = Label(a, text='Current working directory is : ', bg='#aaffbf', width=30)
+text_label = Label(a, text=language[29], bg='#aaffbf', width=30)
 text_label.grid(row=0, column=0)
 
-cwd_label = Label(a, text=os.getcwd(), bg='#aaffbf', width=70, anchor=W)
-cwd_label.grid(row=0, column=1, columnspan=2)
+cwd_label = Label(a, text=os.getcwd(), bg='#aaffbf', width=60, anchor='w')
+cwd_label.grid(row=0, column=1, columnspan=3)
 
 entry_dir = Entry(a, width=30)
 entry_dir.grid(row=1, column=1)
@@ -134,7 +138,7 @@ entry_dir.grid(row=1, column=1)
 refreshbu = Button(a, text='Enter', command=change_directory, activebackground='#ff9999', width=30)
 refreshbu.grid(row=1, column=2)
 
-open_explorerbu = Button(a, text='Open file Explorer', command=open_explorer, activebackground='#96c7ff', width=15)
+open_explorerbu = Button(a, text=language[30], command=open_explorer, activebackground='#96c7ff', width=15)
 open_explorerbu.grid(row=1, column=0)
 
 
@@ -160,11 +164,11 @@ def mipmaps():  # each time the checkbutton dump_mipmaps is triggered
             mipmap.write(b'1')
 
 
-keep_tex0 = Checkbutton(a, text="Keep tex0", command=keep, bg="#aaffbf", width=20)
+keep_tex0 = Checkbutton(a, text=language[90], command=keep, bg="#aaffbf", width=20)
 keep_tex0.grid(row=2, column=0)
-dump_mipmaps = Checkbutton(a, text="Dump mipmaps", command=mipmaps, bg="#aaffbf", width=20)
+dump_mipmaps = Checkbutton(a, text=language[91], command=mipmaps, bg="#aaffbf", width=20)
 dump_mipmaps.grid(row=2, column=2)
-T = Label(a, text='Dumping can take up to 2 minutes', bg='#aaffbf', width=30)
+T = Label(a, text=language[92], bg='#aaffbf', width=30)
 T.grid(row=2, column=1)
 with open('C:\\Yosh\\a', 'rb') as config:
     config.seek(13)
@@ -174,7 +178,7 @@ if checkbu == b'1':
     Checkbutton.select(keep_tex0)
 if mips == b'1':
     Checkbutton.select(dump_mipmaps)
-title = Label(a, text='MSM Textures Dump', font=500, bg='#aaffbf', height=3)
+title = Label(a, text=language[93], font=500, bg='#aaffbf', height=3)
 title.grid(row=3, columnspan=9)
 scan_directory()
 a.mainloop()

@@ -6,6 +6,10 @@ from functools import partial
 if ':\\Windows' in os.getcwd():
     os.chdir(os.environ['userprofile'] + '\\Desktop')
 
+with open('#language.txt', 'r') as txt:
+    language = txt.read()
+    language = [''] + language.splitlines()
+
 brstm_max_size = b"\x7f\xff\xff\xff"  # above is negative values (so sounds won't play) as it's a signed hex float
 button_row = []
 for j in range(8, 20):
@@ -18,7 +22,7 @@ for j in range(20, 32):
 button_col = [0, 1, 2] * 12 + [3, 4, 5, 6, 7] * 12 + [0, 1, 2, 3, 4, 5, 6, 7] * 12
 button_list = []
 a = Tk()
-a.title('MSM Tools : Every game brsar patch')
+a.title(language[49])
 a.minsize(660, 440)
 a.config(bg='#ffffaa')
 a.iconbitmap('C:\\Yosh\\brsar.ico')
@@ -43,7 +47,7 @@ def patch_brsar(file, index):
                 brsar.write(brstm_max_size)
                 cursor = cursor_save
     button_list[index].destroy()
-    patched = Label(a, text=f'patched {patched_num} brstm :)', bg='#ffffaa', width=30)
+    patched = Label(a, text=f'{language[39]} {patched_num} brstm :)', bg='#ffffaa', width=30)
     patched.grid(row=button_row[index], column=button_col[index])
 
 
@@ -71,7 +75,7 @@ def scan_directory():
             button_list.append(brsarbu)
             i += 1
     if i > 50:  # creates a big exit button and make the window fullscreen as it was too tiny to display all buttons
-        exitbu2 = Button(a, text='Exit', command=a.quit, activebackground='#d9ff8c', bg='#d9ff8c', fg='#ff2222', width=58, height=3, font=100)
+        exitbu2 = Button(a, text=language[38], command=a.quit, activebackground='#d9ff8c', bg='#d9ff8c', fg='#ff2222', width=58, height=3, font=100)
         exitbu2.grid(row=0, column=4, rowspan=2, columnspan=3)
         a.attributes('-fullscreen', True)
 
@@ -94,7 +98,7 @@ def open_explorer():  # change directory with C:\Windows\explorer.exe GUI
     scan_directory()
 
 
-text_label = Label(a, text='Current working directory is : ', bg='#ffffaa', width=30)
+text_label = Label(a, text=language[29], bg='#ffffaa', width=30)
 text_label.grid(row=0, column=0)
 
 cwd_label = Label(a, text=os.getcwd(), bg='#ffffaa', width=60, anchor='w')
@@ -103,13 +107,13 @@ cwd_label.grid(row=0, column=1, columnspan=2)
 entry_dir = Entry(a, width=30)
 entry_dir.grid(row=1, column=1)
 
-refreshbu = Button(a, text='Enter', command=change_directory, activebackground='#ff9999', width=30)
+refreshbu = Button(a, text=language[40], command=change_directory, activebackground='#ff9999', width=30)
 refreshbu.grid(row=1, column=2)
 
-open_explorerbu = Button(a, text='Open file Explorer', command=open_explorer, activebackground='#96c7ff', width=15)
+open_explorerbu = Button(a, text=language[30], command=open_explorer, activebackground='#96c7ff', width=15)
 open_explorerbu.grid(row=1, column=0)
 
-title = Label(a, text='Every Game Brsar Patcher', font=500, bg='#ffffaa', height=3)
+title = Label(a, text=language[48], font=500, bg='#ffffaa', height=3)
 title.grid(row=2, columnspan=9)
 scan_directory()
 a.mainloop()

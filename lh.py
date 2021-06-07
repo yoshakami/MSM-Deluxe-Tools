@@ -6,8 +6,12 @@ from tkinter.filedialog import askopenfilename, askdirectory
 if ':\\Windows' in os.getcwd():
     os.chdir(os.environ['userprofile'] + '\\Desktop')
 
+with open('#language.txt', 'r') as txt:
+    language = txt.read()
+    language = [''] + language.splitlines()
+
 a = Tk()
-a.title('Mario Sports Mix Modding mdl/bin/cmp/mot files extract and compress')
+a.title(language[103])
 a.minsize(660, 440)
 a.config(bg='#dfffaa')
 a.iconbitmap('C:\\Yosh\\lh.ico')
@@ -83,8 +87,7 @@ def scan_directory():
             shortname = cfile  # else compressed file name will be the file name + its right extension
         for j in range(3):
             if f"{shortname}{extensions[j]}" != cfile:  # don't delete the file the script will compress!
-                os.system(
-                    f'del "{shortname}{extensions[j]}"')  # delete the mdl, cmp, or bin file with the same name as the
+                os.system(f'del "{shortname}{extensions[j]}"')  # delete the mdl, cmp, or bin file with the same name as the
         if ismodel:  # future compressed file if it exists  ( == overwrite )
             os.system(f'C:\\Yosh\\n.exe "{cfile}" -lh -o "{shortname}.mdl"')  # create a compressed file with mdl extension
         elif iscmp:
@@ -111,30 +114,30 @@ def scan_directory():
         compress(brres)
         button_list2[num].destroy()
 
-    file_extract_label = Label(a, text='file extract', font=300, bg='#dfffaa', height=2, width=45)
+    file_extract_label = Label(a, text=language[104], font=300, bg='#dfffaa', height=2, width=45)
     file_extract_label.grid(row=2, columnspan=20)
-    extract_allbu = Button(a, text='extract all files', activebackground='#ff7373', bg='#ffb8b8', command=extract_all, width=30)
+    extract_allbu = Button(a, text=language[105], activebackground='#ff7373', bg='#ffb8b8', command=extract_all, width=30)
     extract_allbu.grid(row=4, column=0)
 
-    extract_mdlbu = Button(a, text='extract all mdl', activebackground='#cf7dff', bg='#e2b0ff', width=30)
+    extract_mdlbu = Button(a, text=language[106], activebackground='#cf7dff', bg='#e2b0ff', width=30)
     extract_mdl = partial(extract_type, '.mdl', extract_mdlbu)
     extract_mdlbu.config(command=extract_mdl)
     extract_mdlbu.grid(row=4, column=1)
 
-    extract_binbu = Button(a, text='extract all bin', activebackground='#8afff3', bg='#bffff8', width=30)
+    extract_binbu = Button(a, text=language[107], activebackground='#8afff3', bg='#bffff8', width=30)
     extract_bin = partial(extract_type, '.bin', extract_binbu)
     extract_binbu.config(command=extract_bin)
     extract_binbu.grid(row=4, column=2)
 
-    explorer_extractbu = Button(a, text='Open file explorer', activebackground='#96c7ff', bg='#c4e0ff', command=explorer_extract, width=30)
+    explorer_extractbu = Button(a, text=language[30], activebackground='#96c7ff', bg='#c4e0ff', command=explorer_extract, width=30)
     explorer_extractbu.grid(row=5, column=0)
 
-    extract_cmpbu = Button(a, text='extract all cmp', activebackground='#ff70ec', bg='#ffbdf6', width=30)
+    extract_cmpbu = Button(a, text=language[108], activebackground='#ff70ec', bg='#ffbdf6', width=30)
     extract_cmp = partial(extract_type, '.cmp', extract_cmpbu)
     extract_cmpbu.config(command=extract_cmp)
     extract_cmpbu.grid(row=5, column=1)
 
-    extract_motbu = Button(a, text='extract all mot', activebackground='#ffff7f', bg='#ffffc2', width=30)
+    extract_motbu = Button(a, text=language[109], activebackground='#ffff7f', bg='#ffffc2', width=30)
     extract_mot = partial(extract_type, '.mot', extract_motbu)
     extract_motbu.config(command=extract_mot)
     extract_motbu.grid(row=5, column=2)
@@ -157,24 +160,24 @@ def scan_directory():
             print(error)
             continue
 
-    file_compress_label = Label(a, text='file compress', font=300, bg='#dfffaa', height=2)
+    file_compress_label = Label(a, text=language[110], font=300, bg='#dfffaa', height=2)
     file_compress_label.grid(row=18, columnspan=20)
 
-    manual_explorerbu = Button(a, text='Open file explorer', command=explorer_compress, activebackground='#ffc773', bg='#ffe4bd', width=30)
+    manual_explorerbu = Button(a, text=language[30], command=explorer_compress, activebackground='#ffc773', bg='#ffe4bd', width=30)
     manual_explorerbu.grid(row=21, column=0)
 
-    manual_label = Label(a, text='Manual Compress ->', bg='#dfffaa', width=30)
+    manual_label = Label(a, text=f'{language[111]} ->', bg='#dfffaa', width=30)
     manual_label.grid(row=20, column=0)
 
     manual_entry = Entry(a, width=30)
     manual_entry.grid(row=20, column=1)
 
-    manual_button = Button(a, text='Compress', activebackground='#a9ff91', bg='#c9ffba', width=30)
+    manual_button = Button(a, text=language[112], activebackground='#a9ff91', bg='#c9ffba', width=30)
     manual_compress = partial(compress, manual_entry.get())
     manual_button.config(command=manual_compress)
     manual_button.grid(row=20, column=2)
 
-    compress_all_filesbu = Button(a, text='compress all files', command=compress_all, activebackground='#ff8c8c', bg='#ffc7c7', width=61)
+    compress_all_filesbu = Button(a, text=language[113], command=compress_all, activebackground='#ff8c8c', bg='#ffc7c7', width=61)
     compress_all_filesbu.grid(row=21, column=1, columnspan=2)
 
     i = 0
@@ -215,15 +218,15 @@ def open_explorer():  # change directory with C:\Windows\explorer.exe GUI
 
 
 cwd = os.getcwd()
-text_label = Label(a, text='Current working directory is : ', bg='#dfffaa', width=30)
+text_label = Label(a, text=language[29], bg='#dfffaa', width=30)
 text_label.grid(row=0, column=0)
 cwd_label = Label(a, text=cwd, bg='#dfffaa', width=60, anchor='w')
 cwd_label.grid(row=0, column=1, columnspan=2)
 entry_dir = Entry(a, width=30)
 entry_dir.grid(row=1, column=1)
-refreshbu = Button(a, text='Enter', command=change_directory, activebackground='#ff9999', width=30)
+refreshbu = Button(a, text=language[40], command=change_directory, activebackground='#ff9999', width=30)
 refreshbu.grid(row=1, column=2)
-open_explorerbu = Button(a, text='Open file Explorer', command=open_explorer, activebackground='#96c7ff', width=15)
+open_explorerbu = Button(a, text=language[30], command=open_explorer, activebackground='#96c7ff', width=15)
 open_explorerbu.grid(row=1, column=0)
 scan_directory()
 a.mainloop()

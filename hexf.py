@@ -1,6 +1,10 @@
 import pyperclip
 import struct
 
+with open('#language.txt', 'r') as txt:
+    language = txt.read()
+    language = [''] + language.splitlines()
+
 
 def hex_float(number):
     try:
@@ -13,11 +17,11 @@ def hex_float(number):
     # add zeros to always make the value length to 8
     w = '0' * (8 - len(w)) + w[:8]
     pyperclip.copy(w)  # copy hex float number to clipboard
-    return f"copied to clipboard the value below\n{w}\n\n"
+    return f"{language[83]}\n{w}\n\n"
 
 
 
-print('Welcome ! this app is used to convert any number to hexadecimal float, size fixed to 4 bytes\n')
+print(language[94] + '\n')
 while True:  # forever
-    entry = input("decimal value : ")
+    entry = input(language[95])
     print(hex_float(entry))

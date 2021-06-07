@@ -1,29 +1,32 @@
 import os
-import sys
+import webbrowser
 from random import randint
 from subprocess import Popen
 from tkinter import Tk, Button, Label, Entry, Canvas, PhotoImage, DISABLED, OptionMenu, StringVar
 from tkinter.filedialog import askdirectory
 from winsound import PlaySound
-import webbrowser
 
 if ':\\Windows' in os.getcwd():
     os.chdir(os.environ['userprofile'] + '\\Desktop')
 
+with open('#language.txt', 'r') as txt:
+    language = txt.read()
+    language = [''] + language.splitlines()
+
 a = Tk()
-a.title("Mario Sports Mix Modding App")
+a.title(language[1])
 a.minsize(680, 495)
 a.maxsize(680, 495)
 a.config(bg="#aecfee")
 a.iconbitmap('C:\\Yosh\\msm.ico')
 
-run = ('Compress files in cwd (c.py)', 'Extract files in cwd (x.py)', 'Fix textures in cwd to v3 (tex3.py)',
-       'Decimal to hex-float (hexf.py)', "Hex-float to decimal (dec.py)", 'Read hex integer (int.py)',
-       "CaPiTaLiSe (rEtUrN-tExT.py)", "V a p o r w a v e (vaporwave.py)",
-       'Png texture replace no ext (p.py)', 'Encoded texture replace (t.py)', 'Png texture replace ext (png.py)'
+run = (f'{language[2]} (c.py)', f'{language[3]} (x.py)', f'{language[4]} (tex3.pyw)',
+       f'{language[5]} (hexf.py)', f'{language[6]} (dec.py)', f'{language[7]} (int.py)',
+       f'{language[8]} (rEtUrN-tExT.py)', f'{language[9]} (vaporwave.py)',
+       f'{language[10]} (p.py)', f'{language[11]} (t.py)', f'{language[12]} (png.py)'
        )
 RUN = StringVar()
-RUN.set("Instant Run Apps (no UI)")
+RUN.set(language[13])
 Run = OptionMenu(a, RUN, *run)
 Run["menu"].config(bg="#000000", fg='#ffffff')
 random = (
@@ -74,6 +77,7 @@ def question_mark():
                 play(data[-1] + 1)
                 config.write(bytes(chr(data[-1] + 1), 'latin-1'))
             # tu regardes le dernier octet écrit et tu lances random[octet+1]
+            # it looks at the last byte and adds one, to play the list in loop
         else:
             config.seek(16)
             count = config.read(1)[0]
@@ -113,7 +117,7 @@ def enter():  # "Run Instant App (Enter)" Button
         current_cwd.configure(text=cwd)
     cwd_entry.delete(0, 'end')  # empties the entry and change current working directory if it exists
     os.chdir(cwd)
-    if app == "Instant Run Apps (no UI)":
+    if app == language[13]:
         return
     Popen(('wscript.exe', f"C:\\Yosh\\{os.path.splitext(app.split('(')[-1])[0]}.vbs"))
 
@@ -184,45 +188,45 @@ def shortcuts():
     Popen(('wscript.exe', "C:\\Yosh\\msmshortcuts.vbs"))
 
 
-ltitle = Label(a, text="Mario Sports Mix Modding App Menu", font=300, bg="#aecfee", height=3)
+ltitle = Label(a, text=language[14], font=300, bg="#aecfee", height=3)
 ltitle.grid(row=0, columnspan=3)
-lp = Button(a, text="Pack (Dump Textures before)", state=DISABLED, command=pack, width=30)
+lp = Button(a, text=language[15], state=DISABLED, command=pack, width=30)
 lp.grid(row=3, column=0)
-lt = Button(a, text="THP Compressor", state=DISABLED, command=thp, width=30)
+lt = Button(a, text=language[16], state=DISABLED, command=thp, width=30)
 lt.grid(row=3, column=1)
-lbrsar = Button(a, text="Every Game Brsar Patcher", command=brsar, width=30)
+lbrsar = Button(a, text=language[17], command=brsar, width=30)
 lbrsar.grid(row=3, column=2)
 l1 = Label(a, text="", bg="#aecfee", width=35)
 l1.grid(row=4, column=1)
-llh = Button(a, text="MSM files extract and compress", command=lh, width=30)
+llh = Button(a, text=language[18], command=lh, width=30)
 llh.grid(row=5, column=0)
-lweb = Button(a, text="Website", command=web, width=30)
+lweb = Button(a, text=language[19], command=web, width=30)
 lweb.grid(row=5, column=1)
-lisox = Button(a, text="MSM iso/wbfs extract and compress", command=isox, width=30)
+lisox = Button(a, text=language[20], command=isox, width=30)
 lisox.grid(row=5, column=2)
 l2 = Label(a, text="", bg="#aecfee")
 l2.grid(row=6)
-ldump = Button(a, text="Dump Textures", command=dump, width=30)
+ldump = Button(a, text=language[21], command=dump, width=30)
 ldump.grid(row=7, column=0)
-liso = Button(a, text="MSM iso patcher (soon)", state=DISABLED, command=iso, width=30)
+liso = Button(a, text=language[22], state=DISABLED, command=iso, width=30)
 liso.grid(row=7, column=1)
-larc = Button(a, text="MSM arc extract and compress", command=arc, width=30)
+larc = Button(a, text=language[23], command=arc, width=30)
 larc.grid(row=7, column=2)
 l3 = Label(a, text="", bg="#aecfee")
 l3.grid(row=8, column=1)
-lbstick = Button(a, text="Change bstick colour", command=bstick, width=30)
+lbstick = Button(a, text=language[24], command=bstick, width=30)
 lbstick.grid(row=9, column=0)
-ltex = Button(a, text="Encode png to tex0", command=tex, width=30)
+ltex = Button(a, text=language[25], command=tex, width=30)
 ltex.grid(row=9, column=1)
-lmappyw = Button(a, text="MSM Symbol Map Viewer", command=mappyw, width=30)
+lmappyw = Button(a, text=language[26], command=mappyw, width=30)
 lmappyw.grid(row=9, column=2)
 l4 = Label(a, text="", bg="#aecfee")
 l4.grid(row=10)
-lrandom = Button(a, text="????", command=question_mark, width=30)
+lrandom = Button(a, text=language[27], command=question_mark, width=30)
 lrandom.grid(row=11, column=0)
 Run.config(width=30)
 Run.grid(row=11, column=1)
-ltrib = Button(a, text="Change root bone attributes", command=trib, width=30)
+ltrib = Button(a, text=language[28], command=trib, width=30)
 ltrib.grid(row=11, column=2)
 
 
@@ -460,23 +464,23 @@ else:
     no_color()
 l5 = Label(a, text="", bg="#aecfee")
 l5.grid(row=12)
-lcwd = Label(a, text="Current working directory is :", bg="#aecfee")
+lcwd = Label(a, text=language[29], bg="#aecfee")
 lcwd.grid(row=13, column=0)
 current_cwd = Label(a, text=os.getcwd(), bg="#aecfee", width=70, anchor='w')
 current_cwd.grid(row=13, column=1, columnspan=3)
 cwd_entry = Entry(a, width=30)
 cwd_entry.grid(row=14, column=1)
-dirbutton = Button(a, text='Open file Explorer', command=change_directory, activebackground='#96c7ff', width=30)
+dirbutton = Button(a, text=language[30], command=change_directory, activebackground='#96c7ff', width=30)
 dirbutton.grid(row=14, column=0)
-lenter = Button(a, text="Run Instant App (Enter)", command=enter, activebackground="#a9ff91")
+lenter = Button(a, text=language[31], command=enter, activebackground="#a9ff91")
 lenter.grid(row=14, column=2)
-me = Label(a, text="Made by Yosh", bg="#aecfee")
+me = Label(a, text=language[32], bg="#aecfee")
 me.grid(row=15, column=1)
-lhelp = Button(a, text="Help", activebackground="#a9ff91", command=msmhelp, width=25)
+lhelp = Button(a, text=language[33], activebackground="#a9ff91", command=msmhelp, width=25)
 lhelp.grid(row=16, column=1)
-lshortcuts = Button(a, text="Shortcuts", activebackground="#a9ff91", command=shortcuts, width=25)
+lshortcuts = Button(a, text=language[34], activebackground="#a9ff91", command=shortcuts, width=25)
 lshortcuts.grid(row=17, column=1)
-lconfig = Button(a, text="Config", activebackground="#ff9999", command=change_config, width=25)
+lconfig = Button(a, text=language[35], activebackground="#ff9999", command=change_config, width=25)
 lconfig.grid(row=18, column=1)
 msm1 = Canvas(a, width=216, height=148, bd=-2, bg="#aecfee")
 msm_msm = PhotoImage(file="C:\\Yosh\\msm.png")
