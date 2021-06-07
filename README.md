@@ -19,7 +19,7 @@ bstick.pyw ------ Change bstick colour
 
 c.py ------------- Compress files in cwd
 
-dump.py --------- Dump all textures to png
+dump.py -------- Dump all textures to png
 
 hexf.py --------- Convert decimal to hex-float
 
@@ -27,11 +27,11 @@ isox.py --------- MSM iso/wbfs extract and compress
 
 lh.py ----------- MSM files extract and compress
 
-map.pyw --------- MSM Symbol Map Viewer
+map.pyw -------- MSM Symbol Map Viewer
 
-msm.pyw --------- Mario Sports Mix Modding App Menu
+msm.pyw -------- Mario Sports Mix Modding App Menu
 
-msmhelp.pyw ----- Help pictures I made
+msmhelp.pyw ---- Help pictures I made
 
 msmshortcuts.pyw- Shortcuts (file name and full title)
 
