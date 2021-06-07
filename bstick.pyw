@@ -1,7 +1,6 @@
 # coding: latin-1
 # ^ else every byte above 0x7f will be encoded in utf-8 (oof)
 import os
-import sys
 import webbrowser
 from functools import partial
 from subprocess import Popen
