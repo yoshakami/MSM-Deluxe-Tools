@@ -349,24 +349,6 @@ def step4_local():
     #    os.system(f'xcopy "{el}" Yosh /i /y /q')
     # for el in png:
     #    os.system(f'del "{el}"')
-    with open('./Yosh/msm.pyw', 'r+') as msmp:
-        msm_data = msmp.read()
-        msm_data = msm_data.splitlines()
-        new_data = ''
-        for line in msm_data:
-            if "Popen(('wscript.exe', " in line:
-                line_os = line.split('"')[1]
-                script = line_os.split(".")[0][10:] # removes C:\\Yosh\\
-                if script == '{os':
-                    new_data += '''    Popen((sys.executable.rstrip("w.exe")+".exe", f"C:\\\\Yosh\\\\{os.path.splitext(app.split('(')[-1])[0]}.py"))\n'''
-                    continue
-                print('.\\Yosh\\'+script+'.py') # -> '.\Yosh\\pack.py' not sure about that double slash but it works lol
-                if os.path.exists('.\\Yosh\\'+script+'.py'):
-                    new_data += f'    Popen((sys.executable.rstrip("w.exe")+".exe", "{line_os.split(".")[0]}.py"))\n'
-                else:
-                    new_data += f'    Popen((sys.executable, "{line_os.split(".")[0]}.pyw"))\n'
-            else:
-                new_data += line + '\n'
     try:
         for el in delete:
             os.remove(el)
@@ -378,7 +360,7 @@ def step4_local():
     #    default_file.seek(0x187)
     #    path = default_file.read(10)  # C:\\Yosh\\
     #    print(path)
-    path = b'C:\\\\Yosh\\\\'
+    path = 'C:\\\\Yosh\\\\'
     with open('./Yosh/msm.pyw', 'r+') as msmp:
         msm_data = msmp.read()
         msm_data = msm_data.splitlines()
@@ -390,7 +372,7 @@ def step4_local():
                 if script == '{os':
                     new_data += '''    Popen((sys.executable.rstrip("w.exe")+".exe", f"C:\\\\Yosh\\\\{os.path.splitext(app.split('(')[-1])[0]}.py"))\n'''
                     continue
-                print('.\\Yosh\\'+script+'.py') # -> '.\Yosh\\pack.py' not sure about that double slash but it works lol
+                # print('.\\Yosh\\'+script+'.py') # -> '.\Yosh\pack.py'
                 if os.path.exists('.\\Yosh\\'+script+'.py'):
                     new_data += f'    Popen((sys.executable.rstrip("w.exe")+".exe", "{line_os.split(".")[0]}.py"))\n'
                 else:
@@ -402,9 +384,20 @@ def step4_local():
     os.remove('./Yosh/msm.pyw')
     for filee in os.listdir('./Yosh/'):
         if os.path.splitext(filee)[-1] in ['.pyw', '.py']:
-            with open(f'./Yosh/{filee}', 'r+b') as filoc:
+            with open(f'./Yosh/{filee}', 'r+') as filoc:
                 content = filoc.read()
-                ignore = []
+
+                content = content.splitlines()
+                new_data = ''
+                for line in content:
+                    if path in line:
+                        new_data += line.split(path)[0] + line.split(path)[-1] + '\n'
+                    else:
+                        new_data += line + '\n'
+                filoc.seek(0)
+                filoc.write(new_data)
+
+                """ignore = [] # there's an easier method above
                 for i in range(len(content) - 9):
                     filoc.seek(i)
                     if filoc.read(10) != path:
@@ -424,7 +417,7 @@ def step4_local():
                             py.write(content[offset:index])
                         else:
                             i = 1
-                    py.write(content[index:])
+                    py.write(content[index:])"""
     a.quit()
 
 
@@ -433,12 +426,15 @@ def step4_other(remove_ico):
         data = bstick.read()
         data = data.splitlines()
         new_data = ''
-        # position = 0
         for line in data:
-            if line == "    Popen('C:\\\\Yosh\\\\bstick.exe')":
-                new_data += "    Popen((sys.executable, 'bstick.pyw'))\n"
+            if line == '    Popen(("wscript.exe", "Z:\\Yosh\\bstick.vbs"))':
+                new_data += '    # Popen(("wscript.exe", "Z:\\Yosh\\bstick.vbs"))\n'
+            elif line == '    # Popen((sys.executable, "C:\\Yosh\\bstick.pyw"))':
+                new_data += '    Popen((sys.executable, "C:\\Yosh\\bstick.pyw"))\n'
             else:
                 new_data += line + '\n'
+        bstick.seek(0)
+        bstick.write(new_data)
             # position += len(line)
             #    print(position)
     # for el in png:
@@ -455,7 +451,7 @@ def step4_other(remove_ico):
     #    default_file.seek(0x132)
     #    path = default_file.read(10)
     #    print(path)
-    path = b'C:\\\\Yosh\\\\'
+    path = 'C://Yosh//'
     with open('./Yosh/msm.pyw', 'r+') as msmp:
         msm_data = msmp.read()
         msm_data = msm_data.splitlines()
@@ -463,8 +459,13 @@ def step4_other(remove_ico):
         for line in msm_data:
             if "Popen(('wscript.exe', " in line:
                 line_os = line.split('"')[1]
-                if os.path.exists(f'./Yosh/{line_os.split(".")[0]}.py'):
-                    new_data += f'    Popen((sys.executable, "{line_os.split(".")[0]}.py"))\n'
+                script = line_os.split(".")[0][10:]  # removes C:\\Yosh\\
+                if script == '{os':
+                    new_data += """    Popen((sys.executable.rstrip("w.exe")+".exe", f"C:\\\\Yosh\\\\{os.path.splitext(app.split('(')[-1])[0]}.py"))\n"""
+                    continue
+                # print('.\\Yosh\\' + script + '.py')  # -> '.\Yosh\pack.py'
+                if os.path.exists('./Yosh/' + script + '.py'):
+                    new_data += f'    Popen((sys.executable.rstrip("w.exe")+".exe", "{line_os.split(".")[0]}.py"))\n'
                 else:
                     new_data += f'    Popen((sys.executable, "{line_os.split(".")[0]}.pyw"))\n'
             else:
@@ -488,15 +489,34 @@ def step4_other(remove_ico):
 
     for filee in os.listdir('./Yosh/'):  # replaces opening paths
         if os.path.splitext(filee)[-1] in ['.pyw', '.py']:
-            with open(f'./Yosh/{filee}', 'r+b') as filoc:
+            print(filee)
+            with open(f'./Yosh/{filee}', 'r+') as filoc:
                 content = filoc.read()
-                ignore = []
-                for i in range(len(content) - 9):
+                content = content.replace('\\', '/')  # unix systems only support front slashes
+                content = content.replace('/n', '\\n') # lmao I like the snowball effect
+                filoc.seek(0)
+                filoc.write(content)
+
+                content = content.splitlines()
+                new_data = ''
+                for line in content:
+                    if path in line:
+                        new_data += line.split(path)[0] + line.split(path)[-1] + '\n'
+                    else:
+                        new_data += line + '\n'
+                filoc.seek(0)
+                filoc.write(new_data)
+
+                """ignore = [] 
+                for i in range(len(content) - 9): # for some reason, the two last lines of each file get duplicated while it's the same code as local, WTF.
                     filoc.seek(i)
-                    if filoc.read(10) != path:
-                        continue
-                    ignore.append(i)
-                    ignore.append(i + 10)
+                    #if filoc.read(10) != path:
+                    #    continue
+                    if filoc.read(10) == path:
+                        filoc.seek(i)
+                        print(i, filoc.read(10))
+                        ignore.append(i)
+                        ignore.append(i + 10)
             if ignore != []:
                 with open(f'./Yosh/{filee}', 'wb') as py:
                     i = 0
@@ -511,10 +531,13 @@ def step4_other(remove_ico):
                         else:
                             i = 1
                     py.write(content[index:])
+                    print(content[index:])
+                    print(content[offset:])
+                    print(content[offset:index])"""
         if os.path.splitext(filee)[-1] == '.ico' and remove_ico:
-            os.remove(f".\\Yosh\\{filee}")
+            os.remove(f"./Yosh/{filee}")
         if os.path.splitext(filee)[-1] in ['.exe', '.bat', '.vbs', '.lnk']:
-            os.remove(f".\\Yosh\\{filee}")
+            os.remove(f"./Yosh/{filee}")
     a.quit()
 
 
@@ -588,7 +611,7 @@ def step3_other(remove_ico):
     a.config(bg="#aecfee")
     for everything in a.winfo_children():
         everything.destroy()
-    os.system('Yosh\\how-to-run-msm.png')
+    # os.system('./Yosh/how-to-run-msm.png')  # this picture is only for windows
     try:
         for element in jpg:
             os.remove(element)
