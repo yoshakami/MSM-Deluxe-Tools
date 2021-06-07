@@ -43,8 +43,8 @@ a.config(bg="#aecfee")
 
 w = a.winfo_screenwidth()
 h = a.winfo_screenheight()
-print(f"Welcome to the console!\nHere you can see what's happening behind the installer\nthe buttons are just here to separate actions to let them finish")
-print("When you'll click on 'I agree', it will resize 18 jpg to your screen dimensions ({w}x{h})\n")
+print("Welcome to the console!\nHere you can see what's happening behind the installer\nthe buttons are just here to separate actions to let them finish")
+print(f"When you'll click on 'I agree', it will resize 18 jpg to your screen dimensions ({w}x{h})\n")
 print("During the installation, it will extract zips and move its content to your directory installation path\nit'll also delete useless data (except the installer as it can't delete itself lol)")
 print("the installer will add the installation directory to PATH, so scripts will be able to be launched from everywhere !\n")
 jpg = ['msma.jpg', 'msmb.jpg', 'r.png', 'r2.png', 'r3.png', 'r4.png', 'r5.png', 'r6.png', 'r7.png', 'r8.png', 'r9.png',
@@ -162,7 +162,7 @@ def step4_drive(letter, clean_inst):
     else:
         no_exe = True
 
-    if clean_inst:
+    if clean_inst() == '1':
         if os.path.exists(f"{letter}:\\Yosh"):
             shutil.rmtree(f"{letter}:\\Yosh")
         shutil.copytree('Yosh', f"{letter}:\\Yosh")
@@ -231,7 +231,7 @@ def step4_appdata(clean_inst):
     else:
         no_exe = True
 
-    if clean_inst:
+    if clean_inst() == '1':
         if os.path.exists(f"{os.environ['APPDATA']}\\Yosh"):
             shutil.rmtree(f"{os.environ['APPDATA']}\\Yosh")
         shutil.copytree('Yosh', f"{os.environ['APPDATA']}\\Yosh")
@@ -365,7 +365,7 @@ def step4_other(remove_ico):
     with open('./Yosh/msm.py', "w") as msmpy:
         msmpy.write(new_data)
     os.remove("./Yosh/msm.pyw")
-    if remove_ico:
+    if remove_ico() == '1':
         for file2 in os.listdir('./Yosh/'):
             if os.path.splitext(file2)[-1] in ['.pyw', '.py']:
                 with open(f'./Yosh/{file2}', 'r+') as filoc:
@@ -377,7 +377,7 @@ def step4_other(remove_ico):
                             continue
                         new_data += line + '\n'
 
-                with open(f'./Yosh/{filee}', 'w') as py:
+                with open(f'./Yosh/{file2}', 'w') as py:
                     py.write(new_data)
 
     for filee in os.listdir('./Yosh/'):  # replaces opening paths
@@ -401,7 +401,7 @@ def step4_other(remove_ico):
             with open(f'./Yosh/{filee}', 'w') as py:
                 py.write(new_data)
 
-        if os.path.splitext(filee)[-1] == '.ico' and remove_ico:
+        if os.path.splitext(filee)[-1] == '.ico' and remove_ico() == '1':
             os.remove(f"./Yosh/{filee}")
         if os.path.splitext(filee)[-1] in ['.exe', '.bat', '.vbs', '.lnk']:
             os.remove(f"./Yosh/{filee}")
@@ -434,7 +434,7 @@ def step3_drive(letter, clean_inst):
 
 
 def step3_appdata(clean_inst):
-    print('clean_inst = ' + clean_inst + clean_inst == True)
+    # print(clean_inst, clean_inst(), type(clean_inst()), clean_inst == '1')
     a.config(bg="#aecfee")
     appdata = f'{os.environ["APPDATA"]}\\Yosh'
     print(f"installing to {appdata}")
@@ -478,7 +478,7 @@ def step3_local():
 
 
 def step3_other(remove_ico):
-    print('remove_ico =' + remove_ico + remove_ico == True)
+    # print(remove_ico, remove_ico(), type(remove_ico()), remove_ico() == '1', remove_ico() == ('1'), sep='\n')
     a.config(bg="#aecfee")
     for everything in a.winfo_children():
         everything.destroy()
@@ -530,27 +530,19 @@ def step2():
         new_pic.save(f"./Yosh/{png[i]}")
         pic.close()
 
-    def return_clean():
-        return clean.get()
-    getclean = partial(return_clean)
-
-    appdata = partial(step3_appdata, getclean)
+    appdata = partial(step3_appdata, clean.get)
     path_appdata2 = Button(a, text="%AppData%\\Yosh", command=appdata, bg="#91ffc8", activebackground="#91ffc8", width=30)
     path_appdata2.grid(row=7, column=0)
     path_local2 = Button(a, text="Local (movable directory)\\Yosh", command=step3_local, bg="#ff9999", activebackground="#ff7f7f", width=30)
     path_local2.grid(row=7, column=1)
-
-    def return_ico():
-        return ico.get()
-    getico = partial(return_ico)
-    other = partial(step3_other, getico)
+    other = partial(step3_other, ico.get)
     path_other2 = Button(a, text="Other OS than Windows", command=other, width=30)
     path_other2.grid(row=7, column=2)
 
     def verify(drive_letter, index):
         if os.path.exists(f'{drive_letter}:\\'):
             a.config(bg="#aecfee")
-            step3_drive(drive_letter, getclean)
+            step3_drive(drive_letter, clean.get)
         else:
             button_list[index].destroy()
 
