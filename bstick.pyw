@@ -343,9 +343,9 @@ def launch_photo():
 
 
 def bstick():
-    Popen('C:\\Yosh\\bstick.exe')
-    # Popen(("wscript.exe", "C:\\Yosh\\bstick.vbs"))
+    Popen(("wscript.exe", "C:\\Yosh\\bstick.vbs"))
     # Popen((sys.executable, "C:\\Yosh\\bstick.pyw"))
+    # Popen('C:\\Yosh\\bstick.exe')
     a.quit()
 
 

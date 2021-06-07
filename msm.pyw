@@ -106,8 +106,6 @@ def play(num):
 
 def enter():  # "Run Instant App (Enter)" Button
     app = RUN.get()
-    if app != "Instant Run Apps (no UI)":
-        Popen(('wscript.exe', f"C:\\Yosh\\{os.path.splitext(app.split('(')[-1])[0]}.vbs"))
     cwd = cwd_entry.get()
     if cwd == '':
         cwd = os.getcwd()  # returns current working directory
@@ -115,6 +113,9 @@ def enter():  # "Run Instant App (Enter)" Button
         current_cwd.configure(text=cwd)
     cwd_entry.delete(0, 'end')  # empties the entry and change current working directory if it exists
     os.chdir(cwd)
+    if app == "Instant Run Apps (no UI)":
+        return
+    Popen(('wscript.exe', f"C:\\Yosh\\{os.path.splitext(app.split('(')[-1])[0]}.vbs"))
 
 
 def change_directory():  # executed when you press "Open FIle Explorer" button
