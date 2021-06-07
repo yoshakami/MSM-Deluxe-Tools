@@ -41,13 +41,13 @@ png.py -------------- Png texture replace (CLI with png extension)
 
 rEtUrN-tExT.py ----- CaPiTaLiSe
 
-t.py ---------------- Encoded texture replace (CLI)
+t.py ----------------- Encoded texture replace (CLI)
 
-tex.py -------------- Encode png to tex0
+tex.py --------------- Encode png to tex0
 
-tex3.py ------------- Fix all textures to version 3
+tex3.py -------------- Fix all textures to version 3
 
-trib.py ------------- Change root bone attributes
+trib.py --------------- Change root bone attributes
 
 vaporwave.py -------- V a p o r w a v e
 
