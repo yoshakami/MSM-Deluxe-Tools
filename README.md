@@ -3,7 +3,8 @@ Set of more than 20 python scripts used to edit Mario Sports Mix files or any Wi
 
 I wrote these scripts alone and keep maintaining them up to date by adding new scripts/fixing bugs/adding features/cleaning code
 
-You will need <a href="https://szs.wiimm.de/download.html#vers">Wiimms SZS Tools</a>, <a href="https://wit.wiimm.de/download.html#vers">Wiimms ISO Tools</a>, and <a href="https://www.python.org/downloads/release/python-392#files">python 3.X</a>
+You will need <a href="https://szs.wiimm.de/download.html#vers">Wiimms SZS Tools</a>, <a href="https://wit.wiimm.de/download.html#vers">Wiimms ISO Tools</a>, and <a href="https://www.python.org/downloads/release/python-392#files">python 3.X</a>.
+
 for the modules pyperclip, win10toast and Pillow, the installer should install them automatically. If not, in cmd or your terminal type ```pip install pyperclip```, ```pip install win10toast```  and ```pip install Pillow```
 
 if you plan looking at the source code, be aware that they are written to be used in C:/Yosh. the installer's job is to edit these paths (and also add assets)
