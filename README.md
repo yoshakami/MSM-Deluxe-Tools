@@ -5,16 +5,23 @@ I wrote these scripts alone and keep maintaining them up to date by adding new s
 
 You will need <a href="https://szs.wiimm.de/download.html#vers">Wiimms SZS Tools</a>, <a href="https://wit.wiimm.de/download.html#vers">Wiimms ISO Tools</a>, and <a href="https://www.python.org/downloads/release/python-392#files">python 3.X</a>.
 
-for the modules pyperclip, win10toast and Pillow, the installer should install them automatically. If not, in cmd or your terminal type ```pip install pyperclip```, ```pip install win10toast```  and ```pip install Pillow```
+for the modules pyperclip, win10toast and Pillow, the installer should install them automatically. If not, in cmd or your terminal type 
+```python" -m pip install --upgrade pip
+pip install Pillow
+pip install requests
+pip install pyperclip
+pip install win10toast
+pip install win10toast_click``` (linux users have to do it with pip3, and probably install tkinter)
 
 if you plan looking at the source code, be aware that they are written to be used in C:/Yosh. the installer's job is to edit these paths (and also add assets)
 the reason why path is not relative is because the tools are being added to %path% environment variable, in order to be used everywhere
-you can easily change the language with #lang.txt
+you can easily change the language with #language.txt or from the main menu
 
-They all have a special utility, sometimes it's just for fun, or very useful
+All scripts have a special utility, sometimes it's just for fun, or very useful
 
-they are all independent scripts, they just need to access the config file named 'a' (bstick + checkbuttons), or some png (especially for msmhelp, I made all these png)
+they are all independent scripts, they just need to access the config file named 'a' (bstick + checkbuttons), or some png (especially for msmhelp, I made all these png) and of course the icons and #language.txt
 
+if you want to know what's happening when you launch an app by the explorer navbar, it simply run an exe that will run a vbs which will state wether or not the app needs a console, make that console associated with the app on the taskbar, and will make it an alone process by launching a .lnk shortcut file of the python script, so there's a custom icon on the taskbar
 
 arc.py ----------- arc extract and compress, creates U8 archive with/without compression
 
@@ -46,6 +53,8 @@ png.py -------------- Png texture replace (CLI with png extension)
 
 rEtUrN-tExT.py ----- CaPiTaLiSe
 
+sizeC.pyw ----------- Prints C:\pagefile.sys, C:\hiberfil.sys, and C:\swapfile.sys filesize
+
 t.py ----------------- Encoded texture replace (CLI)
 
 tex.py --------------- Encode png to tex0
@@ -59,3 +68,5 @@ vaporwave.py ------- V a p o r w a v e
 web.pyw ------------ Website
 
 x.py ----------------- Extract files in cwd
+
+yt.pyw --------------- YT Videos Thumbnails Download
