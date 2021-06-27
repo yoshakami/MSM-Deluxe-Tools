@@ -11,7 +11,9 @@ pip install Pillow
 pip install requests
 pip install pyperclip
 pip install win10toast
-pip install win10toast_click``` (linux users have to do it with pip3, and probably install tkinter)
+pip install win10toast_click
+```
+(linux users have to do it with pip3, and probably install tkinter)
 
 if you plan looking at the source code, be aware that they are written to be used in C:/Yosh. the installer's job is to edit these paths (and also add assets)
 the reason why path is not relative is because the tools are being added to %path% environment variable, in order to be used everywhere
