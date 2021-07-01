@@ -6,15 +6,17 @@ from tkinter.filedialog import askopenfilename, askdirectory
 if ':\\Windows' in os.getcwd():
     os.chdir(os.environ['userprofile'] + '\\Desktop')
 
-with open('#language.txt', 'r') as txt:
+with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
     language = txt.read()
     language = [''] + language.splitlines()
 
+start = int(language[1].split(":")[13])
+msm = int(language[1].split(":")[1])
 a = Tk()
-a.title(language[103])
+a.title(language[start])
 a.minsize(660, 440)
 a.config(bg='#dfffaa')
-a.iconbitmap('C:\\Yosh\\lh.ico')
+a.iconbitmap('C:\\Yosh\\msm_stuff\\lh.ico')
 
 thrice = [b'U\xaa8-', b'bres', b'\x00 \xaf0', b'\x00\x00\x00\x00']  # arc, brres, tpl and rso files
 twice = thrice[:2]
@@ -114,30 +116,30 @@ def scan_directory():
         compress(brres)
         button_list2[num].destroy()
 
-    file_extract_label = Label(a, text=language[104], font=300, bg='#dfffaa', height=2, width=45)
+    file_extract_label = Label(a, text=language[start + 1], font=300, bg='#dfffaa', height=2, width=45)
     file_extract_label.grid(row=2, columnspan=20)
-    extract_allbu = Button(a, text=language[105], activebackground='#ff7373', bg='#ffb8b8', command=extract_all, width=30)
+    extract_allbu = Button(a, text=language[start + 2], activebackground='#ff7373', bg='#ffb8b8', command=extract_all, width=30)
     extract_allbu.grid(row=4, column=0)
 
-    extract_mdlbu = Button(a, text=language[106], activebackground='#cf7dff', bg='#e2b0ff', width=30)
+    extract_mdlbu = Button(a, text=language[start + 3], activebackground='#cf7dff', bg='#e2b0ff', width=30)
     extract_mdl = partial(extract_type, '.mdl', extract_mdlbu)
     extract_mdlbu.config(command=extract_mdl)
     extract_mdlbu.grid(row=4, column=1)
 
-    extract_binbu = Button(a, text=language[107], activebackground='#8afff3', bg='#bffff8', width=30)
+    extract_binbu = Button(a, text=language[start + 4], activebackground='#8afff3', bg='#bffff8', width=30)
     extract_bin = partial(extract_type, '.bin', extract_binbu)
     extract_binbu.config(command=extract_bin)
     extract_binbu.grid(row=4, column=2)
 
-    explorer_extractbu = Button(a, text=language[30], activebackground='#96c7ff', bg='#c4e0ff', command=explorer_extract, width=30)
+    explorer_extractbu = Button(a, text=language[msm + 19], activebackground='#96c7ff', bg='#c4e0ff', command=explorer_extract, width=30)
     explorer_extractbu.grid(row=5, column=0)
 
-    extract_cmpbu = Button(a, text=language[108], activebackground='#ff70ec', bg='#ffbdf6', width=30)
+    extract_cmpbu = Button(a, text=language[start + 5], activebackground='#ff70ec', bg='#ffbdf6', width=30)
     extract_cmp = partial(extract_type, '.cmp', extract_cmpbu)
     extract_cmpbu.config(command=extract_cmp)
     extract_cmpbu.grid(row=5, column=1)
 
-    extract_motbu = Button(a, text=language[109], activebackground='#ffff7f', bg='#ffffc2', width=30)
+    extract_motbu = Button(a, text=language[start + 6], activebackground='#ffff7f', bg='#ffffc2', width=30)
     extract_mot = partial(extract_type, '.mot', extract_motbu)
     extract_motbu.config(command=extract_mot)
     extract_motbu.grid(row=5, column=2)
@@ -145,11 +147,13 @@ def scan_directory():
     i = 0
     for file_to_extract in os.listdir('./'):
         try:
-            size = os.path.getsize(file_to_extract)
-            if os.path.isfile(file_to_extract) or size > 4 or i < 96:
+            if os.path.isfile(file_to_extract):
+                size = os.path.getsize(file_to_extract)
+                if size < 5 or i > 96:
+                    continue
                 with open(file_to_extract, 'rb') as check_xfile:
-                    header = check_xfile.read(1)
-                if header in [b'@', b'\x10', b'\x11', b'\x81', b'\x82', b'$', b'(', b'0', b'P']:  # lh @, old lz \x10, lz77 \x11, diff8 \x81, diff16 \x82, huff4 $, huff8 (, runlength 0, lrc P
+                    header = check_xfile.read(4)
+                if header[0] in [b'@', b'\x10', b'\x11', b'\x81', b'\x82', b'$', b'(', b'0', b'P'] and header != b'PK\x03\x04':  # lh @, old lz \x10, lz77 \x11, diff8 \x81, diff16 \x82, huff4 $, huff8 (, runlength 0, lrc P
                     i += 1
                     run_extract_file = partial(extract_file, file_to_extract, i)
                     temp = Button(a, text=file_to_extract, command=run_extract_file, activebackground='#a9ff99', width=30)
@@ -160,31 +164,33 @@ def scan_directory():
             print(error)
             continue
 
-    file_compress_label = Label(a, text=language[110], font=300, bg='#dfffaa', height=2)
+    file_compress_label = Label(a, text=language[start + 7], font=300, bg='#dfffaa', height=2)
     file_compress_label.grid(row=18, columnspan=20)
 
-    manual_explorerbu = Button(a, text=language[30], command=explorer_compress, activebackground='#ffc773', bg='#ffe4bd', width=30)
+    manual_explorerbu = Button(a, text=language[msm + 19], command=explorer_compress, activebackground='#ffc773', bg='#ffe4bd', width=30)
     manual_explorerbu.grid(row=21, column=0)
 
-    manual_label = Label(a, text=f'{language[111]} ->', bg='#dfffaa', width=30)
+    manual_label = Label(a, text=f'{language[start + 8]} ->', bg='#dfffaa', width=30)
     manual_label.grid(row=20, column=0)
 
     manual_entry = Entry(a, width=30)
     manual_entry.grid(row=20, column=1)
 
-    manual_button = Button(a, text=language[112], activebackground='#a9ff91', bg='#c9ffba', width=30)
+    manual_button = Button(a, text=language[start + 9], activebackground='#a9ff91', bg='#c9ffba', width=30)
     manual_compress = partial(compress, manual_entry.get())
     manual_button.config(command=manual_compress)
     manual_button.grid(row=20, column=2)
 
-    compress_all_filesbu = Button(a, text=language[113], command=compress_all, activebackground='#ff8c8c', bg='#ffc7c7', width=61)
+    compress_all_filesbu = Button(a, text=language[start + 10], command=compress_all, activebackground='#ff8c8c', bg='#ffc7c7', width=61)
     compress_all_filesbu.grid(row=21, column=1, columnspan=2)
 
     i = 0
     for file_to_compress in os.listdir('./'):
         try:
-            size = os.path.getsize(file_to_compress)
-            if os.path.isfile(file_to_compress) and size > 4 and i < 96:
+            if os.path.isfile(file_to_compress):
+                size = os.path.getsize(file_to_compress)
+                if size < 5 or i > 96:
+                    continue
                 with open(file_to_compress, 'rb') as check_cfile:
                     header4 = check_cfile.read(4)
                 if header4 in thrice:
@@ -218,15 +224,15 @@ def open_explorer():  # change directory with C:\Windows\explorer.exe GUI
 
 
 cwd = os.getcwd()
-text_label = Label(a, text=language[29], bg='#dfffaa', width=30)
+text_label = Label(a, text=language[msm + 18], bg='#dfffaa', width=30)
 text_label.grid(row=0, column=0)
 cwd_label = Label(a, text=cwd, bg='#dfffaa', width=60, anchor='w')
 cwd_label.grid(row=0, column=1, columnspan=2)
 entry_dir = Entry(a, width=30)
 entry_dir.grid(row=1, column=1)
-refreshbu = Button(a, text=language[40], command=change_directory, activebackground='#ff9999', width=30)
+refreshbu = Button(a, text=language[msm + 40], command=change_directory, activebackground='#ff9999', width=30)
 refreshbu.grid(row=1, column=2)
-open_explorerbu = Button(a, text=language[30], command=open_explorer, activebackground='#96c7ff', width=15)
+open_explorerbu = Button(a, text=language[msm + 19], command=open_explorer, activebackground='#96c7ff', width=15)
 open_explorerbu.grid(row=1, column=0)
 scan_directory()
 a.mainloop()

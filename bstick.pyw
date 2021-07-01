@@ -12,15 +12,17 @@ from PIL import Image
 if ':\\Windows' in os.getcwd():
     os.chdir(os.environ['userprofile'] + '\\Desktop')
 
-with open('#language.txt', 'r') as txt:
+with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
     language = txt.read()
     language = [''] + language.splitlines()
 
+start = int(language[1].split(":")[7])
+msm = int(language[1].split(":")[1])
 a = Tk()
-a.title(language[52])
+a.title(language[start])
 a.minsize(660, 440)
 a.config(bg='#aaaaff')
-a.iconbitmap('C:\\Yosh\\bstick.ico')
+a.iconbitmap('C:\\Yosh\\msm_stuff\\bstick.ico')
 
 button_row = []
 for j in range(12, 26):
@@ -117,13 +119,13 @@ def change_file(name, index):  # changes the color in the brres or mdl0 given in
                 h.write(g)
                 break
     button_list[index].destroy()
-    patched = Label(a, text=language[53], bg='#aaaaff')
+    patched = Label(a, text=language[start + 1], bg='#aaaaff')
     patched.grid(row=button_row[index], column=button_col[index])
 
 
 def scan_directory():
     do_not_delete = [entry_dir, text_label, cwd_label, refreshbu, open_explorerbu, title, lcolour,
-                     colour_entry, colourbu, google_colourbu, preview, lred, lorange, lyellow, lchartreuse,
+                     colour_entry, colourbu, google_colorbu, preview, lred, lorange, lyellow, lchartreuse,
                      llight_green, lgreen, lgreen_cyan, lblue_cyan, lblue, lpurple, lfushia, lred_fushia,
                      empty, fix_colourcb, previewbu, lrestart, lwin,
                      lpreview1, lpreview2, lpreview3, lpreview4, lpreview5, lpreview6, lpreview7]
@@ -193,7 +195,7 @@ def change_bmp():
     bb = bytes(chr(temp), 'latin-1')
 
     colourbu.configure(text=hex_colour)
-    with open('C:\\Yosh\\bstick.bmp', 'r+b') as bmp:
+    with open('C:\\Yosh\\msm_stuff\\bstick.bmp', 'r+b') as bmp:
         ab = 397
         ae = b'\x00'
         bmp.seek(695)
@@ -216,8 +218,8 @@ def change_bmp():
                 bmp.write(bb)
                 bmp.write(gb)
                 bmp.write(rb)
-    bstick_image = Image.open('C:\\Yosh\\bstick.bmp')
-    bstick_image.save('C:\\Yosh\\bstick.png')
+    bstick_image = Image.open('C:\\Yosh\\msm_stuff\\bstick.bmp')
+    bstick_image.save('C:\\Yosh\\msm_stuff\\bstick.png')
     bstick_image.close()
     preview.destroy()
 
@@ -342,7 +344,7 @@ def fix_colour():
 
 
 def launch_photo():
-    os.system('C:\\Yosh\\bstick.png')
+    os.system('C:\\Yosh\\msm_stuff\\bstick.png')
 
 
 def bstick():
@@ -362,75 +364,74 @@ def win_colour_picker():
     change_bmp()
 
 
-text_label = Label(a, text=language[29], bg='#aaaaff', width=30)
+text_label = Label(a, text=language[msm + 18], bg='#aaaaff', width=30)
 text_label.grid(row=0, column=0)
-open_explorerbu = Button(a, text=language[30], command=open_explorer, activebackground='#96c7ff', width=15)
+open_explorerbu = Button(a, text=language[msm + 19], command=open_explorer, activebackground='#96c7ff', width=15)
 open_explorerbu.grid(row=1, column=0)
-cwd_label = Label(a, text=os.getcwd(), bg='#aaaaff', width=60, anchor='w')
+cwd_label = Label(a, text=os.getcwd(), bg='#aaaaff', width=60)
 cwd_label.grid(row=0, column=1, columnspan=2)
 entry_dir = Entry(a, width=30)
 entry_dir.grid(row=1, column=1)
-refreshbu = Button(a, text=language[40], command=change_directory, activebackground='#ff9999', width=30)
+refreshbu = Button(a, text=language[msm + 40], command=change_directory, activebackground='#ff9999', width=30)
 refreshbu.grid(row=1, column=2)
-title = Label(a, text=language[54], font=500, bg='#aaaaff', height=3)
+title = Label(a, text=language[start + 2], font=500, bg='#aaaaff', height=3)
 title.grid(row=2, columnspan=20)
-lcolour = Label(a, text=language[55], bg='#aaaaff', width=30)
+lcolour = Label(a, text=language[start + 3], bg='#aaaaff', width=30)
 lcolour.grid(row=5, column=0)
 colour_entry = Entry(a, width=30)
 colour_entry.grid(row=5, column=1)
-colourbu = Button(a, text=language[56], command=take_entry_hex, activebackground='#96c7ff', width=30)
+colourbu = Button(a, text=language[start + 4], command=take_entry_hex, activebackground='#96c7ff', width=30)
 colourbu.grid(row=5, column=2)
-google_colourbu = Button(a, text=language[57], command=google_colour_picker,
-                         activebackground='#96c7ff', width=98)
-google_colourbu.grid(row=6, column=0, columnspan=3)
-lred = Button(a, text=language[58], command=red, bg="#ff7f7f", activebackground="#ff7f7f", width=30)
+google_colorbu = Button(a, text=language[start + 5], command=google_colour_picker, activebackground='#96c7ff', width=98)
+google_colorbu.grid(row=6, column=0, columnspan=3)
+lred = Button(a, text=language[start + 6], command=red, bg="#ff7f7f", activebackground="#ff7f7f", width=30)
 lred.grid(row=7, column=0)
-lorange = Button(a, text=language[59], command=orange, bg="#ffbf7f", activebackground="#ffbf7f", width=30)
+lorange = Button(a, text=language[start + 7], command=orange, bg="#ffbf7f", activebackground="#ffbf7f", width=30)
 lorange.grid(row=7, column=1)
-lyellow = Button(a, text=language[60], command=yellow, bg="#ffff7f", activebackground="#ffff7f", width=30)
+lyellow = Button(a, text=language[start + 8], command=yellow, bg="#ffff7f", activebackground="#ffff7f", width=30)
 lyellow.grid(row=7, column=2)
-lchartreuse = Button(a, text=language[61], command=chartreuse, bg="#dfff7f", activebackground="#dfff7f", width=30)
+lchartreuse = Button(a, text=language[start + 9], command=chartreuse, bg="#dfff7f", activebackground="#dfff7f", width=30)
 lchartreuse.grid(row=8, column=0)
-llight_green = Button(a, text=language[62], command=light_green, bg="#9fff7f", activebackground="#bfff7f", width=30)
+llight_green = Button(a, text=language[start + 10], command=light_green, bg="#9fff7f", activebackground="#bfff7f", width=30)
 llight_green.grid(row=8, column=1)
-lgreen = Button(a, text=language[63], command=green, bg="#7fff7f", activebackground="#7fff7f", width=30)
+lgreen = Button(a, text=language[start + 11], command=green, bg="#7fff7f", activebackground="#7fff7f", width=30)
 lgreen.grid(row=8, column=2)
-lgreen_cyan = Button(a, text=language[64], command=green_cyan, bg="#7fffbf", activebackground="#7fffbf", width=30)
+lgreen_cyan = Button(a, text=language[start + 12], command=green_cyan, bg="#7fffbf", activebackground="#7fffbf", width=30)
 lgreen_cyan.grid(row=9, column=0)
-lblue_cyan = Button(a, text=language[65], command=blue_cyan, bg="#7fbfff", activebackground="#7fbfff", width=30)
+lblue_cyan = Button(a, text=language[start + 13], command=blue_cyan, bg="#7fbfff", activebackground="#7fbfff", width=30)
 lblue_cyan.grid(row=9, column=1)
-lblue = Button(a, text=language[66], command=blue, bg="#7f7fff", activebackground="#7f7fff", width=30)
+lblue = Button(a, text=language[start + 14], command=blue, bg="#7f7fff", activebackground="#7f7fff", width=30)
 lblue.grid(row=9, column=2)
-lpurple = Button(a, text=language[67], command=purple, bg="#bf7fff", activebackground="#bf7fff", width=30)
+lpurple = Button(a, text=language[start + 15], command=purple, bg="#bf7fff", activebackground="#bf7fff", width=30)
 lpurple.grid(row=10, column=0)
-lfushia = Button(a, text=language[68], command=fushia, bg="#ff7fff", activebackground="#ff7fff", width=30)
+lfushia = Button(a, text=language[start + 16], command=fushia, bg="#ff7fff", activebackground="#ff7fff", width=30)
 lfushia.grid(row=10, column=1)
-lred_fushia = Button(a, text=language[69], command=red_fushia, bg="#ff7fbf", activebackground="#ff7fc9", width=30)
+lred_fushia = Button(a, text=language[start + 17], command=red_fushia, bg="#ff7fbf", activebackground="#ff7fc9", width=30)
 lred_fushia.grid(row=10, column=2)
 empty = Label(a, text="", bg="#aaaaff", width=35)
 empty.grid(row=11, column=1)
-fix_colourcb = Checkbutton(a, text=language[70], command=fix_colour, bg="#aaaaff", width=20)
+fix_colourcb = Checkbutton(a, text=language[start + 18], command=fix_colour, bg="#aaaaff", width=20)
 fix_colourcb.grid(row=0, column=3)
-previewbu = Button(a, text=language[71], command=launch_photo, activebackground="#a9ff91", width=20)
+previewbu = Button(a, text=language[start + 19], command=launch_photo, activebackground="#a9ff91", width=20)
 previewbu.grid(row=1, column=3)
-lpreview1 = Label(a, text=language[72], bg='#aaaaff')
+lpreview1 = Label(a, text=language[start + 20], bg='#aaaaff')
 lpreview1.grid(row=5, column=3)
-lpreview2 = Label(a, text=language[73], bg='#aaaaff')
+lpreview2 = Label(a, text=language[start + 21], bg='#aaaaff')
 lpreview2.grid(row=6, column=3)
-lpreview3 = Label(a, text=language[74], bg='#aaaaff')
+lpreview3 = Label(a, text=language[start + 22], bg='#aaaaff')
 lpreview3.grid(row=7, column=3)
-lrestart = Button(a, text=language[75], command=bstick, activebackground="#a9ff91", width=12)
+lrestart = Button(a, text=language[start + 23], command=bstick, activebackground="#a9ff91", width=12)
 lrestart.grid(row=8, column=3)
-lpreview4 = Label(a, text=language[76], bg='#aaaaff')
+lpreview4 = Label(a, text=language[start + 24], bg='#aaaaff')
 lpreview4.grid(row=9, column=3)
-lpreview5 = Label(a, text=language[77], bg='#aaaaff')
+lpreview5 = Label(a, text=language[start + 25], bg='#aaaaff')
 lpreview5.grid(row=10, column=3)
-lpreview6 = Label(a, text=language[78], bg='#aaaaff')
+lpreview6 = Label(a, text=language[start + 26], bg='#aaaaff')
 lpreview6.grid(row=11, column=3)
-lpreview7 = Label(a, text=language[79], bg='#aaaaff')
+lpreview7 = Label(a, text=language[start + 27], bg='#aaaaff')
 lpreview7.grid(row=12, column=3)
 preview = Canvas(a, width=93, height=669)
-prev_image = PhotoImage(file="C:\\Yosh\\bstick.png")
+prev_image = PhotoImage(file="C:\\Yosh\\msm_stuff\\bstick.png")
 preview.create_image(46, 333, image=prev_image)
 preview.grid(row=2, column=3, rowspan=100, columnspan=100)
 with open('C:\\Yosh\\a', 'rb') as config:
@@ -440,7 +441,7 @@ with open('C:\\Yosh\\a', 'rb') as config:
 colourbu.config(text=hex_color)
 if fix == b'1':
     Checkbutton.select(fix_colourcb)
-lwin = Button(a, text=language[80], command=win_colour_picker, activebackground="#a9ff91", width=30)
+lwin = Button(a, text=language[start + 28], command=win_colour_picker, activebackground="#a9ff91", width=30)
 lwin.grid(row=2, column=0)
 scan_directory()
 a.mainloop()

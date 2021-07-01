@@ -6,10 +6,12 @@ from functools import partial
 if ':\\Windows' in os.getcwd():
     os.chdir(os.environ['userprofile'] + '\\Desktop')
 
-with open('#language.txt', 'r') as txt:
+with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
     language = txt.read()
     language = [''] + language.splitlines()
 
+start = int(language[1].split(":")[19])
+msm = int(language[1].split(":")[1])
 space = " "*20
 space25 = " "*25
 
@@ -21,15 +23,15 @@ for j in range(8, 20):
 for j in range(20, 32):
     button_row += [j, j, j, j, j, j, j, j]
 
-print(f"{language[167]}\n{language[168]}\n")
+print(f"{language[start + 2]}\n")
 
 button_col = [0, 1, 2] * 12 + [3, 4, 5, 6, 7] * 12 + [0, 1, 2, 3, 4, 5, 6, 7] * 12
 button_list = []
 a = Tk()
-a.title(language[166])
+a.title(language[start])
 a.minsize(660, 440)
 a.config(bg='#bfaaff')
-a.iconbitmap('C:\\Yosh\\tex.ico')
+a.iconbitmap('C:\\Yosh\\msm_stuff\\tex.ico')
 
 
 def encode(file, index):
@@ -43,7 +45,7 @@ def encode(file, index):
     os.system(f'wimgt encode "{file}" -x {colourenc} --n-mm {nmipmap} -d "{out}.tex0"')
 
     button_list[index].destroy()
-    patched = Label(a, text=language[169], bg='#bfaaff', width=30)
+    patched = Label(a, text=language[start + 3], bg='#bfaaff', width=30)
     patched.grid(row=button_row[index], column=button_col[index])
 
 
@@ -72,7 +74,7 @@ def scan_directory():
             continue
 
     if i > 36:  # if many png are found, then it puts the window on fullscreen and create a big exit button
-        exitbu2 = Button(a, text=language[38], command=a.quit, activebackground='#d9ff8c', bg='#d9ff8c', fg='#ff2222', width=58, height=3, font=100)
+        exitbu2 = Button(a, text=language[msm + 39], command=a.quit, activebackground='#d9ff8c', bg='#d9ff8c', fg='#ff2222', width=58, height=3, font=100)
         exitbu2.grid(row=0, column=4, rowspan=2, columnspan=3)
         a.attributes('-fullscreen', True)
 
@@ -95,7 +97,7 @@ def open_explorer():  # change directory with C:\Windows\explorer.exe GUI
     scan_directory()
 
 
-text_label = Label(a, text=language[29], bg='#bfaaff', width=30)
+text_label = Label(a, text=language[msm + 18], bg='#bfaaff', width=30)
 text_label.grid(row=0, column=0)
 
 cwd_label = Label(a, text=os.getcwd(), bg='#bfaaff', width=60, anchor='w')
@@ -104,22 +106,22 @@ cwd_label.grid(row=0, column=1, columnspan=3)
 entry_dir = Entry(a, width=30)
 entry_dir.grid(row=1, column=1)
 
-refreshbu = Button(a, text=language[40], command=change_directory, activebackground='#ff9999', width=30)
+refreshbu = Button(a, text=language[msm + 40], command=change_directory, activebackground='#ff9999', width=30)
 refreshbu.grid(row=1, column=2)
 
-open_explorerbu = Button(a, text=language[30], command=open_explorer, activebackground='#96c7ff', width=15)
+open_explorerbu = Button(a, text=language[msm + 19], command=open_explorer, activebackground='#96c7ff', width=15)
 open_explorerbu.grid(row=1, column=0)
 
-title = Label(a, text=language[170], font=500, bg='#bfaaff', height=3)
+title = Label(a, text=language[start + 1], font=(None, 15), bg='#bfaaff', height=3)
 title.grid(row=2, columnspan=20)
 
-encoding = Label(a, text=language[171], bg='#bfaaff', width=30)
+encoding = Label(a, text=language[start + 4], bg='#bfaaff', width=30)
 encoding.grid(row=5, column=0)
 
-mipmaps = Label(a, text=language[172], bg='#bfaaff', width=30)
+mipmaps = Label(a, text=language[start + 5], bg='#bfaaff', width=30)
 mipmaps.grid(row=5, column=1)
 
-output_name = Label(a, text=language[173], bg='#bfaaff', width=30)
+output_name = Label(a, text=language[start + 6], bg='#bfaaff', width=30)
 output_name.grid(row=5, column=2)
 
 colour = (

@@ -2,33 +2,46 @@ import os
 import webbrowser
 from random import randint
 from subprocess import Popen
-from tkinter import Tk, Button, Label, Entry, Canvas, PhotoImage, DISABLED, OptionMenu, StringVar
-from tkinter.filedialog import askdirectory
 from winsound import PlaySound
+from tkinter.filedialog import askdirectory
+from tkinter import Tk, Button, Label, Entry, Canvas, PhotoImage, DISABLED, OptionMenu, StringVar, _setit
 
 if ':\\Windows' in os.getcwd():
     os.chdir(os.environ['userprofile'] + '\\Desktop')
 
-with open('#language.txt', 'r') as txt:
+with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
     language = txt.read()
     language = [''] + language.splitlines()
 
+start = int(language[1].split(":")[1])
 a = Tk()
-a.title(language[1])
+a.title(language[start + 2])
 a.minsize(680, 495)
 a.maxsize(680, 495)
 a.config(bg="#aecfee")
-a.iconbitmap('C:\\Yosh\\msm.ico')
+a.iconbitmap('C:\\Yosh\\msm_stuff\\msm.ico')
 
-run = (f'{language[2]} (c.py)', f'{language[3]} (x.py)', f'{language[4]} (tex3.pyw)',
-       f'{language[5]} (hexf.py)', f'{language[6]} (dec.py)', f'{language[7]} (int.py)',
-       f'{language[8]} (rEtUrN-tExT.py)', f'{language[9]} (vaporwave.py)',
-       f'{language[10]} (p.py)', f'{language[11]} (t.py)', f'{language[12]} (png.py)'
-       )
+run = [f'{language[start + 26]} (c.py)', f'{language[start + 27]} (x.py)', f'{language[start + 28]} (tex3.pyw)',
+       f'{language[start + 29]} (hexf.py)', f'{language[start + 30]} (dec.py)', f'{language[start + 31]} (int.py)',
+       f'{language[start + 32]} (rEtUrN-tExT.py)', f'{language[start + 33]} (vaporwave.py)',
+       f'{language[start + 34]} (yt.pyw)', f'{language[start + 35]} (sizeC.pyw)',
+       f'{language[start + 36]} (p.py)', f'{language[start + 37]} (t.py)', f'{language[start + 38]} (png.py)'
+       ]
 RUN = StringVar()
-RUN.set(language[13])
+RUN.set(language[start + 25])
 Run = OptionMenu(a, RUN, *run)
 Run["menu"].config(bg="#000000", fg='#ffffff')
+
+languages = (
+    'English', 'Français', 'Deutsch (Google Übersetzer)', 'Español (Traductor de google)', 'Italiano (Google Traduttore)',
+    'Nederlands (Google Vertalen)', 'Português (Google Tradutor)', 'Pусский (Гугл переводчик)',  # PAL Wii U
+    'Polskie (tłumacz Google)', '日本語 (グーグル翻訳)', '中国人 (谷歌翻译)', '한국어 (구글 번역)')
+LANGUAGES = StringVar()
+LANGUAGES.set(language[start + 21])  # Change Language
+Languages = OptionMenu(a, LANGUAGES, *languages)
+Languages["menu"].config(bg="#000000", fg='#ffffff')
+Languages.config(width=15)
+
 random = (
     'question_mark_coin.wav', 'gnomed.wav',
     'C:\\Program Files\\Internet Explorer\\iexplore.exe',
@@ -107,9 +120,52 @@ def play(num):
     else:
         webbrowser.open(random[num])
 
+def refresh():
+    with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as text:
+        language = text.read()
+        language = [''] + language.splitlines()
+    run = [f'{language[start + 26]} (c.py)', f'{language[start + 27]} (x.py)', f'{language[start + 28]} (tex3.pyw)',
+           f'{language[start + 29]} (hexf.py)', f'{language[start + 30]} (dec.py)', f'{language[start + 31]} (int.py)',
+           f'{language[start + 32]} (rEtUrN-tExT.py)', f'{language[start + 33]} (vaporwave.py)',
+           f'{language[start + 34]} (yt.pyw)', f'{language[start + 35]} (sizeC.pyw)',
+           f'{language[start + 36]} (p.py)', f'{language[start + 37]} (t.py)', f'{language[start + 38]} (png.py)'
+           ]
+    Run['menu'].delete(0, 'end')
+
+    # Insert list of new options (tk._setit hooks them up to var)
+    new_choices = ('one', 'two', 'three')
+    for app in run:
+        Run['menu'].add_command(label=app, command=_setit(RUN, app))
+
+    ltitle.config(text=language[start + 3])
+    lp.config(text=language[start + 4])
+    lt.config(text=language[start + 5])
+    lbrsar.config(text=language[start + 6])
+    llh.config(text=language[start + 7])
+    lweb.config(text=language[start + 8])
+    lisox.config(text=language[start + 9])
+    ldump.config(text=language[start + 10])
+    liso.config(text=language[start + 11])
+    larc.config(text=language[start + 12])
+    lbstick.config(text=language[start + 13])
+    ltex.config(text=language[start + 14])
+    lmappyw.config(text=language[start + 15])
+    lcmn.config(text=language[start + 16])
+    ltrib.config(text=language[start + 17])
+    lcwd.config(text=language[start + 18])
+    dirbutton.config(text=language[start + 19])
+    lenter.config(text=language[start + 20])
+    LANGUAGES.set(language[start + 21])  # Change Language
+    lhelp.config(text=language[start + 22])
+    lquestion.config(text=language[start + 23])
+    lconfig.config(text=language[start + 24])
+    RUN.set(language[start + 25])  # Instant Run Apps (no UI)
+
+
 
 def enter():  # "Run Instant App (Enter)" Button
     app = RUN.get()
+    lang = LANGUAGES.get()
     cwd = cwd_entry.get()
     if cwd == '':
         cwd = os.getcwd()  # returns current working directory
@@ -117,7 +173,14 @@ def enter():  # "Run Instant App (Enter)" Button
         current_cwd.configure(text=cwd)
     cwd_entry.delete(0, 'end')  # empties the entry and change current working directory if it exists
     os.chdir(cwd)
-    if app == language[13]:
+    if lang != language[start + 33]:
+        with open(f'C:\\Yosh\\lang\\{lang}.txt', 'rb') as txt1:
+            new_lang = txt1.read()
+        with open('C:\\Yosh\\#language.txt', 'wb') as txt2:
+            txt2.write(new_lang)
+        refresh()
+        return
+    if app == language[start + 14]:
         return
     Popen(('wscript.exe', f"C:\\Yosh\\{os.path.splitext(app.split('(')[-1])[0]}.vbs"))
 
@@ -184,49 +247,49 @@ def msmhelp():
     Popen(('wscript.exe', "C:\\Yosh\\msmhelp.vbs"))
 
 
-def shortcuts():
-    Popen(('wscript.exe', "C:\\Yosh\\msmshortcuts.vbs"))
+def cmn():
+    Popen(('wscript.exe', "C:\\Yosh\\cmn.vbs"))
 
 
-ltitle = Label(a, text=language[14], font=300, bg="#aecfee", height=3)
+ltitle = Label(a, text=language[start + 3], font=(None, 15), bg="#aecfee", height=3)
 ltitle.grid(row=0, columnspan=3)
-lp = Button(a, text=language[15], state=DISABLED, command=pack, width=30)
+lp = Button(a, text=language[start + 4], state=DISABLED, command=pack, width=30)
 lp.grid(row=3, column=0)
-lt = Button(a, text=language[16], state=DISABLED, command=thp, width=30)
+lt = Button(a, text=language[start + 5], state=DISABLED, command=thp, width=30)
 lt.grid(row=3, column=1)
-lbrsar = Button(a, text=language[17], command=brsar, width=30)
+lbrsar = Button(a, text=language[start + 6], command=brsar, width=30)
 lbrsar.grid(row=3, column=2)
-l1 = Label(a, text="", bg="#aecfee", width=35)
+l1 = Label(a, text="", bg="#aecfee", width=6)
 l1.grid(row=4, column=1)
-llh = Button(a, text=language[18], command=lh, width=30)
+llh = Button(a, text=language[start + 7], command=lh, width=30)
 llh.grid(row=5, column=0)
-lweb = Button(a, text=language[19], command=web, width=30)
+lweb = Button(a, text=language[start + 8], command=web, width=30)
 lweb.grid(row=5, column=1)
-lisox = Button(a, text=language[20], command=isox, width=30)
+lisox = Button(a, text=language[start + 9], command=isox, width=30)
 lisox.grid(row=5, column=2)
 l2 = Label(a, text="", bg="#aecfee")
 l2.grid(row=6)
-ldump = Button(a, text=language[21], command=dump, width=30)
+ldump = Button(a, text=language[start + 10], command=dump, width=30)
 ldump.grid(row=7, column=0)
-liso = Button(a, text=language[22], state=DISABLED, command=iso, width=30)
+liso = Button(a, text=language[start + 11], state=DISABLED, command=iso, width=30)
 liso.grid(row=7, column=1)
-larc = Button(a, text=language[23], command=arc, width=30)
+larc = Button(a, text=language[start + 12], command=arc, width=30)
 larc.grid(row=7, column=2)
 l3 = Label(a, text="", bg="#aecfee")
 l3.grid(row=8, column=1)
-lbstick = Button(a, text=language[24], command=bstick, width=30)
+lbstick = Button(a, text=language[start + 13], command=bstick, width=30)
 lbstick.grid(row=9, column=0)
-ltex = Button(a, text=language[25], command=tex, width=30)
+ltex = Button(a, text=language[start + 14], command=tex, width=30)
 ltex.grid(row=9, column=1)
-lmappyw = Button(a, text=language[26], command=mappyw, width=30)
+lmappyw = Button(a, text=language[start + 15], command=mappyw, width=30)
 lmappyw.grid(row=9, column=2)
 l4 = Label(a, text="", bg="#aecfee")
 l4.grid(row=10)
-lrandom = Button(a, text=language[27], command=question_mark, width=30)
-lrandom.grid(row=11, column=0)
+lcmn = Button(a, text=language[start + 16], state=DISABLED, command=cmn, width=30)
+lcmn.grid(row=11, column=0)
 Run.config(width=30)
 Run.grid(row=11, column=1)
-ltrib = Button(a, text=language[28], command=trib, width=30)
+ltrib = Button(a, text=language[start + 17], command=trib, width=30)
 ltrib.grid(row=11, column=2)
 
 
@@ -255,7 +318,7 @@ def no_color():
 
     lmappyw.config(activebackground="#d999ff", bg="#f0f0f0")
 
-    lrandom.config(activebackground="#ff99ff", bg="#f0f0f0")
+    lcmn.config(activebackground="#ff99ff", bg="#f0f0f0")
 
     Run.config(bg="#f0f0f0", activebackground="#f0f0f0")
 
@@ -287,7 +350,7 @@ def color_bb():
 
     lmappyw.config(bg="#ebbbff", activebackground="#ebbbff")
 
-    lrandom.config(bg="#ffbbff", activebackground="#ffbbff")
+    lcmn.config(bg="#ffbbff", activebackground="#ffbbff")
 
     Run.config(bg="#ffbbe4", activebackground="#ffbbe4")
 
@@ -319,7 +382,7 @@ def color_aa():
 
     lmappyw.config(bg="#dfaaff", activebackground="#dfaaff")
 
-    lrandom.config(bg="#ffaaff", activebackground="#ffaaff")
+    lcmn.config(bg="#ffaaff", activebackground="#ffaaff")
 
     Run.config(bg="#ffaadf", activebackground="#ffaadf")
 
@@ -351,7 +414,7 @@ def color_99():
 
     lmappyw.config(bg="#d999ff", activebackground="#d999ff")
 
-    lrandom.config(bg="#ff99ff", activebackground="#ff99ff")
+    lcmn.config(bg="#ff99ff", activebackground="#ff99ff")
 
     Run.config(bg="#ff99d9", activebackground="#ff99d9")
 
@@ -383,7 +446,7 @@ def color_90():
 
     lmappyw.config(bg="#d090ff", activebackground="#d090ff")
 
-    lrandom.config(bg="#ff90ff", activebackground="#ff90ff")
+    lcmn.config(bg="#ff90ff", activebackground="#ff90ff")
 
     Run.config(bg="#ff90d0", activebackground="#ff90d0")
 
@@ -415,7 +478,7 @@ def color_7f():
 
     lmappyw.config(bg="#cc7fff", activebackground="#cc7fff")
 
-    lrandom.config(bg="#ff7fff", activebackground="#ff7fff")
+    lcmn.config(bg="#ff7fff", activebackground="#ff7fff")
 
     Run.config(bg="#ff7fc4", activebackground="#ff7fc4")
 
@@ -464,30 +527,30 @@ else:
     no_color()
 l5 = Label(a, text="", bg="#aecfee")
 l5.grid(row=12)
-lcwd = Label(a, text=language[29], bg="#aecfee")
+lcwd = Label(a, text=language[start + 18], bg="#aecfee")
 lcwd.grid(row=13, column=0)
 current_cwd = Label(a, text=os.getcwd(), bg="#aecfee", width=70, anchor='w')
 current_cwd.grid(row=13, column=1, columnspan=3)
 cwd_entry = Entry(a, width=30)
 cwd_entry.grid(row=14, column=1)
-dirbutton = Button(a, text=language[30], command=change_directory, activebackground='#96c7ff', width=30)
+dirbutton = Button(a, text=language[start + 19], command=change_directory, activebackground='#96c7ff', width=30)
 dirbutton.grid(row=14, column=0)
-lenter = Button(a, text=language[31], command=enter, activebackground="#a9ff91")
+lenter = Button(a, text=language[start + 20], command=enter, activebackground="#a9ff91", width=29)
 lenter.grid(row=14, column=2)
-me = Label(a, text=language[32], bg="#aecfee")
-me.grid(row=15, column=1)
-lhelp = Button(a, text=language[33], activebackground="#a9ff91", command=msmhelp, width=25)
+Languages.grid(row=15, column=1)
+# Language OptionMenu is being at language[start + 21]
+lhelp = Button(a, text=language[start + 22], activebackground="#a9ff91", command=msmhelp, width=25)
 lhelp.grid(row=16, column=1)
-lshortcuts = Button(a, text=language[34], activebackground="#a9ff91", command=shortcuts, width=25)
-lshortcuts.grid(row=17, column=1)
-lconfig = Button(a, text=language[35], activebackground="#ff9999", command=change_config, width=25)
+lquestion = Button(a, text=language[start + 23], activebackground="#a9ff91", command=question_mark, width=25)
+lquestion.grid(row=17, column=1)
+lconfig = Button(a, text=language[start + 24], activebackground="#ff9999", command=change_config, width=25)
 lconfig.grid(row=18, column=1)
-msm1 = Canvas(a, width=216, height=148, bd=-2, bg="#aecfee")
-msm_msm = PhotoImage(file="C:\\Yosh\\msm.png")
-msm1.create_image(110, 90, image=msm_msm)
+msm1 = Canvas(a, width=220, height=148, bd=-2, bg="#aecfee")
+msm_msm = PhotoImage(file="C:\\Yosh\\msm_stuff\\msm3.png")
+msm1.create_image(110, 74, image=msm_msm)
 msm1.grid(row=15, column=0, rowspan=6)
 msm2 = Canvas(a, width=216, height=148, bd=-2, bg="#aecfee")
-msm_png = PhotoImage(file="C:\\Yosh\\png.png")
+msm_png = PhotoImage(file="C:\\Yosh\\msm_stuff\\msm4.png")
 msm2.create_image(100, 100, image=msm_png)
 msm2.grid(row=15, column=2, rowspan=6)
 a.mainloop()

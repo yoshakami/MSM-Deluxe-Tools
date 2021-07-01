@@ -1,10 +1,11 @@
 import os
 from win10toast import ToastNotifier
 
-with open('#language.txt', 'r') as txt:
+with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
     language = txt.read()
     language = [''] + language.splitlines()
 
+msm = int(language[1].split(":")[1])
 count_tex = count_files = 0
 for element in os.listdir('./'):
     cursor = 0
@@ -26,4 +27,4 @@ for element in os.listdir('./'):
             continue
 
 toaster = ToastNotifier()
-toaster.show_toast(f'{language[164].split("x")[0]}{count_tex}{language[164].split("x")[1]}', f'{language[165].split("x")[0]}{count_files}{language[165].split("x")[0]}', icon_path="C:/Yosh/tex3.ico", duration=5)
+toaster.show_toast(f'{language[46].split("#")[0]}{count_tex}{language[46].split("#")[1]}', f'{language[47].split("#")[0]}{count_files}{language[47].split("#")[1]}', icon_path="C:/Yosh/tex3.ico", duration=5)

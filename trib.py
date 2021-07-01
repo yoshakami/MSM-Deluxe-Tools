@@ -8,24 +8,26 @@ from tkinter.filedialog import askdirectory
 if ':\\Windows' in os.getcwd():
     os.chdir(os.environ['userprofile'] + '\\Desktop')
 
-with open('#language.txt', 'r') as txt:
+with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
     language = txt.read()
     language = [''] + language.splitlines()
 
+start = int(language[1].split(":")[23])
+msm = int(language[1].split(":")[1])
 a = Tk()
-a.title(language[174])
+a.title(language[start])
 a.minsize(660, 440)
 a.config(bg='#bfaaff')
-a.iconbitmap('C:\\Yosh\\trib.ico')
+a.iconbitmap('C:\\Yosh\\msm_stuff\\trib.ico')
 
 
 def hex_float(number):
     number = number.replace(',', '.')  # replaces coma with dots
     num = b''
-    value = 0
     w = hex(struct.unpack('<I', struct.pack('<f', float(number)))[0])[2:]
     # add zeros to always make the value length to 8
-    w = '0' * (8-len(w)) + w
+    # w = '0' * (8-len(w)) + w
+    w = w.zfill(8)
     for octet in range(0, 8, 2):  # transform for example "3f800000" to b'\x3f\x80\x00\x00'
         num += bytes(chr(int(w[octet:(octet + 2)], 16)), 'latin-1')
     return num
@@ -71,10 +73,10 @@ def scan_directory():
                     done = True
         button_list[offset].destroy()
         if done:
-            patched = Label(a, text=language[169], bg='#bfaaff', width=30)
+            patched = Label(a, text=language[start + 1], bg='#bfaaff', width=30)
             patched.grid(row=button_row[offset], column=button_col[offset])
         else:
-            notpatched = Label(a, text=language[175], fg='#0050ff', bg='#bfaaff', width=30)
+            notpatched = Label(a, text=language[start + 2], fg='#0050ff', bg='#bfaaff', width=30)
             notpatched.grid(row=button_row[offset], column=button_col[offset])
 
     mdl = mdln = 0
@@ -139,7 +141,7 @@ def scan_directory():
             continue
 
     if mdln > 7:  # if there are too many buttons for the small windows then put it on fullscreen
-        exitbu2 = Button(a, text=language[38], command=a.quit, activebackground='#d9ff8c', bg='#d9ff8c', fg='#ff2222', width=58, height=3, font=100)
+        exitbu2 = Button(a, text=language[msm + 39], command=a.quit, activebackground='#d9ff8c', bg='#d9ff8c', fg='#ff2222', width=58, height=3, font=100)
         exitbu2.grid(row=0, column=4, rowspan=2, columnspan=3)
         a.attributes('-fullscreen', True)
 
@@ -162,13 +164,13 @@ def open_explorer():  # change directory with C:\Windows\explorer.exe GUI
     scan_directory()
 
 
-ltxt = [language[29], os.getcwd(), language[176], language[177], language[178], language[179]]
+ltxt = [language[msm + 18], os.getcwd(), language[start + 3], language[start + 4], language[start + 5], language[start + 6]]
 forstuff = []
 entries = []
 entrow = [2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5]
 for n in range(6):  # create the 6 labels in ltxt
     if n == 1:
-        text = Label(a, text=ltxt[n], bg='#bfaaff', width=60, anchor='w')
+        text = Label(a, text=ltxt[n], bg='#bfaaff', width=60)
         text.grid(row=0, column=1, columnspan=2)
     else:
         text = Label(a, text=ltxt[n], bg='#bfaaff', width=30)
@@ -186,13 +188,13 @@ forstuff += entries
 
 entry_dir = Entry(a, width=30)
 entry_dir.grid(row=1, column=1)
-refreshbu = Button(a, text=language[40], command=change_directory, activebackground='#ff9999', width=30)
+refreshbu = Button(a, text=language[msm + 40], command=change_directory, activebackground='#ff9999', width=30)
 refreshbu.grid(row=1, column=2)
-open_explorerbu = Button(a, text=language[30], command=open_explorer, activebackground='#96c7ff', width=15)
+open_explorerbu = Button(a, text=language[msm + 19], command=open_explorer, activebackground='#96c7ff', width=15)
 open_explorerbu.grid(row=1, column=0)
 slash_n = Label(a, text='', bg='#bfaaff')
 slash_n.grid(row=6)
-dot = Label(a, text=f'{language[180]}\n{language[181]}', bg='#bfaaff', font=2, fg='#ff2222')
+dot = Label(a, text=f'{language[start + 7]}\n{language[start + 8]}', bg='#bfaaff', font=2, fg='#ff2222')
 dot.grid(row=0, column=3, rowspan=2)
 forstuff += [entry_dir, refreshbu, open_explorerbu, slash_n, dot]
 scan_directory()

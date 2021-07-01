@@ -6,10 +6,12 @@ from functools import partial
 if ':\\Windows' in os.getcwd():
     os.chdir(os.environ['userprofile'] + '\\Desktop')
 
-with open('#language.txt', 'r') as txt:
+with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
     language = txt.read()
     language = [''] + language.splitlines()
 
+start = int(language[1].split(":")[5])
+msm = int(language[1].split(":")[1])
 extract_row = []
 for j in range(6, 18):
     extract_row += [j, j, j, j]
@@ -27,17 +29,17 @@ create_col = [0, 1, 2, 3] * 12 + [4, 5, 6, 7] * 12
 extract_list = []
 create_list = []
 a = Tk()
-a.title(language[36])
+a.title(language[start])
 a.minsize(660, 440)
 a.config(bg='#aacfff')
-a.iconbitmap('C:\\Yosh\\arc.ico')
+a.iconbitmap('C:\\Yosh\\msm_stuff\\arc.ico')
 
 
 def extract_all():
     for stuff in os.listdir('./'):
         os.system(f'wszst x "{stuff}" -o')
     extract_allbu.destroy()
-    patched = Label(a, text=language[37], bg='#aacfff', width=30)
+    patched = Label(a, text=language[start + 1], bg='#aacfff', width=30)
     patched.grid(row=1, column=3)
 
 
@@ -91,7 +93,7 @@ def scan_directory():  # triggered each time Enter button / Open File Explorer b
 
         create_list[ref].destroy()
         if os.path.exists(f"{name2}.{archi}") or os.path.exists(f"{name2}.arc") or os.path.exists(f"{name2}.wbz") or os.path.exists(f"{name2}.szs"):
-            patched = Label(a, text=language[37], bg='#aacfff', width=30)
+            patched = Label(a, text=language[start + 1], bg='#aacfff', width=30)
         else:
             patched = Label(a, text='oof! check folder permissions', bg='#aacfff', width=30)
         patched.grid(row=create_row[ref], column=create_col[ref])
@@ -99,12 +101,12 @@ def scan_directory():  # triggered each time Enter button / Open File Explorer b
     def extract(file, index):
         os.system(f'wszst x "{file}" -o')
         extract_list[index].destroy()
-        patched = Label(a, text=language[37], bg='#aacfff', width=30)
+        patched = Label(a, text=language[start + 1], bg='#aacfff', width=30)
         patched.grid(row=extract_row[index], column=extract_col[index])
 
     i = n = 0
     for tkstuff in a.winfo_children():
-        if tkstuff not in [text_label, exitbu, open_explorerbu, brawlcrate, cwd_label, entry_dir, refreshbu, lextract, lextract2, extract_allbu, expextract, lcreate, larchive, lcompression, Compression, Archive, expcreate, lfiletypes]:
+        if tkstuff not in [text_label, open_explorerbu, brawlcrate, cwd_label, entry_dir, refreshbu, lextract, lextract2, extract_allbu, expextract, lcreate, larchive, lcompression, Compression, Archive, expcreate, lfiletypes]:
             tkstuff.destroy()
 
     for files in os.listdir('./'):  # display a button for each yaz0, yaz1, pack, breff, breft, arc or brres found
@@ -133,7 +135,7 @@ def scan_directory():  # triggered each time Enter button / Open File Explorer b
             n += 1
 
     if i > 40 or n > 40:  # creates a big exit button and make the window fullscreen as it was too tiny to display all buttons
-        exitbu2 = Button(a, text=language[38], command=a.quit, activebackground='#d9ff8c', bg='#d9ff8c', fg='#ff2222', width=58, height=3, font=100)
+        exitbu2 = Button(a, text=language[msm + 39], command=a.quit, activebackground='#d9ff8c', bg='#d9ff8c', fg='#ff2222', width=58, height=3, font=100)
         exitbu2.grid(row=0, column=4, rowspan=2, columnspan=3)
         a.attributes('-fullscreen', True)
 
@@ -156,46 +158,43 @@ def open_explorer():  # change directory with C:\Windows\explorer.exe GUI
     scan_directory()
 
 
-text_label = Label(a, text=language[29], bg='#ffffaa', width=30)
+text_label = Label(a, text=language[msm + 18], bg='#aacfff', width=30)
 text_label.grid(row=0, column=0)
 
-exitbu = Button(a, text=language[38], command=a.quit, activebackground='#d9ff8c', width=15)
-exitbu.grid(row=0, column=2)
-
-open_explorerbu = Button(a, text=language[30], command=open_explorer, activebackground='#96c7ff', width=15)
+open_explorerbu = Button(a, text=language[msm + 19], command=open_explorer, activebackground='#96c7ff', width=15)
 open_explorerbu.grid(row=1, column=0)
 
-brawlcrate = Label(a, text=language[50]+'\n'+language[51], bg='#aacfff', width=30)
+brawlcrate = Label(a, text=language[start + 2]+'\n'+language[start + 3], bg='#aacfff', width=30)
 brawlcrate.grid(row=0, column=3, rowspan=2)
 
-cwd_label = Label(a, text=os.getcwd(), bg='#aacfff', width=30)
+cwd_label = Label(a, text=os.getcwd(), bg='#aacfff', width=60)
 cwd_label.grid(row=0, column=1, columnspan=2)
 
 entry_dir = Entry(a, width=30)
 entry_dir.grid(row=1, column=1)
 
-refreshbu = Button(a, text=language[40], command=change_directory, activebackground='#ff9999', width=30)
+refreshbu = Button(a, text=language[msm + 40], command=change_directory, activebackground='#ff9999', width=30)
 refreshbu.grid(row=1, column=2)
 
-lextract = Label(a, text=language[41], font=500, bg='#aacfff', height=3)
+lextract = Label(a, text=language[start + 4], font=500, bg='#aacfff', height=3)
 lextract.grid(row=2, column=0, rowspan=2)
 
-lextract2 = Label(a, text=language[42], font=500, bg='#aacfff', height=3)
+lextract2 = Label(a, text=language[start + 5], font=500, bg='#aacfff', height=3)
 lextract2.grid(row=2, column=1, rowspan=2, columnspan=2)
 
-extract_allbu = Button(a, text=language[43], command=extract_all, activebackground='#ff9999', width=20)
+extract_allbu = Button(a, text=language[start + 6], command=extract_all, activebackground='#ff9999', width=20)
 extract_allbu.grid(row=2, column=3)
 
-expextract = Button(a, text=language[30], command=explorer_extract, activebackground='#99ffee', width=20)
+expextract = Button(a, text=language[msm + 19], command=explorer_extract, activebackground='#99ffee', width=20)
 expextract.grid(row=3, column=3)
 
-lcreate = Label(a, text=f'{language[44]}           ', font=500, bg='#aacfff')
+lcreate = Label(a, text=f'{language[start + 7]}           ', font=500, bg='#aacfff')
 lcreate.grid(row=16, column=0)
 
-larchive = Label(a, text=f'  {language[45]}  ->', bg='#aacfff')
+larchive = Label(a, text=f'  {language[start + 8]}  ->', bg='#aacfff')
 larchive.grid(row=16, column=0, columnspan=2)
 
-lcompression = Label(a, text=f'              {language[46]}  ->', bg='#aacfff')
+lcompression = Label(a, text=f'              {language[start + 9]}  ->', bg='#aacfff')
 lcompression.grid(row=16, column=1, columnspan=2)
 
 archive = ('u8', 'wu8', 'pack', 'brres', 'breff', 'breft')
@@ -212,10 +211,10 @@ Compression = OptionMenu(a, COMPRESSION, *compression)
 Compression["menu"].config(bg="#000000", fg='#ffffff')
 Compression.grid(row=16, column=2)
 
-expcreate = Button(a, text=language[30], command=explorer_create, activebackground='#99ffee', width=20)
+expcreate = Button(a, text=language[msm + 19], command=explorer_create, activebackground='#99ffee', width=20)
 expcreate.grid(row=17, column=0, sticky='w')
 
-lfiletypes = Label(a, text=f'{language[47]} -> u8 = arc | u8 + yaz0 = szs | wu8 + bz = wbz', bg='#aacfff', width=54)
+lfiletypes = Label(a, text=f'{language[start + 10]} -> u8 = arc | u8 + yaz0 = szs | wu8 + bz = wbz', bg='#aacfff', width=54)
 lfiletypes.grid(row=17, column=1, columnspan=2)
 
 scan_directory()

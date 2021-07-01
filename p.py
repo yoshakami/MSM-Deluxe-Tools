@@ -1,9 +1,11 @@
 import os
 
-with open('#language.txt', 'r') as txt:
+with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
     language = txt.read()
     language = [''] + language.splitlines()
 
+start = int(language[1].split(":")[25])
+msm = int(language[1].split(":")[1])
 tex0 = [0]
 name, position, bres_list = [], [], []
 add_png = keep = filetype = file = header = 0
@@ -13,7 +15,7 @@ bresarc = [b'U\xaa8-', b'bres']
 
 
 def message():
-    print(f"\n\n{language[122]},\n{language[123]}\n{language[124]}\n{language[125]}\n\n{language[126]}\n")
+    print(f"\n\n{language[start]},\n{language[start + 1]}\n{language[start + 2]}\n{language[start + 3]}\n\n{language[start + 4]}\n")
 
 
 for file in os.listdir('./'):
@@ -29,21 +31,21 @@ for file in os.listdir('./'):
     if header in bresarc:
         break
 if header not in bresarc:  # the for can ends after browsing a complete directory without finding any brres or arc file.
-    input(f'{language[127]}.\n{language[128]}.')
+    input(f'{language[start + 5]}.\n{language[start + 6]}.')
     exit()
 compress = True
-mode = input(f"{language[129]} : {file}\n{language[130]}\n{language[131]}\n{language[132]}\n{language[133]}\n{language[134]}\n{language[135]}\n{language[136]}\n{language[137]} : ")
+mode = input(f"{language[start + 7]} : {file}\n{language[start + 8]}\n{language[start + 9]}\n{language[start + 10]}\n{language[start + 11]}\n{language[start + 12]}\n{language[start + 13]}\n{language[start + 14]}\n{language[start + 15]}")
 if mode in ['2', '3', '5', '6']:  # keep encoded textures
     keep = True
 if mode in ['4', '5', '6']:  # don't compress
     compress = False
 while mode in ["1", "3", "6"]:  # that's not the file you want, so type manually the filename
-    file = input(f'{language[138]} : ')
+    file = input(f'{language[start + 16]} : ')
     if not os.path.exists(file):
         continue
     with open(file, 'rb') as check:
         if check.read(4) not in bresarc:
-            print(f'{language[139]}.')
+            print(f'{language[start + 17]}.')
         else:
             mode = '0'
 with open(file, 'r+b') as arc:  # though arc could have been named brres as it's the same process for both files
@@ -54,7 +56,7 @@ with open(file, 'r+b') as arc:  # though arc could have been named brres as it's
         short = os.path.splitext(file)[0]
     else:
         short = file  # short has high probabilities to be the name used in the filesystem of the game
-    print(language[140])  # in case it's long
+    print(language[start + 18])  # in case it's long
     for z in range(0, size - 17, 16):
         arc.seek(z)
         header = arc.read(4)
@@ -73,19 +75,19 @@ with open(file, 'r+b') as arc:  # though arc could have been named brres as it's
             else:  # os.remove crashes the script if the file doesn't exists while del doesn't
                 os.system(f'del "{short}{extensions[indice]}"')  # overwrite files if compressing
     while add_png != '1':  # while user enters a wrong name
-        picture = input(f'{language[141]} : ')
+        picture = input(f'{language[start + 19]} : ')
         if not os.path.exists(f'{picture}.png'):
-            print(f'{picture}.png {language[142]}.\n{language[143]}.')
+            print(f'{picture}.png {language[start + 20]}.\n{language[start + 21]}.')
             continue
         with open(f'{picture}.png', 'r+b') as png:
             header = png.read(4)
         if header != b'\x89PNG':
-            print(f"{language[144]}.")
+            print(f"{language[start + 22]}.")
             continue
         while header != 1:  # while user enters a wrong number
-            pos = input(f'{language[145]} : ')
+            pos = input(f'{language[start + 23]} : ')
             if pos in ['0', '-0', '']:
-                print(language[146])
+                print(language[start + 24])
             elif pos.lstrip('-').isdigit():
                 if int(pos.lstrip('-')) > len(tex0):  # if position entered is greater than the max number of tex0 found
                     message()
@@ -103,8 +105,8 @@ with open(file, 'r+b') as arc:  # though arc could have been named brres as it's
         arc.seek(offset - 4)
         colour = arc.read(1)[0]  # the 35th byte of a tex0 file is the colour encoding, see colourenc for full list
         cmd_list.append(f'wimgt encode "{picture}.png" -x {colourenc[colour]} --n-mm {nmipmap} -o')
-        print(language[147])
-        add_png = input(f'{language[148]}\n')
+        print(language[start + 25])
+        add_png = input(f'{language[start + 26]}\n')
         if add_png == '1':
             for command in cmd_list:
                 os.system(command)
@@ -118,7 +120,8 @@ with open(file, 'r+b') as arc:  # though arc could have been named brres as it's
             if texture.read(4) != b'TEX0':
                 continue
             byte = texture.read(4)
-            data_size = (byte[0] * 16777216) + (byte[1] * 65536) + (byte[2] * 256) + byte[3] - 64  # 4 bytes integer
+            # data_size = (byte[0] * 16777216) + (byte[1] * 65536) + (byte[2] * 256) + byte[3] - 64  # 4 bytes integer
+            data_size = (byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3] - 64  # 4 bytes integer
             texture.seek(64)  # the header of a tex0 is 64 bytes long
             tex = texture.read(data_size)  # custom texture data
 
@@ -129,7 +132,7 @@ with open(file, 'r+b') as arc:  # though arc could have been named brres as it's
             arc.seek(arc_tex0_data_pos - 36)
             arc_tex_dim = arc.read(4)
         if dim_tex != arc_tex_dim:  # don't replace vanilla texture if the custom one doesn't have the same size
-            input(f'{picture} is {dim_tex[0] * 256 + dim_tex[1]}x{dim_tex[2] * 256 + dim_tex[3]} while {file} texture is {arc_tex_dim[0] * 256 + arc_tex_dim[1]}x{arc_tex_dim[2] * 256 + arc_tex_dim[3]}\nDid you opened external folder ???\n\nNote also that all textures are counted for all brres in an arc file.\n\nPress enter to replace all other textures.\n')
+            input(f'{picture}{language[msm + 49].split("#")[1]}{dim_tex[0] * 256 + dim_tex[1]}{language[msm + 49].split("#")[2]}{dim_tex[2] * 256 + dim_tex[3]}{language[msm + 49].split("#")[3]}{file}{language[msm + 49].split("#")[4]}{arc_tex_dim[0] * 256 + arc_tex_dim[1]}{language[msm + 49].split("#")[5]}{arc_tex_dim[2] * 256 + arc_tex_dim[3]}\n{language[start + 30]}\n\n{language[start + 31]}\n\n{language[start + 32]}\n')
             continue
         next_tex0_pos = arc_tex0_data_pos + data_size
         if pos == -1 or pos == len(tex0) - 1:  # if the texture is the last one, it doesn't have a next
@@ -138,10 +141,10 @@ with open(file, 'r+b') as arc:  # though arc could have been named brres as it's
         header = arc.read(4)
         brres = bres_list[-1]  # equals zero if the list is empty or the first brres offset if not empty
         if (brres == 0 or next_tex0_pos < brres) and header != b'TEX0':
-            print(language[149])
+            print(language[start + 27])
             print(f'dev info : current file = {file} ; picture name = {picture} ; tex0 data size = {data_size}')
             print(f'offset of next tex0 = {next_tex0_pos} ; next brres offset = {brres}')
-            input(language[150])
+            input(language[start + 28])
             continue
         arc.seek(arc_tex0_data_pos)
         arc.write(tex)  # custom texture data

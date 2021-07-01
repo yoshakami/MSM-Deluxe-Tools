@@ -7,10 +7,13 @@ from functools import partial
 if ':\\Windows' in os.getcwd():
     os.chdir(os.environ['userprofile'] + '\\Desktop')
 
-with open('#language.txt', 'r') as txt:
+with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
     language = txt.read()
     language = [''] + language.splitlines()
 
+start = int(language[1].split(":")[11])
+msm = int(language[1].split(":")[1])
+arc = int(language[1].split(":")[5])
 extract_row = []
 for j in range(5, 16):
     extract_row += [j, j, j, j]
@@ -28,10 +31,10 @@ create_col = [0, 1, 2, 3] * 15 + [4, 5, 6, 7] * 15
 extract_list = []
 create_list = []
 a = Tk()
-a.title(language[98])
+a.title(language[start])
 a.minsize(660, 440)
 a.config(bg='#aaffaa')
-a.iconbitmap('C:\\Yosh\\isox.ico')
+a.iconbitmap('C:\\Yosh\\msm_stuff\\isox.ico')
 
 
 def extract(file, index):
@@ -46,7 +49,7 @@ def extract(file, index):
         shutil.rmtree(f'{file2}\\DATA')
 
     extract_list[index].destroy()
-    patched = Label(a, text=language[37], bg='#aaffaa', width=30)
+    patched = Label(a, text=language[start + 1], bg='#aaffaa', width=30)
     patched.grid(row=extract_row[index], column=extract_col[index])
 
 
@@ -56,9 +59,9 @@ def create(name, ref):
 
     create_list[ref].destroy()
     if os.path.exists(f"{name}.{filetype}"):
-        patched = Label(a, text=language[37], bg='#aaffaa', width=30)
+        patched = Label(a, text=language[start + 1], bg='#aaffaa', width=30)
     else:
-        patched = Label(a, text=language[99], bg='#aaffaa', width=30)
+        patched = Label(a, text=language[start + 2], bg='#aaffaa', width=30)
     patched.grid(row=create_row[ref], column=create_col[ref])
 
 
@@ -100,7 +103,7 @@ def scan_directory():  # triggered each time Enter button / Open File Explorer b
             n += 1
 
     if i > 40 or n > 40:  # creates a big exit button and make the window fullscreen as it was too tiny to display all buttons
-        exitbu2 = Button(a, text=language[38], command=a.quit, activebackground='#d9ff8c', bg='#d9ff8c', fg='#ff2222', width=58, height=3, font=100)
+        exitbu2 = Button(a, text=language[msm + 39], command=a.quit, activebackground='#d9ff8c', bg='#d9ff8c', fg='#ff2222', width=58, height=3, font=100)
         exitbu2.grid(row=0, column=4, rowspan=2, columnspan=3)
         a.attributes('-fullscreen', True)
 
@@ -134,25 +137,25 @@ def checkbu_rm_update():  # trigerred each time the checkbutton is pressed
             conf.write(b'1')
 
 
-text_label = Label(a, text=language[29], bg='#aaffaa', width=30)
+text_label = Label(a, text=language[start + msm + 18], bg='#aaffaa', width=30)
 text_label.grid(row=0, column=0)
 
-cwd_label = Label(a, text=os.getcwd(), bg='#aaffaa', width=60, anchor='w')
+cwd_label = Label(a, text=os.getcwd(), bg='#aaffaa', width=60)
 cwd_label.grid(row=0, column=1, columnspan=2)
 
 entry_dir = Entry(a, width=30)
 entry_dir.grid(row=1, column=1)
 
-refreshbu = Button(a, text=language[40], command=change_directory, activebackground='#ff9999', width=30)
+refreshbu = Button(a, text=language[msm + 40], command=change_directory, activebackground='#ff9999', width=30)
 refreshbu.grid(row=1, column=2)
 
-open_explorerbu = Button(a, text=language[30], command=open_explorer, activebackground='#96c7ff', width=15)
+open_explorerbu = Button(a, text=language[msm + 19], command=open_explorer, activebackground='#96c7ff', width=15)
 open_explorerbu.grid(row=1, column=0)
 
-cb_rm_update = Checkbutton(a, text=language[100], command=checkbu_rm_update, bg="#aaffaa", width=20)
+cb_rm_update = Checkbutton(a, text=language[start + 3], command=checkbu_rm_update, bg="#aaffaa", width=20)
 cb_rm_update.grid(row=0, column=3)
 
-lcompression = Label(a, text=f'{language[101]} ->             ', bg='#aaffaa', width=30)
+lcompression = Label(a, text=f'{language[start + 4]} ->             ', bg='#aaffaa', width=30)
 lcompression.grid(row=16, column=1, columnspan=2)
 
 compression = ('iso', 'ciso', 'wbfs')
@@ -163,13 +166,13 @@ Compression["menu"].config(bg="#000000", fg='#ffffff')
 Compression.config(width=7)
 Compression.grid(row=16, column=2)
 
-lextract = Label(a, text=language[41], font=500, bg='#aaffaa', height=3)
+lextract = Label(a, text=language[arc + 4], font=(None, 15), bg='#aaffaa', height=3)
 lextract.grid(row=2, column=0, rowspan=2)
 
-lextract2 = Label(a, text=language[102], font=500, bg='#aaffaa', height=3)
+lextract2 = Label(a, text=language[start + 5], font=(None, 15), bg='#aaffaa', height=3)
 lextract2.grid(row=2, column=1, rowspan=2, columnspan=2)
 
-lcreate = Label(a, text=language[44], font=500, bg='#aaffaa')
+lcreate = Label(a, text=language[arc + 7], font=(None, 15), bg='#aaffaa')
 lcreate.grid(row=16, column=0)
 
 with open('C:\\Yosh\\a', 'rb') as config:

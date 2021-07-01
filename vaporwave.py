@@ -1,12 +1,13 @@
 import pyperclip
 
-with open('#language.txt', 'r') as txt:
+with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
     language = txt.read()
     language = [''] + language.splitlines()
 
+start = int(language[1].split(":")[3])
 while True:  # forever
     message = ''
-    text = input(language[163])
+    text = input(language[start + 7])
     for letter in text:
         if letter == ' ':
             message += '   '
