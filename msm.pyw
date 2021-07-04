@@ -258,7 +258,7 @@ def cmn():
 
 ltitle = Label(a, text=language[start + 3], font=(None, 15), bg="#aecfee", height=3)
 ltitle.grid(row=0, columnspan=3)
-lp = Button(a, text=language[start + 4], state=DISABLED, command=pack, width=30)
+lp = Button(a, text=language[start + 4], command=pack, width=30)
 lp.grid(row=3, column=0)
 lt = Button(a, text=language[start + 5], state=DISABLED, command=thp, width=30)
 lt.grid(row=3, column=1)
