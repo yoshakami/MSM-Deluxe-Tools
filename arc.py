@@ -111,16 +111,19 @@ def scan_directory():  # triggered each time Enter button / Open File Explorer b
 
     for files in os.listdir('./'):  # display a button for each yaz0, yaz1, pack, breff, breft, arc or brres found
         try:
+            if not os.path.isfile(files):
+                continue
             size = os.path.getsize(files)
-            if os.path.isfile(files) and size > 4 and i < 96:
-                with open(files, 'rb') as check_file:
-                    header = check_file.read(4)
-                if header in [b'Yaz0', b'Yaz1', b'PACK', b'REFF', b'REFT', b'U\xaa8-', b'bres']:
-                    launch_func = partial(extract, files, i)
-                    extractbu = Button(a, text=files, command=launch_func, activebackground='#a9ff99', width=30)
-                    extractbu.grid(row=extract_row[i], column=extract_col[i])
-                    extract_list.append(extractbu)
-                    i += 1
+            if size < 5 or i > 96:
+                continue
+            with open(files, 'rb') as check_file:
+                header = check_file.read(4)
+            if header in [b'Yaz0', b'Yaz1', b'PACK', b'REFF', b'REFT', b'U\xaa8-', b'bres']:
+                launch_func = partial(extract, files, i)
+                extractbu = Button(a, text=files, command=launch_func, activebackground='#a9ff99', width=30)
+                extractbu.grid(row=extract_row[i], column=extract_col[i])
+                extract_list.append(extractbu)
+                i += 1
 
         except PermissionError as error:
             print(error)

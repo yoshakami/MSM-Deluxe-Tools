@@ -1,6 +1,6 @@
 import os
 import webbrowser
-from random import randint
+# from random import randint
 from subprocess import Popen
 from winsound import PlaySound
 from tkinter.filedialog import askdirectory
@@ -77,13 +77,13 @@ def question_mark():
     with open('C:\\Yosh\\a', 'r+b') as config:
         size = os.path.getsize('C:\\Yosh\\a')
         for n in range(size, 17):
-            config.write(b'\x00')
+            config.write(b'0')
         # ints = []
         config.seek(17)
         data = config.read()
-        if len(data) != len(random):
-            config.seek(17 + len(data))
-            if not data:
+        if len(data) != len(random):  # if user didn't triggered all events, trigger the next from the list
+            config.seek(len(data))
+            if not data:  # if the string is empty
                 play(0)
                 config.write(b'\x00')
             else:
@@ -92,24 +92,29 @@ def question_mark():
             # tu regardes le dernier octet écrit et tu lances random[octet+1]
             # it looks at the last byte and adds one, to play the list in loop
         else:
-            config.seek(16)
-            count = config.read(1)[0]
-            config.seek(16)
-            config.write(bytes(chr(count + 1), 'latin-1'))
-            if count > 50:
-                config.seek(0)
-                content = config.read(16)
-                rewrite = True
-            # for j in range(len(data)):
-            #    ints.append(data[j])
-            i = randint(0, len(data))
-            while i == data[0]:
-                i = randint(0, len(data))
-            config.write(bytes(chr(i), 'latin-1'))
-            play(i)
+            config.seek(0)
+            content = config.read(17)
+            rewrite = True
+            # this used to play 50 times random events then rewrite config, but as the list is too big now it's better to rewrite
+            # config.seek(16)
+            # count = config.read(1)[0]
+            # config.seek(16)
+            # config.write(bytes(chr(count + 1), 'latin-1'))
+            # if count > 50:
+            #     config.seek(0)
+            #     content = config.read(16)
+            #    rewrite = True
+            # # for j in range(len(data)):
+            # #    ints.append(data[j])
+            # i = randint(0, len(data))
+            # while i == data[0]:
+            #    i = randint(0, len(data))
+            # config.write(bytes(chr(i), 'latin-1'))
+            # play(i)
     if rewrite:
         with open('C:\\Yosh\\a', 'wb') as config2:
             config2.write(content)
+            question_mark()
 
 
 def play(num):

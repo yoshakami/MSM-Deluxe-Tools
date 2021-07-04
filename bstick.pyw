@@ -135,27 +135,21 @@ def scan_directory():
 
     i = -1
     for file in os.listdir('./'):
-        if not os.path.isfile(file):
-            continue
-        size = cursor = os.path.getsize(file)
-        if size < 2222:
-            continue
-        cursor -= 7
         try:
+            if not os.path.isfile(file):
+                continue
+            size = os.path.getsize(file)
+            if size < 10:
+                continue
             with open(file, 'r+b') as binary:
                 header = binary.read(4)
                 if header in [b'bres', b'MDL0']:
-                    while cursor > size - 2222:
-                        cursor -= 1
-                        binary.seek(cursor)
-                        r = binary.read(7)
-                        if r == b'\x06bstick':
-                            i += 1
-                            change_color = partial(change_file, file, i)
-                            filebu = Button(a, text=file, command=change_color, activebackground='#a9ff91', width=30)
-                            filebu.grid(row=button_row[i], column=button_col[i])
-                            button_list.append(filebu)
-
+                    if b'\x00\x00\x06bstick\x00\x00' in binary.read():  # the mdl0 name must be inside the file
+                        i += 1
+                        change_color = partial(change_file, file, i)
+                        filebu = Button(a, text=file, command=change_color, activebackground='#a9ff91', width=30)
+                        filebu.grid(row=button_row[i], column=button_col[i])
+                        button_list.append(filebu)
         except PermissionError:
             continue
 

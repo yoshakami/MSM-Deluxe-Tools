@@ -72,11 +72,12 @@ def scan_directory():  # triggered each time Enter button / Open File Explorer b
             tkstuff.destroy()
 
     for files in os.listdir('./'):  # display a button for each iso, ciso or wbfs found
-        # print(os.listdir('./'))
-        size = os.path.getsize(files)
-        if not os.path.isfile(files) or size < 4 or i > 88:
-            continue
         try:
+            if not os.path.isfile(files):
+                continue
+            size = os.path.getsize(files)
+            if size < 10 or i > 88:
+                continue
             with open(files, 'rb') as check_file:
                 header = check_file.read(4)
                 check_file.seek(24)

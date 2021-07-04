@@ -47,10 +47,12 @@ def scan_directory():
             tkstuff.destroy()
 
     for files in os.listdir('./'):
-        size = os.path.getsize(files)
-        if not os.path.isfile(files) or size < 10 or i > 192:
-            continue
         try:
+            if not os.path.isfile(files):
+                continue
+            size = os.path.getsize(files)
+            if size < 10 or i > 192:
+                continue
             with open(files, 'rb') as check_file:
                 header = check_file.read(4)
             if header == b'THP\x00':

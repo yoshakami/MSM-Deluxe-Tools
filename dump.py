@@ -2,6 +2,7 @@ import os
 from tkinter import Tk, Label, Button, END, Entry, Checkbutton
 from tkinter.filedialog import askdirectory
 from functools import partial
+from hashlib import sha256
 
 if ':\\Windows' in os.getcwd():
     os.chdir(os.environ['userprofile'] + '\\Desktop')
@@ -20,6 +21,7 @@ for j in range(8, 20):
 for j in range(20, 32):
     button_row += [j, j, j, j, j, j, j, j]
 
+colourenc = ['I4', 'I8', 'IA4', 'IA8', 'RGB565', 'RGB5A3', 'RGBA8', 0, 'CI4', 'CI8', 'CI14x2', 0, 0, 0, 'CMPR']
 button_col = [0, 1, 2] * 12 + [3, 4, 5, 6, 7] * 12 + [0, 1, 2, 3, 4, 5, 6, 7] * 12
 button_list = []
 a = Tk()
@@ -45,36 +47,78 @@ def dump(file, index):
         dumpmip = True  # dump mipmaps button checked
     else:
         dumpmip = False
+    tex0 = True
     folder = './' + os.path.splitext(file)[0]
     if not os.path.exists(folder):
         os.mkdir(folder)
+    png_list = []
+    size_list = []
+    mips_list = []
+    color_list = []
     with open(file, 'rb') as model:
         header = model.read(4)
         if header in [b'U\xaa8-', b'bres']:
+            tex0 = False
             while y - 17 > z:
                 model.seek(z)
                 data = model.read(4)
                 if data == b'TEX0':
                     counter += 1
                     byte = model.read(4)
+                    model.seek(z + 20)
+                    pointer = model.read(4)
                     # tex_size = (byte[0] * 16777216) + (byte[1] * 65536) + (byte[2] * 256) + byte[3] - 64  # 4 bytes integer
-                    tex_size = (byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3] - 64  # 4 bytes integer
+                    tex_size = (byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3] - 64  # 4 bytes integer minus the header
+                    tex_name_offset = (pointer[0] << 24) + (pointer[1] << 16) + (pointer[2] << 8) + pointer[3]  # 4 bytes integer
+                    model.seek(tex_name_offset - 1)
+                    name_length = model.read(1)[0]
+                    tex_name = str(model.read(name_length))[2:-1]  # removes b' '
+                    model.seek(z + 39)
+                    tex_mips = model.read(1)[0] - 1
+                    model.seek(z + 35)
+                    tex_color = model.read(1)[0]
                     model.seek(z)
                     texture = model.read(tex_size)
-                    with open(f'./{folder}/{counter}.tex0', 'wb') as tex:
+                    for character in ['\\', '/', ':', '*', '?', '"', '<', '>', '|']:
+                        tex_name = tex_name.replace(character, ';')  # forbidden characters by windows
+                    if os.path.exists(f'./{folder}/tex0/{tex_name}.tex0'):
+                        num = 0
+                        tex_name += '-0'
+                        while os.path.exists(f'./{folder}/tex0/{tex_name}.tex0'):
+                            tex_name = tex_name.rstrip(num)
+                            num += 1
+                            tex_name += str(num)
+                    with open(f'./{folder}/tex0/{tex_name}.tex0', 'wb') as tex:
                         tex.write(texture)
                     if dumpmip:
-                        os.system(f'wimgt decode "{folder}/{counter}.tex0" -d "{folder}/{counter}.png"')
+                        os.system(f'wimgt decode "{folder}/tex0/{tex_name}.tex0" -d "{folder}/{tex_name}.png" -o')
                     else:
-                        os.system(f'wimgt decode "{folder}/{counter}.tex0" --no-mm -d "{folder}/{counter}.png"')
+                        os.system(f'wimgt decode "{folder}/tex0/{tex_name}.tex0" --no-mm -d "{folder}/{tex_name}.png" -o')
+                    png_list.append(f"{folder}/{tex_name}.png")
+                    size_list.append(tex_size)
+                    mips_list.append(tex_mips)
+                    color_list.append(colourenc[tex_color])
                 z += 16
+        elif dumpmip:
+            os.system(f'wimgt decode "{file}" -o')
         else:
-            os.system(f'wimgt decode "{file}"')
+            os.system(f'wimgt decode --no-mm "{file}" -o')
     if remtex0:
-        for element in os.listdir(folder):
+        for element in os.listdir(folder + '\\tex0'):
             if os.path.splitext(element)[-1] == '.tex0':
-                os.system(f'del ".\\{folder[2:]}\\{element}"')
+                # os.system(f'del ".\\{folder[2:]}\\{element}"')
+                if os.path.exists(f'.\\{folder[2:]}\\tex0\\{element}'):
+                    os.remove(f'.\\{folder[2:]}\\tex0\\{element}')
                 print(language[msm + 48].replace('#', element))
+    if not tex0:
+        with open(folder + '\\zzzdump.txt', 'w') as zzzdump:
+            zzzdump.write('\n'.join([language[113], language[114], language[115]]))
+            for i in range(len(png_list)):
+                if not os.path.exists(png_list[i]):
+                    print(language[50].replace('#', png_list[i]))
+                zzzdump.write('\n' + ' '.join([str(size_list[i]), mips_list[i], color_list[i], png_list[i]]) + '\n')
+                with open(png_list[i], 'rb') as png:
+                    zzzdump.write(sha256(png.read()).hexdigest())  # sha256 hash of the png
     button_list[index].destroy()
     dumped = Label(a, text=f'{language[msm + 44].split("#")[0]}{counter}{language[msm + 44].split("#")[1]}', bg='#aaffbf', width=30)
     dumped.grid(row=button_row[index], column=button_col[index])
@@ -87,10 +131,12 @@ def scan_directory():
             tkstuff.destroy()
 
     for files in os.listdir('./'):
-        size = os.path.getsize(files)
-        if not os.path.isfile(files) or size < 10 or i > 192:
-            continue
         try:
+            if not os.path.isfile(files):
+                continue
+            size = os.path.getsize(files)
+            if size < 10 or i > 192:
+                continue
             with open(files, 'rb') as check_file:
                 header = check_file.read(4)
             if header in [b'bres', b'U\xaa8-', b'TEX0']:

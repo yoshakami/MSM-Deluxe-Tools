@@ -2,16 +2,13 @@ import os
 
 extensions = ['.mdl', '.bin', '.cmp']  # extensions of compressed files recognized
 for cfile in os.listdir('./'):
-    if not os.path.isfile(cfile):
-        continue
     ismodel = iscmp = False
-    size = cursor = os.path.getsize(cfile)
-    if size < 8:
-        continue
     try:
-        if size < 2222:  # if the size is very little, don't trigger the while, it's definitely not a mdl file
-            cursor = -3333
-        cursor -= 8  # cursor = size - 8
+        if not os.path.isfile(cfile):
+            continue
+        size = cursor = os.path.getsize(cfile)
+        if size < 8:
+            continue
         with open(cfile, 'rb') as mdl_check:
             if mdl_check.read(4) not in [b'U\xaa8-', b'bres', b'\x00 \xaf0']:
                 continue
@@ -19,13 +16,8 @@ for cfile in os.listdir('./'):
             if mdl_check.read(1) == b'\x00':
                 iscmp = True
             if not iscmp:  # if it's not a cmp, check whether it is a mdl or else a bin.
-                while cursor > size - 2222:
-                    cursor -= 1
-                    mdl_check.seek(cursor)
-                    data = mdl_check.read(7)
-                    if data == b'\x06body_h':  # all mdl does have this text before their end (a mdl0 named body_h)
-                        ismodel = True
-                        break
+                if b'\x00\x00\x06body_h\x00\x00' in mdl_check.read():
+                    ismodel = True
 
     except PermissionError as error:
         print(error)

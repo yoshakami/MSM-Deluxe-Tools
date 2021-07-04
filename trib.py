@@ -83,10 +83,12 @@ def scan_directory():
     for files in os.listdir('./'):
         if mdl > 800:
             break
-        size = os.path.getsize(files)
-        if not os.path.isfile(files) or size < 10:
-            continue
         try:
+            if not os.path.isfile(files):
+                continue
+            size = os.path.getsize(files)
+            if size < 10:
+                continue
             with open(files, 'rb') as bfile:
                 cursor = 0
                 header = bfile.read(4)

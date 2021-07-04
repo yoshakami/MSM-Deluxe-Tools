@@ -1,7 +1,9 @@
-import os
-from tkinter import Tk, Label, Button, END, Entry
+import shutil
+from tkinter import Tk, Label, Button, END, Entry, Checkbutton
 from tkinter.filedialog import askdirectory
 from functools import partial
+from hashlib import sha256
+import os
 
 if ':\\Windows' in os.getcwd():
     os.chdir(os.environ['userprofile'] + '\\Desktop')
@@ -33,9 +35,59 @@ print(f"{language[dump + 2]}\n{language[start + 2]}\n{language[start + 3]}\n{lan
 
 
 def pack(file, index):
-    y = os.path.getsize(file)
-    counter = 0
-
+    with open('C:\\Yosh\\a', 'r+b') as checcbutton:
+        checcbutton.seek(16)
+        keep_encoded = checcbutton.read(1)
+    edited = []
+    index_edited = []
+    size_list = []
+    filesize = os.path.getsize(file)
+    counter = clock = num = 0
+    # compare the current hashes with these written in zzzdump.txt and establish a list of edited pictures
+    # encode these png to tex0
+    encoded = os.path.splitext(file)[0] + '/encoded'
+    if not os.path.exists(encoded):
+        os.mkdir(encoded)
+    with open(os.path.splitext(file)[0] + '\\zzzdump.txt', 'r') as zzzdump:
+        text = zzzdump.read().splitlines()[3:]
+        for line in text:
+            if clock:
+                clock = False
+                with open(name, 'rb') as png:
+                    if line != sha256(png.read()).hexdigest():
+                        counter += 1
+                        edited.append(f'{os.path.splitext(name)[0]}.tex0')
+                        index_edited.append(num)
+                        size_list.append(size)
+                        os.system(f'wimgt encode "{os.path.splitext(file)[0]}/{name}" -x {color} --n-mm {mip} -d "{encoded}/{os.path.splitext(name)[0]}.tex0" -o')
+                num += 1
+            else:
+                clock = True
+                size = line.split(' ', 3)[0]
+                mip = line.split(' ', 3)[1]
+                color = line.split(' ', 3)[2]
+                name = line.split(' ', 3)[3]
+    # now just replace them inside the file
+    tex0 = current = -1
+    with open(file, 'r+b') as u8:  # works with arc and brres, so it's just a basic u8 archive format I would say
+        for cursor in range(0, filesize - 17, 16):
+            u8.seek(cursor)
+            if u8.read(4) == b'TEX0':
+                tex0 += 1
+                if tex0 in index_edited:
+                    current += 1
+                    byte = u8.read(4)
+                    data_size = (byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3] - 64  # 4 bytes integer
+                    if data_size != size_list[current]:
+                        print(language[51])
+                        continue
+                    with open(f'{encoded}/{edited[current]}', 'rb') as texture:
+                        texture.seek(64)
+                        tex = texture.read(data_size)
+                    u8.seek(cursor + 64)
+                    u8.write(tex)
+    if keep_encoded == b'0':
+        shutil.rmtree(encoded)
     button_list[index].destroy()
     patched = Label(a, text=f'{language[msm + 45].split("#")[0]}{counter}{language[msm + 45].split("#")[1]}', bg='#aaffbf', width=30)
     patched.grid(row=button_row[index], column=button_col[index])
@@ -44,17 +96,19 @@ def pack(file, index):
 def scan_directory():
     i = 0
     for tkstuff in a.winfo_children():
-        if tkstuff not in [text_label, cwd_label, entry_dir, refreshbu, open_explorerbu, T, title]:
+        if tkstuff not in [text_label, cwd_label, entry_dir, refreshbu, open_explorerbu, T, title, keep_tex0]:
             tkstuff.destroy()
 
     for files in os.listdir('./'):
-        size = os.path.getsize(files)
-        if not os.path.isfile(files) or size < 10 or i > 192:
-            continue
         try:
+            if not os.path.isfile(files):
+                continue
+            size = os.path.getsize(files)
+            if size < 10 or i > 192:
+                continue
             with open(files, 'rb') as check_file:
                 header = check_file.read(4)
-            if header in [b'bres', b'U\xaa8-', b'TEX0']:
+            if header in [b'bres', b'U\xaa8-'] and os.path.exists(os.path.splitext(files)[0] + '\\zzzdump.txt'):
                 patch = partial(pack, files, i)
                 packbu = Button(a, text=files, command=patch, activebackground='#a9ff99', width=30)
                 packbu.grid(row=button_row[i], column=button_col[i])
@@ -89,6 +143,17 @@ def open_explorer():  # change directory with C:\Windows\explorer.exe GUI
     scan_directory()
 
 
+def keep():  # each time the checkbutton keep_tex0 is triggered
+    with open('C:\\Yosh\\a', 'r+b') as checcbutton:
+        checcbutton.seek(16)
+        configg = checcbutton.read(1)
+        checcbutton.seek(16)
+        if configg == b'1':
+            checcbutton.write(b'0')
+        else:
+            checcbutton.write(b'1')
+
+
 text_label = Label(a, text=language[msm + 18], bg='#aaffbf', width=30)
 text_label.grid(row=0, column=0)
 
@@ -110,5 +175,7 @@ T.grid(row=2, column=0, columnspan=3)
 title = Label(a, text=language[start + 1], font=(None, 15), bg='#aaffbf', height=3)
 title.grid(row=3, columnspan=9)
 
+keep_tex0 = Checkbutton(a, text=language[start + 4], command=keep, bg="#aaffbf", width=20)
+keep_tex0.grid(row=2, column=0)
 scan_directory()
 a.mainloop()
