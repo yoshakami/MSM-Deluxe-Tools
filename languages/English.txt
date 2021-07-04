@@ -1,7 +1,7 @@
-/* msm.pyw :0:   short :50:   arc.py :65:   bstick.pyw :76:   dump.py :105:   isox.py :112:   lh.py :118:   map.pyw :129:   pack.py :137:   tex.py :142:   thp.pyw :149:   trib.py :153:    web.pyw :162:   cli :178:   msmhelp.pyw :221:
+/* msm.pyw :0:   short :52:   arc.py :67:   bstick.pyw :78:   dump.py :107:   isox.py :117:   lh.py :123:   map.pyw :134:   pack.py :142:   tex.py :148:   thp.pyw :155:   trib.py :159:    web.pyw :168:   cli :184:   msmhelp.pyw :227:
 Mario Sports Mix Modding App
 Mario Sports Mix Modding App Menu
-Pack (Dump Textures before)
+Pack Textures
 THP Compressor
 Every Game Brsar Patcher
 MSM files extract and compress
@@ -41,12 +41,14 @@ Enter
 $$change between the hashtags$$    # texture has # mipmaps while # has #
 $$change between the hashtags$$    # texture is in # colour encoding format while # is in #
 patched # brstm :)
-dumped # textures
-replaced # textures
+dumped # textures :)
+replaced # textures :D
 fixed # textures
 on # files
 deleting #
 $$ a.png is 512x512 while ...$$     # is #x# while # texture is #x#
+what's happening with >#< ?? this file no longer exists
+the file >#< doesn't fit in the texture data. you can't edit texture sizes (but if you insist you can change colour encoding and number of mipmaps in zzzdump.txt to make the same data size with different dimensions)
 Welcome ! this app is used to convert hexadecimal float values to decimal float
 hex-float : 
 copied to clipboard the value below
@@ -109,6 +111,9 @@ It'll dump all raw tex0 of the file then will convert them to png
 Keep tex0
 Dump mipmaps
 Dumping can take up to 2 minutes
+Auto-Gerated file by MSM Dump Texture App. Don't delete it else you can't use the Pack Texture app.
+It contains all tex0 data size, number of mipmaps, colour encoding, dumped png names, and sha256 hashes (used to know which png has been edited)
+Also, you may already know that you can't resize any png. else they won't fit inside the brres/arc data.
 MSM Tools : iso/wbfs extract and compress
 done ! (^•^)
 oof! folder not recognized as a game
@@ -139,13 +144,14 @@ MSM Pack Textures
 This app is also looking for "zzzdump.txt" which contains png hashes,
 It will search in current directory and the directories in this current one
 use the "Dump Textures" app to get this file, then this app will pack edited png files onto the brres you want
+keep encoded folder
 Mario Sports Mix Modding Tool : Encode png to tex0
 Encode png to tex0
 Hoi ! this app displays max 192 png in your current working directory.
 Done! (づ｡◕‿◕｡)づ
 Colour Encoding
 Number of Mipmaps
-Output File Name (without extension) [Optionnal]
+Output File Name (without extension)
 Mario Sports Mix Modding Tool : THP Compressor
 Compress THP Files
 Heya :] ! this app display up to 192 thp files in your current working directory.
