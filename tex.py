@@ -50,6 +50,7 @@ def encode(file, index):
 
 
 def scan_directory():
+    del button_list[:]
     i = 0
     for tkstuff in a.winfo_children():
         if tkstuff not in [text_label, cwd_label, entry_dir, refreshbu, open_explorerbu, title, encoding, mipmaps, output_name, Mipmap, Colour, output, blank]:

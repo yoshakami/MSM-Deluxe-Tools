@@ -27,7 +27,7 @@ button_list = []
 a = Tk()
 a.title(language[start])
 a.minsize(660, 440)
-a.config(bg='#aaffbf')
+a.config(bg='#ffbfaa')
 a.iconbitmap('C:\\Yosh\\msm_stuff\\thp.ico')
 
 
@@ -36,11 +36,12 @@ def compress(file, index):
     y = os.path.getsize(file)
 
     button_list[index].destroy()
-    patched = Label(a, text=f'{language[start + 3]}', bg='#aaffbf', width=30)
+    patched = Label(a, text=f'{language[start + 3]}', bg='#ffbfaa', width=30)
     patched.grid(row=button_row[index], column=button_col[index])
 
 
 def scan_directory():
+    del button_list[:]
     i = 0
     for tkstuff in a.winfo_children():
         if tkstuff not in [text_label, cwd_label, entry_dir, refreshbu, open_explorerbu, T, title]:
@@ -90,10 +91,10 @@ def open_explorer():  # change directory with C:\Windows\explorer.exe GUI
     scan_directory()
 
 
-text_label = Label(a, text=language[msm + 18], bg='#aaffbf', width=30)
+text_label = Label(a, text=language[msm + 18], bg='#ffbfaa', width=30)
 text_label.grid(row=0, column=0)
 
-cwd_label = Label(a, text=os.getcwd(), bg='#aaffbf', width=60, anchor='w')
+cwd_label = Label(a, text=os.getcwd(), bg='#ffbfaa', width=60, anchor='w')
 cwd_label.grid(row=0, column=1, columnspan=3)
 
 entry_dir = Entry(a, width=30)
@@ -105,10 +106,10 @@ refreshbu.grid(row=1, column=2)
 open_explorerbu = Button(a, text=language[msm + 19], command=open_explorer, activebackground='#96c7ff', width=15)
 open_explorerbu.grid(row=1, column=0)
 
-T = Label(a, text=language[isox + 5].replace('5', '2'), bg='#aaffbf', width=30)
+T = Label(a, text=language[isox + 5].replace('5', '2'), bg='#ffbfaa', width=30)
 T.grid(row=2, column=1)
 
-title = Label(a, text=language[start + 1], font=(None, 15), bg='#aaffbf', height=3)
+title = Label(a, text=language[start + 1], font=(None, 15), bg='#ffbfaa', height=3)
 title.grid(row=3, columnspan=9)
 
 scan_directory()

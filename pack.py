@@ -29,9 +29,9 @@ button_list = []
 a = Tk()
 a.title(language[start])
 a.minsize(660, 440)
-a.config(bg='#aaffbf')
+a.config(bg='#ffaaaa')
 a.iconbitmap('C:\\Yosh\\msm_stuff\\pack.ico')
-print(f"{language[dump + 2]}\n{language[start + 2]}\n{language[start + 3]}\n{language[start + 4]}")
+print(f"{language[dump + 2]}\n{language[start + 2]}\n{language[start + 3]}\n{language[start + 4]}\n")
 
 
 def pack(file, index):
@@ -53,13 +53,13 @@ def pack(file, index):
         for line in text:
             if clock:
                 clock = False
-                with open(name, 'rb') as png:
+                with open(f"./{os.path.splitext(file)[0]}/{name}", 'rb') as png:
                     if line != sha256(png.read()).hexdigest():
                         counter += 1
                         edited.append(f'{os.path.splitext(name)[0]}.tex0')
                         index_edited.append(num)
                         size_list.append(size)
-                        os.system(f'wimgt encode "{os.path.splitext(file)[0]}/{name}" -x {color} --n-mm {mip} -d "{encoded}/{os.path.splitext(name)[0]}.tex0" -o')
+                        os.system(f'wimgt encode "./{os.path.splitext(file)[0]}/{name}" -x {color} --n-mm {mip} -d "./{encoded}/{os.path.splitext(name)[0]}.tex0" -o')
                 num += 1
             else:
                 clock = True
@@ -78,10 +78,10 @@ def pack(file, index):
                     current += 1
                     byte = u8.read(4)
                     data_size = (byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3] - 64  # 4 bytes integer
-                    if data_size != size_list[current]:
-                        print(language[51])
+                    if data_size != int(size_list[current]):  # will not replace data if it's not the vanilla size
+                        print(language[51].replace('#', name) + '\n')
                         continue
-                    with open(f'{encoded}/{edited[current]}', 'rb') as texture:
+                    with open(f'./{encoded}/{edited[current]}', 'rb') as texture:
                         texture.seek(64)
                         tex = texture.read(data_size)
                     u8.seek(cursor + 64)
@@ -89,11 +89,12 @@ def pack(file, index):
     if keep_encoded == b'0':
         shutil.rmtree(encoded)
     button_list[index].destroy()
-    patched = Label(a, text=f'{language[msm + 45].split("#")[0]}{counter}{language[msm + 45].split("#")[1]}', bg='#aaffbf', width=30)
+    patched = Label(a, text=f'{language[msm + 45].split("#")[0]}{counter}{language[msm + 45].split("#")[1]}', bg='#ffaaaa', width=30)
     patched.grid(row=button_row[index], column=button_col[index])
 
 
 def scan_directory():
+    del button_list[:]
     i = 0
     for tkstuff in a.winfo_children():
         if tkstuff not in [text_label, cwd_label, entry_dir, refreshbu, open_explorerbu, T, title, keep_tex0]:
@@ -154,10 +155,10 @@ def keep():  # each time the checkbutton keep_tex0 is triggered
             checcbutton.write(b'1')
 
 
-text_label = Label(a, text=language[msm + 18], bg='#aaffbf', width=30)
+text_label = Label(a, text=language[msm + 18], bg='#ffaaaa', width=30)
 text_label.grid(row=0, column=0)
 
-cwd_label = Label(a, text=os.getcwd(), bg='#aaffbf', width=60, anchor='w')
+cwd_label = Label(a, text=os.getcwd(), bg='#ffaaaa', width=60, anchor='w')
 cwd_label.grid(row=0, column=1, columnspan=3)
 
 entry_dir = Entry(a, width=30)
@@ -169,13 +170,13 @@ refreshbu.grid(row=1, column=2)
 open_explorerbu = Button(a, text=language[msm + 19], command=open_explorer, activebackground='#96c7ff', width=15)
 open_explorerbu.grid(row=1, column=0)
 
-T = Label(a, text=language[isox + 5].replace('5', '2'), bg='#aaffbf', width=30)
+T = Label(a, text=language[isox + 5].replace('5', '2'), bg='#ffaaaa', width=30)
 T.grid(row=2, column=0, columnspan=3)
 
-title = Label(a, text=language[start + 1], font=(None, 15), bg='#aaffbf', height=3)
+title = Label(a, text=language[start + 1], font=(None, 15), bg='#ffaaaa', height=3)
 title.grid(row=3, columnspan=9)
 
-keep_tex0 = Checkbutton(a, text=language[start + 4], command=keep, bg="#aaffbf", width=20)
+keep_tex0 = Checkbutton(a, text=language[start + 5], command=keep, bg="#ffaaaa", width=20)
 keep_tex0.grid(row=2, column=0)
 scan_directory()
 a.mainloop()

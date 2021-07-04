@@ -125,6 +125,7 @@ def play(num):
     else:
         webbrowser.open(random[num])
 
+
 def refresh():
     with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as text:
         language = text.read()
@@ -178,14 +179,14 @@ def enter():  # "Run Instant App (Enter)" Button
         current_cwd.configure(text=cwd)
     cwd_entry.delete(0, 'end')  # empties the entry and change current working directory if it exists
     os.chdir(cwd)
-    if lang != language[start + 33]:
+    if lang != language[start + 21]:
         with open(f'C:\\Yosh\\lang\\{lang}.txt', 'rb') as txt1:
             new_lang = txt1.read()
         with open('C:\\Yosh\\#language.txt', 'wb') as txt2:
             txt2.write(new_lang)
         refresh()
         return
-    if app == language[start + 14]:
+    if app == language[start + 25]:
         return
     Popen(('wscript.exe', f"C:\\Yosh\\{os.path.splitext(app.split('(')[-1])[0]}.vbs"))
 

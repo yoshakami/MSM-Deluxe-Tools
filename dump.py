@@ -1,8 +1,10 @@
-import os
 from tkinter import Tk, Label, Button, END, Entry, Checkbutton
 from tkinter.filedialog import askdirectory
 from functools import partial
 from hashlib import sha256
+import shutil
+import os
+
 
 if ':\\Windows' in os.getcwd():
     os.chdir(os.environ['userprofile'] + '\\Desktop')
@@ -51,6 +53,8 @@ def dump(file, index):
     folder = './' + os.path.splitext(file)[0]
     if not os.path.exists(folder):
         os.mkdir(folder)
+    if not os.path.exists(folder + '/tex0'):
+        os.mkdir(folder + '/tex0')
     png_list = []
     size_list = []
     mips_list = []
@@ -67,10 +71,12 @@ def dump(file, index):
                     byte = model.read(4)
                     model.seek(z + 20)
                     pointer = model.read(4)
+                    # print(f'pointer = {pointer}')
                     # tex_size = (byte[0] * 16777216) + (byte[1] * 65536) + (byte[2] * 256) + byte[3] - 64  # 4 bytes integer
                     tex_size = (byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3] - 64  # 4 bytes integer minus the header
                     tex_name_offset = (pointer[0] << 24) + (pointer[1] << 16) + (pointer[2] << 8) + pointer[3]  # 4 bytes integer
-                    model.seek(tex_name_offset - 1)
+                    # print(tex_name_offset)
+                    model.seek(z + tex_name_offset - 1)
                     name_length = model.read(1)[0]
                     tex_name = str(model.read(name_length))[2:-1]  # removes b' '
                     model.seek(z + 39)
@@ -81,15 +87,22 @@ def dump(file, index):
                     texture = model.read(tex_size)
                     for character in ['\\', '/', ':', '*', '?', '"', '<', '>', '|']:
                         tex_name = tex_name.replace(character, ';')  # forbidden characters by windows
-                    if os.path.exists(f'./{folder}/tex0/{tex_name}.tex0'):
+                    if os.path.exists(f'{folder}/tex0/{tex_name}.tex0') and f"{folder}/{tex_name}.png" in png_list:
                         num = 0
                         tex_name += '-0'
-                        while os.path.exists(f'./{folder}/tex0/{tex_name}.tex0'):
+                        while os.path.exists(f'{folder}/tex0/{tex_name}.tex0'):
                             tex_name = tex_name.rstrip(num)
                             num += 1
                             tex_name += str(num)
-                    with open(f'./{folder}/tex0/{tex_name}.tex0', 'wb') as tex:
-                        tex.write(texture)
+                    # padding = b'\x00' * 3 + bytes(chr(len(tex_name)), 'latin_1') + bytes(tex_name, 'latin_1')
+                    # i = 11
+                    # k = 4 + len(tex_name)
+                    # if len(tex_name) > i:
+                    #    if k % 16 == 0:
+                    #        k = 0
+                    # padding += b'\x00' * (16 - k)
+                    with open(f'{folder}/tex0/{tex_name}.tex0', 'wb') as tex:
+                        tex.write(texture)  # + padding
                     if dumpmip:
                         os.system(f'wimgt decode "{folder}/tex0/{tex_name}.tex0" -d "{folder}/{tex_name}.png" -o')
                     else:
@@ -104,19 +117,21 @@ def dump(file, index):
         else:
             os.system(f'wimgt decode --no-mm "{file}" -o')
     if remtex0:
-        for element in os.listdir(folder + '\\tex0'):
-            if os.path.splitext(element)[-1] == '.tex0':
-                # os.system(f'del ".\\{folder[2:]}\\{element}"')
-                if os.path.exists(f'.\\{folder[2:]}\\tex0\\{element}'):
-                    os.remove(f'.\\{folder[2:]}\\tex0\\{element}')
-                print(language[msm + 48].replace('#', element))
+        shutil.rmtree(folder + '/tex0')
+        print(language[msm + 48].replace('#', folder + '/tex0'))
+        # for element in os.listdir(folder + '/tex0'):
+        #    if os.path.splitext(element)[-1] == '.tex0':
+        #        # os.system(f'del ".\\{folder[2:]}\\{element}"')
+        #        if os.path.exists(f'{folder}/tex0/{element}'):
+        #            os.remove(f'{folder}/tex0/{element}')
+        #        print(language[msm + 48].replace('#', element))
     if not tex0:
-        with open(folder + '\\zzzdump.txt', 'w') as zzzdump:
-            zzzdump.write('\n'.join([language[113], language[114], language[115]]))
+        with open(folder + '/zzzdump.txt', 'w') as zzzdump:
+            zzzdump.write('\n'.join([language[start + 7], language[start + 8], language[start + 9]]))
             for i in range(len(png_list)):
                 if not os.path.exists(png_list[i]):
                     print(language[50].replace('#', png_list[i]))
-                zzzdump.write('\n' + ' '.join([str(size_list[i]), mips_list[i], color_list[i], png_list[i]]) + '\n')
+                zzzdump.write('\n' + ' '.join([str(size_list[i]), str(mips_list[i]), color_list[i], png_list[i].split('/')[-1]]) + '\n')
                 with open(png_list[i], 'rb') as png:
                     zzzdump.write(sha256(png.read()).hexdigest())  # sha256 hash of the png
     button_list[index].destroy()
@@ -125,6 +140,7 @@ def dump(file, index):
 
 
 def scan_directory():
+    del button_list[:]
     i = 0
     for tkstuff in a.winfo_children():
         if tkstuff not in [text_label, cwd_label, entry_dir, refreshbu, open_explorerbu, keep_tex0, dump_mipmaps, T, title]:

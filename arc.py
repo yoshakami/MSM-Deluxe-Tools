@@ -105,6 +105,8 @@ def scan_directory():  # triggered each time Enter button / Open File Explorer b
         patched.grid(row=extract_row[index], column=extract_col[index])
 
     i = n = 0
+    del create_list[:]
+    del extract_list[:]
     for tkstuff in a.winfo_children():
         if tkstuff not in [text_label, open_explorerbu, brawlcrate, cwd_label, entry_dir, refreshbu, lextract, lextract2, extract_allbu, expextract, lcreate, larchive, lcompression, Compression, Archive, expcreate, lfiletypes]:
             tkstuff.destroy()

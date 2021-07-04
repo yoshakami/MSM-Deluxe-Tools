@@ -25,11 +25,13 @@ burow_extract = [6, 6, 6, 6, 7, 7, 7, 8, 8, 8, 9, 9, 9, 10, 10, 10] + [6, 7, 8, 
 bucolumn = [0] + [0, 1, 2] * 5 + [3] * 5 + [4] * 5 + [5] * 5 + [6] * 5 + [7] * 5 + [0, 1, 2, 3, 4, 5, 6, 7] * 7
 burow_compress = [burow_extract[i] + 16 for i in range(len(burow_extract))]
 
-button_list = [0]
-button_list2 = [0]
+extract_list = []
+compress_list = []
 
 
 def scan_directory():
+    del compress_list[:]
+    del extract_list[:]
     for tkstuff in a.winfo_children():
         if tkstuff not in [text_label, cwd_label, entry_dir, refreshbu, open_explorerbu]:
             tkstuff.destroy()
@@ -110,11 +112,11 @@ def scan_directory():
 
     def extract_file(file, number):
         os.system(f'C:\\Yosh\\n.exe "{file}" -x')
-        button_list[number].destroy()
+        extract_list[number].destroy()
 
     def compress_file(brres, num):
         compress(brres)
-        button_list2[num].destroy()
+        compress_list[num].destroy()
 
     file_extract_label = Label(a, text=language[start + 1], font=300, bg='#dfffaa', height=2, width=45)
     file_extract_label.grid(row=2, columnspan=20)
@@ -154,11 +156,11 @@ def scan_directory():
                 with open(file_to_extract, 'rb') as check_xfile:
                     header = check_xfile.read(4)
                 if header[0] in [b'@', b'\x10', b'\x11', b'\x81', b'\x82', b'$', b'(', b'0', b'P'] and header != b'PK\x03\x04':  # lh @, old lz \x10, lz77 \x11, diff8 \x81, diff16 \x82, huff4 $, huff8 (, runlength 0, lrc P
-                    i += 1
                     run_extract_file = partial(extract_file, file_to_extract, i)
                     temp = Button(a, text=file_to_extract, command=run_extract_file, activebackground='#a9ff99', width=30)
                     temp.grid(row=burow_extract[i], column=bucolumn[i])
-                    button_list.append(temp)
+                    extract_list.append(temp)
+                    i += 1
 
         except PermissionError as error:
             print(error)
@@ -194,11 +196,11 @@ def scan_directory():
                 with open(file_to_compress, 'rb') as check_cfile:
                     header4 = check_cfile.read(4)
                 if header4 in thrice:
-                    i += 1
                     run_compress_file = partial(compress_file, file_to_compress, i)
                     temp2 = Button(a, text=file_to_compress, command=run_compress_file, activebackground='#a9ff91', width=30)
                     temp2.grid(row=burow_compress[i], column=bucolumn[i])
-                    button_list2.append(temp2)
+                    compress_list.append(temp2)
+                    i += 1
 
         except PermissionError as error:
             print(error)

@@ -124,6 +124,7 @@ def change_file(name, index):  # changes the color in the brres or mdl0 given in
 
 
 def scan_directory():
+    del button_list[:]
     do_not_delete = [entry_dir, text_label, cwd_label, refreshbu, open_explorerbu, title, lcolour,
                      colour_entry, colourbu, google_colorbu, preview, lred, lorange, lyellow, lchartreuse,
                      llight_green, lgreen, lgreen_cyan, lblue_cyan, lblue, lpurple, lfushia, lred_fushia,

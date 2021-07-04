@@ -67,6 +67,8 @@ def create(name, ref):
 
 def scan_directory():  # triggered each time Enter button / Open File Explorer button is pressed (or when you launch the script)
     i = n = 0
+    del create_list[:]
+    del extract_list[:]
     for tkstuff in a.winfo_children():
         if tkstuff not in [text_label, cwd_label, entry_dir, refreshbu, open_explorerbu, cb_rm_update, lextract, lextract2, lcompression, Compression, lcreate]:
             tkstuff.destroy()
@@ -138,7 +140,7 @@ def checkbu_rm_update():  # trigerred each time the checkbutton is pressed
             conf.write(b'1')
 
 
-text_label = Label(a, text=language[start + msm + 18], bg='#aaffaa', width=30)
+text_label = Label(a, text=language[msm + 18], bg='#aaffaa', width=30)
 text_label.grid(row=0, column=0)
 
 cwd_label = Label(a, text=os.getcwd(), bg='#aaffaa', width=60)
