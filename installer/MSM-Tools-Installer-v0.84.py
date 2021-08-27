@@ -1154,7 +1154,10 @@ def refresh_func():
             break
     for n in range(3):
         run[n] = language[lang[0]][24 + n]
-    with open(f'./Yosh/lang/{LANGUAGES.get()}.txt', 'rb') as txt1:
+    chosen_language = f'./Yosh/lang/{LANGUAGES.get()}.txt'
+    if not os.path.exists(chosen_language):
+        chosen_language = './Yosh/lang/English.txt'
+    with open(chosen_language, 'rb') as txt1:
         new_lang = txt1.read()
     with open('./Yosh/#language.txt', 'wb') as txt2:
         txt2.write(new_lang)
