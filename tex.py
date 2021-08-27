@@ -10,7 +10,7 @@ with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
     language = txt.read()
     language = [''] + language.splitlines()
 
-start = int(language[1].split(":")[19])
+start = int(language[1].split(":")[21])
 msm = int(language[1].split(":")[1])
 space = " "*20
 space25 = " "*25

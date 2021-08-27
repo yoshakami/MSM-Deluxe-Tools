@@ -10,7 +10,7 @@ with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
     language = txt.read()
     language = [''] + language.splitlines()
 
-start = int(language[1].split(":")[13])
+start = int(language[1].split(":")[15])
 msm = int(language[1].split(":")[1])
 a = Tk()
 a.title(language[start])
@@ -93,11 +93,11 @@ def scan_directory():
             if f"{shortname}{extensions[j]}" != cfile:  # don't delete the file the script will compress!
                 os.system(f'del "{shortname}{extensions[j]}"')  # delete the mdl, cmp, or bin file with the same name as the
         if ismodel:  # future compressed file if it exists  ( == overwrite )
-            os.system(f'C:\\Yosh\\n.exe "{cfile}" -lh -o "{shortname}.mdl"')  # create a compressed file with mdl extension
+            os.system(f'C:\\Yosh\\n.exe "{cfile}" -lh -o "{shortname}.mdl" -A32')  # create a compressed file with mdl extension
         elif iscmp:
-            os.system(f'C:\\Yosh\\n.exe "{cfile}" -lh -o "{shortname}.cmp"')
+            os.system(f'C:\\Yosh\\n.exe "{cfile}" -lh -o "{shortname}.cmp" -A32')
         else:
-            os.system(f'C:\\Yosh\\n.exe "{cfile}" -lh -o "{shortname}.bin"')
+            os.system(f'C:\\Yosh\\n.exe "{cfile}" -lh -o "{shortname}.bin" -A32')
         manual_entry.delete(0, 'end')
 
     def explorer_compress():

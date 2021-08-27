@@ -4,7 +4,7 @@ import webbrowser
 from subprocess import Popen
 from winsound import PlaySound
 from tkinter.filedialog import askdirectory
-from tkinter import Tk, Button, Label, Entry, Canvas, PhotoImage, DISABLED, OptionMenu, StringVar, _setit
+from tkinter import Button, Label, Entry, OptionMenu, Tk, Canvas, PhotoImage, DISABLED, StringVar, _setit
 
 if ':\\Windows' in os.getcwd():
     os.chdir(os.environ['userprofile'] + '\\Desktop')
@@ -15,7 +15,7 @@ with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
 
 start = int(language[1].split(":")[1])
 a = Tk()
-a.title(language[start + 2])
+a.title(language[start + 2] + " v0.90")
 a.minsize(680, 495)
 a.maxsize(680, 495)
 a.config(bg="#aecfee")
@@ -24,7 +24,7 @@ a.iconbitmap('C:\\Yosh\\msm_stuff\\msm.ico')
 run = [f'{language[start + 26]} (c.py)', f'{language[start + 27]} (x.py)', f'{language[start + 28]} (tex3.pyw)',
        f'{language[start + 29]} (hexf.py)', f'{language[start + 30]} (dec.py)', f'{language[start + 31]} (int.py)',
        f'{language[start + 32]} (rEtUrN-tExT.py)', f'{language[start + 33]} (vaporwave.py)',
-       f'{language[start + 34]} (yt.pyw)', f'{language[start + 35]} (sizeC.pyw)',
+       f'{language[start + 34]} (yt.pyw)', f'{language[start + 35]} (sizeC.pyw)', f'{language[start + 41]} (slot.py)',
        f'{language[start + 36]} (p.py)', f'{language[start + 37]} (t.py)', f'{language[start + 38]} (png.py)'
        ]
 RUN = StringVar()
@@ -32,10 +32,14 @@ RUN.set(language[start + 25])
 Run = OptionMenu(a, RUN, *run)
 Run["menu"].config(bg="#000000", fg='#ffffff')
 
-languages = (
-    'English', 'Français', 'Deutsch (Google Übersetzer)', 'Español (Traductor de google)', 'Italiano (Google Traduttore)',
-    'Nederlands (Google Vertalen)', 'Português (Google Tradutor)', 'Pусский (Гугл переводчик)',  # PAL Wii U
-    'Polskie (tłumacz Google)', '日本語 (グーグル翻訳)', '中国人 (谷歌翻译)', '한국어 (구글 번역)')
+language_list = [
+    'English', 'Français', 'Deutsch', 'Español', 'Italiano',
+    'Nederlands', 'Português', 'Pусский',  # PAL Wii U
+    'Polskie', '日本語', '中国人', '한국어']
+languages = []
+for lang in language_list:
+    if os.path.exists(f'C:\\Yosh\\lang\\{lang}.txt'):
+        languages.append(lang)
 LANGUAGES = StringVar()
 LANGUAGES.set(language[start + 21])  # Change Language
 Languages = OptionMenu(a, LANGUAGES, *languages)
@@ -44,7 +48,7 @@ Languages.config(width=15)
 
 random = (
     'question_mark_coin.wav', 'gnomed.wav',
-    'C:\\Program Files\\Internet Explorer\\iexplore.exe',
+    f'os.environ["ProgramFiles"]\\Internet Explorer\\iexplore.exe',
     "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
     'https://cdn.discordapp.com/attachments/604971224040472577/831235648886407188/rick.gif',
     'https://www.youtube.com/watch?v=hJxFfeyyIXE',
@@ -74,12 +78,13 @@ random = (
 
 def question_mark():
     rewrite = False
+    default_size = 18  # total config size including all apps reading it
     with open('C:\\Yosh\\a', 'r+b') as config:
         size = os.path.getsize('C:\\Yosh\\a')
-        for n in range(size, 17):
+        for n in range(size, default_size):
             config.write(b'0')
         # ints = []
-        config.seek(17)
+        config.seek(default_size)
         data = config.read()
         if len(data) != len(random):  # if user didn't triggered all events, trigger the next from the list
             config.seek(len(data))
@@ -93,16 +98,16 @@ def question_mark():
             # it looks at the last byte and adds one, to play the list in loop
         else:
             config.seek(0)
-            content = config.read(17)
+            content = config.read(default_size)
             rewrite = True
             # this used to play 50 times random events then rewrite config, but as the list is too big now it's better to rewrite
-            # config.seek(16)
+            # config.seek(default_size)
             # count = config.read(1)[0]
-            # config.seek(16)
+            # config.seek(default_size)
             # config.write(bytes(chr(count + 1), 'latin-1'))
             # if count > 50:
             #     config.seek(0)
-            #     content = config.read(16)
+            #     content = config.read(default_size)
             #    rewrite = True
             # # for j in range(len(data)):
             # #    ints.append(data[j])
@@ -133,13 +138,12 @@ def refresh():
     run = [f'{language[start + 26]} (c.py)', f'{language[start + 27]} (x.py)', f'{language[start + 28]} (tex3.pyw)',
            f'{language[start + 29]} (hexf.py)', f'{language[start + 30]} (dec.py)', f'{language[start + 31]} (int.py)',
            f'{language[start + 32]} (rEtUrN-tExT.py)', f'{language[start + 33]} (vaporwave.py)',
-           f'{language[start + 34]} (yt.pyw)', f'{language[start + 35]} (sizeC.pyw)',
+           f'{language[start + 34]} (yt.pyw)', f'{language[start + 35]} (sizeC.pyw)', f'{language[start + 41]} (slot.py)',
            f'{language[start + 36]} (p.py)', f'{language[start + 37]} (t.py)', f'{language[start + 38]} (png.py)'
            ]
     Run['menu'].delete(0, 'end')
 
     # Insert list of new options (tk._setit hooks them up to var)
-    new_choices = ('one', 'two', 'three')
     for app in run:
         Run['menu'].add_command(label=app, command=_setit(RUN, app))
 
@@ -261,7 +265,7 @@ ltitle = Label(a, text=language[start + 3], font=(None, 15), bg="#aecfee", heigh
 ltitle.grid(row=0, columnspan=3)
 lp = Button(a, text=language[start + 4], command=pack, width=30)
 lp.grid(row=3, column=0)
-lt = Button(a, text=language[start + 5], state=DISABLED, command=thp, width=30)
+lt = Button(a, text=language[start + 5], command=thp, width=30)
 lt.grid(row=3, column=1)
 lbrsar = Button(a, text=language[start + 6], command=brsar, width=30)
 lbrsar.grid(row=3, column=2)

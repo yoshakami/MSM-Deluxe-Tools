@@ -5,7 +5,7 @@ with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
     language = txt.read()
     language = [''] + language.splitlines()
 
-start = int(language[1].split(":")[3])
+start = int(language[1].split(":")[5])
 message = ''
 for e in ["C:\\hiberfil.sys", "C:\\pagefile.sys", "C:\\swapfile.sys"]:
     if os.path.exists(e):

@@ -10,7 +10,8 @@ with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
     language = txt.read()
     language = [''] + language.splitlines()
 
-start = int(language[1].split(":")[3])
+start = int(language[1].split(":")[5])
+hashtag = int(language[1].split(":")[3])
 msm = int(language[1].split(":")[1])
 brstm_max_size = b"\x7f\xff\xff\xff"  # above is negative values (so sounds won't play) as it's a signed hex float
 button_row = []
@@ -49,7 +50,7 @@ def patch_brsar(file, index):
                 brsar.write(brstm_max_size)
                 cursor = cursor_save
     button_list[index].destroy()
-    patched = Label(a, text=f'{language[msm + 43].split("#")[0]}{patched_num}{language[msm + 43].split("#")[1]}', bg='#ffffaa', width=30)
+    patched = Label(a, text=language[hashtag + 2].replace("#", patched_num), bg='#ffffaa', width=30)
     patched.grid(row=button_row[index], column=button_col[index])
 
 

@@ -33,8 +33,8 @@ for cfile in os.listdir('./'):
         if f"{shortname}{extensions[i]}" != cfile:  # don't delete the file the script will compress!
             os.system(f'del "{shortname}{extensions[i]}"')  # delete the mdl, cmp, or bin file with the same name as the
     if ismodel:                                             # future compressed file if it exists  ( == overwrite )
-        os.system(f'n "{cfile}" -lh -o "{shortname}.mdl"')  # create a compressed file with mdl extension
+        os.system(f'n "{cfile}" -lh -o "{shortname}.mdl" -A32')  # create a compressed file with mdl extension
     elif iscmp:
-        os.system(f'n "{cfile}" -lh -o "{shortname}.cmp"')
+        os.system(f'n "{cfile}" -lh -o "{shortname}.cmp" -A32')
     else:
-        os.system(f'n "{cfile}" -lh -o "{shortname}.bin"')
+        os.system(f'n "{cfile}" -lh -o "{shortname}.bin" -A32')

@@ -12,10 +12,11 @@ with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
     language = txt.read()
     language = [''] + language.splitlines()
 
-start = int(language[1].split(":")[17])
+start = int(language[1].split(":")[19])
 msm = int(language[1].split(":")[1])
-dump = int(language[1].split(":")[9])
-isox = int(language[1].split(":")[11])
+hashtag = int(language[1].split(":")[3])
+dump = int(language[1].split(":")[11])
+isox = int(language[1].split(":")[13])
 button_row = []
 for j in range(8, 20):
     button_row += [j, j, j]
@@ -49,9 +50,9 @@ def pack(file, index):
     if not os.path.exists(encoded):
         os.mkdir(encoded)
     with open(os.path.splitext(file)[0] + '\\zzzdump.txt', 'r') as zzzdump:
-        text = zzzdump.read().splitlines()[3:]
+        text = zzzdump.read().splitlines()[3:]  # the first three lines are explaining the purpose of this file
         for line in text:
-            if clock:
+            if clock:  # one line on two, there's a sha256, then size + mipmaps + color + name
                 clock = False
                 with open(f"./{os.path.splitext(file)[0]}/{name}", 'rb') as png:
                     if line != sha256(png.read()).hexdigest():
@@ -68,7 +69,8 @@ def pack(file, index):
                 color = line.split(' ', 3)[2]
                 name = line.split(' ', 3)[3]
     # now just replace them inside the file
-    tex0 = current = -1
+    tex0 = -1
+    current = 0
     with open(file, 'r+b') as u8:  # works with arc and brres, so it's just a basic u8 archive format I would say
         for cursor in range(0, filesize - 17, 16):
             u8.seek(cursor)
@@ -89,7 +91,7 @@ def pack(file, index):
     if keep_encoded == b'0':
         shutil.rmtree(encoded)
     button_list[index].destroy()
-    patched = Label(a, text=f'{language[msm + 45].split("#")[0]}{counter}{language[msm + 45].split("#")[1]}', bg='#ffaaaa', width=30)
+    patched = Label(a, text=language[hashtag + 4].replace("#", counter), bg='#ffaaaa', width=30)
     patched.grid(row=button_row[index], column=button_col[index])
 
 
@@ -178,5 +180,12 @@ title.grid(row=3, columnspan=9)
 
 keep_tex0 = Checkbutton(a, text=language[start + 5], command=keep, bg="#ffaaaa", width=20)
 keep_tex0.grid(row=2, column=0)
+
+with open('C:\\Yosh\\a', 'rb') as config:
+    config.seek(16)
+    checkbu = config.read(1)
+if checkbu == b'1':
+    Checkbutton.select(keep_tex0)
+
 scan_directory()
 a.mainloop()

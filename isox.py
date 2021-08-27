@@ -11,9 +11,9 @@ with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
     language = txt.read()
     language = [''] + language.splitlines()
 
-start = int(language[1].split(":")[11])
+start = int(language[1].split(":")[13])
 msm = int(language[1].split(":")[1])
-arc = int(language[1].split(":")[5])
+arc = int(language[1].split(":")[7])
 extract_row = []
 for j in range(5, 16):
     extract_row += [j, j, j, j]

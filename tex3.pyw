@@ -5,7 +5,7 @@ with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
     language = txt.read()
     language = [''] + language.splitlines()
 
-msm = int(language[1].split(":")[1])
+hashtag = int(language[1].split(":")[3])
 count_tex = count_files = 0
 for element in os.listdir('./'):
     cursor = 0
@@ -27,4 +27,4 @@ for element in os.listdir('./'):
             continue
 
 toaster = ToastNotifier()
-toaster.show_toast(f'{language[46].split("#")[0]}{count_tex}{language[46].split("#")[1]}', f'{language[47].split("#")[0]}{count_files}{language[47].split("#")[1]}', icon_path="C:/Yosh/tex3.ico", duration=5)
+toaster.show_toast(language[hashtag + 5].replace("#", count_tex), language[hashtag + 6].replace("#", count_files), icon_path="C:/Yosh/tex3.ico", duration=5)

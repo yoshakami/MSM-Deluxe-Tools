@@ -13,7 +13,8 @@ with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
     language = txt.read()
     language = [''] + language.splitlines()
 
-start = int(language[1].split(":")[9])
+start = int(language[1].split(":")[11])
+hashtag = int(language[1].split(":")[3])
 msm = int(language[1].split(":")[1])
 button_row = []
 for j in range(8, 20):
@@ -118,7 +119,7 @@ def dump(file, index):
             os.system(f'wimgt decode --no-mm "{file}" -o')
     if remtex0:
         shutil.rmtree(folder + '/tex0')
-        print(language[msm + 48].replace('#', folder + '/tex0'))
+        print(language[hashtag + 7].replace('#', folder + '/tex0'))
         # for element in os.listdir(folder + '/tex0'):
         #    if os.path.splitext(element)[-1] == '.tex0':
         #        # os.system(f'del ".\\{folder[2:]}\\{element}"')
@@ -130,12 +131,12 @@ def dump(file, index):
             zzzdump.write('\n'.join([language[start + 7], language[start + 8], language[start + 9]]))
             for i in range(len(png_list)):
                 if not os.path.exists(png_list[i]):
-                    print(language[50].replace('#', png_list[i]))
+                    print(language[hashtag + 9].replace('#', png_list[i]))
                 zzzdump.write('\n' + ' '.join([str(size_list[i]), str(mips_list[i]), color_list[i], png_list[i].split('/')[-1]]) + '\n')
                 with open(png_list[i], 'rb') as png:
                     zzzdump.write(sha256(png.read()).hexdigest())  # sha256 hash of the png
     button_list[index].destroy()
-    dumped = Label(a, text=f'{language[msm + 44].split("#")[0]}{counter}{language[msm + 44].split("#")[1]}', bg='#aaffbf', width=30)
+    dumped = Label(a, text=language[hashtag + 3].replace("#", counter), bg='#aaffbf', width=30)
     dumped.grid(row=button_row[index], column=button_col[index])
 
 

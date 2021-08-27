@@ -4,8 +4,8 @@ with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
     language = txt.read()
     language = [''] + language.splitlines()
 
-start = int(language[1].split(":")[25])
-msm = int(language[1].split(":")[1])
+start = int(language[1].split(":")[29])
+hashtag = int(language[1].split(":")[3])
 tex0 = [0]
 bres_list = []
 add_tex0 = filetype = file = header = 0
@@ -118,7 +118,7 @@ with open(file, 'r+b') as arc:  # though arc could have been named brres as it's
             tex_color = texture.read(1)[0]
 
         if dim_tex != arc_tex_dim:  # don't replace vanilla texture if the custom one doesn't have the same size
-            input(f'{tex_name}{language[msm + 49].split("#")[1]}{dim_tex[0] * 256 + dim_tex[1]}{language[msm + 49].split("#")[2]}{dim_tex[2] * 256 + dim_tex[3]}{language[msm + 49].split("#")[3]}{file}{language[msm + 49].split("#")[4]}{arc_tex_dim[0] * 256 + arc_tex_dim[1]}{language[msm + 49].split("#")[5]}{arc_tex_dim[2] * 256 + arc_tex_dim[3]}\n{language[start + 30]}\n\n{language[start + 31]}\n\n{language[start + 32]}\n')
+            input(f'{tex_name}{language[hashtag + 8].split("#")[1]}{dim_tex[0] * 256 + dim_tex[1]}{language[hashtag + 8].split("#")[2]}{dim_tex[2] * 256 + dim_tex[3]}{language[hashtag + 8].split("#")[3]}{file}{language[hashtag + 8].split("#")[4]}{arc_tex_dim[0] * 256 + arc_tex_dim[1]}{language[hashtag + 8].split("#")[5]}{arc_tex_dim[2] * 256 + arc_tex_dim[3]}\n{language[start + 30]}\n\n{language[start + 31]}\n\n{language[start + 32]}\n')
             external()
             continue
 
@@ -130,11 +130,11 @@ with open(file, 'r+b') as arc:  # though arc could have been named brres as it's
         arc_color = arc.read(1)[0]  # the 35th byte of a tex0 file is the colour encoding, see colourenc for full list
 
         if tex_mips != arc_mips:
-            print(file + language[msm + 41].split("#")[1] + str(arc_mips) + language[msm + 41].split("#")[2] + tex_name + language[msm + 41].split("#")[3] + str(tex_mips))
+            print(file + language[hashtag].split("#")[1] + str(arc_mips) + language[hashtag].split("#")[2] + tex_name + language[hashtag].split("#")[3] + str(tex_mips))
             external()
             continue
         if arc_color != tex_color:
-            print(file + language[msm + 42].split("#")[1] + colourenc[arc_color] + language[msm + 42].split("#")[2] + tex_name + language[msm + 42].split("#")[3] + colourenc[tex_color])
+            print(file + language[hashtag + 1].split("#")[1] + colourenc[arc_color] + language[hashtag + 1].split("#")[2] + tex_name + language[hashtag + 1].split("#")[3] + colourenc[tex_color])
             external()
             continue
 
@@ -166,4 +166,4 @@ if compress:
             if check_mdl.read(6) == b'body_h':
                 filetype = 1  # .mdl
                 break
-    os.system(f'C:\\Yosh\\n.exe "{file}" -lh -o "{short}{extensions[filetype]}"')
+    os.system(f'C:\\Yosh\\n.exe "{file}" -lh -o "{short}{extensions[filetype]}" -A32')

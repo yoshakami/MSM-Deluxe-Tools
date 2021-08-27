@@ -9,7 +9,7 @@ with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
     language = txt.read()
     language = [''] + language.splitlines()
 
-start = int(language[1].split(":")[15])
+start = int(language[1].split(":")[17])
 msm = int(language[1].split(":")[1])
 a = Tk()
 a.title(language[start])

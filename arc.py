@@ -10,7 +10,7 @@ with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
     language = txt.read()
     language = [''] + language.splitlines()
 
-start = int(language[1].split(":")[5])
+start = int(language[1].split(":")[7])
 msm = int(language[1].split(":")[1])
 extract_row = []
 for j in range(6, 18):

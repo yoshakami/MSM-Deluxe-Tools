@@ -5,7 +5,7 @@ with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
     language = txt.read()
     language = [''] + language.splitlines()
 
-start = int(language[1].split(":")[3])
+start = int(language[1].split(":")[5])
 hexl = ["0", "1", "2", "3", "4", "5", '6', '7', '8', '9', 'a', 'A', 'b', 'B', 'c', 'C', 'd', 'D', 'e', 'E', 'f', 'F']
 print(language[start + 5] + "\n")  # see the line below
 # Hi there ! This script converts any hexadecimal values like '7F FF  ffa0' into a decimal integer value, size free

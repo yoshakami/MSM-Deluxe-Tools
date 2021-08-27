@@ -10,7 +10,7 @@ with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
     language = txt.read()
     language = [''] + language.splitlines()
 
-start = int(language[1].split(":")[3])
+start = int(language[1].split(":")[5])
 # import pprint
 if not os.path.exists(f"{os.environ['userprofile']}\\Pictures\\YouTube\\"):
     os.mkdir(f"{os.environ['userprofile']}\\Pictures\\YouTube\\")

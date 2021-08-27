@@ -4,8 +4,8 @@ with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
     language = txt.read()
     language = [''] + language.splitlines()
 
-start = int(language[1].split(":")[25])
-msm = int(language[1].split(":")[1])
+start = int(language[1].split(":")[27])
+hashtag = int(language[1].split(":")[3])
 tex0 = [0]
 name, position, bres_list = [], [], []
 add_png = keep = filetype = file = header = 0
@@ -133,7 +133,7 @@ with open(file, 'r+b') as arc:  # though arc could have been named brres as it's
             arc.seek(arc_tex0_data_pos - 36)
             arc_tex_dim = arc.read(4)
         if dim_tex != arc_tex_dim:  # don't replace vanilla texture if the custom one doesn't have the same size
-            input(f'{picture}{language[msm + 49].split("#")[1]}{dim_tex[0] * 256 + dim_tex[1]}{language[msm + 49].split("#")[2]}{dim_tex[2] * 256 + dim_tex[3]}{language[msm + 49].split("#")[3]}{file}{language[msm + 49].split("#")[4]}{arc_tex_dim[0] * 256 + arc_tex_dim[1]}{language[msm + 49].split("#")[5]}{arc_tex_dim[2] * 256 + arc_tex_dim[3]}\n{language[start + 30]}\n\n{language[start + 31]}\n\n{language[start + 32]}\n')
+            input(f'{picture}{language[hashtag + 8].split("#")[1]}{dim_tex[0] * 256 + dim_tex[1]}{language[hashtag + 8].split("#")[2]}{dim_tex[2] * 256 + dim_tex[3]}{language[hashtag + 8].split("#")[3]}{file}{language[hashtag + 8].split("#")[4]}{arc_tex_dim[0] * 256 + arc_tex_dim[1]}{language[hashtag + 8].split("#")[5]}{arc_tex_dim[2] * 256 + arc_tex_dim[3]}\n{language[start + 30]}\n\n{language[start + 31]}\n\n{language[start + 32]}\n')
             continue
         next_tex0_pos = arc_tex0_data_pos + data_size
         if pos == -1 or pos == len(tex0) - 1:  # if the texture is the last one, it doesn't have a next
@@ -168,4 +168,4 @@ if compress:
             if check_mdl.read(6) == b'body_h':
                 filetype = 1  # .mdl
                 break
-    os.system(f'C:\\Yosh\\n.exe "{file}" -lh -o "{short}{extensions[filetype]}"')
+    os.system(f'C:\\Yosh\\n.exe "{file}" -lh -o "{short}{extensions[filetype]}" -A32')
