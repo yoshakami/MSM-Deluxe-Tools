@@ -1,4 +1,4 @@
-/* msm.pyw :0:   short :52:   arc.py :67:   bstick.pyw :78:   dump.py :107:   isox.py :117:   lh.py :123:   map.pyw :134:   pack.py :142:   tex.py :148:   thp.pyw :155:   trib.py :159:    web.pyw :168:   cli :184:   msmhelp.pyw :227:
+/* msm.pyw :0:   short :52:   arc.py :67:   bstick.pyw :78:   dump.py :107:   isox.py :117:   lh.py :123:   map.pyw :134:   pack.py :142:   tex.py :148:   thp.pyw :155:   trib.py :187:    web.pyw :196:   cli :212:   msmhelp.pyw :255:
 Mario Sports Mix Modding App
 Mario Sports Mix Modding App Menu
 Pack Textures
@@ -40,8 +40,8 @@ Exit
 Enter
 $$change between the hashtags$$    # texture has # mipmaps while # has #
 $$change between the hashtags$$    # texture is in # colour encoding format while # is in #
-patched # brstm :)
-dumped # textures :)
+patched # brstm
+dumped # textures
 replaced # textures :D
 fixed # textures
 on # files
@@ -65,7 +65,7 @@ download failed !?§?!?§
 MSM Tools : Every game brsar patch
 Every Game Brsar Patcher
 MSM Tools : arc extract and compress
-done! :)
+done!
 Brawlcrate is recommended
 to edit brres (especially in MSM)
 Extract
@@ -76,7 +76,7 @@ output file archive type
 compression
 default
 Mario Sports Mix Modding Change bstick colour
-done :) !
+done !
 MSM Change bstick colour
 Bypass windows colour picker
 no custom colour
@@ -115,7 +115,7 @@ Auto-Gerated file by MSM Dump Texture App. Don't delete it else you can't use th
 It contains all tex0 data size, number of mipmaps, colour encoding, dumped png names, and sha256 hashes (used to know which png has been edited)
 Also, you may already know that you can't resize any png. else they won't fit inside the brres/arc data.
 MSM Tools : iso/wbfs extract and compress
-done ! (^•^)
+done !
 oof! folder not recognized as a game
 Remove Update Folder
 filetype output format
@@ -148,16 +148,44 @@ keep encoded folder
 Mario Sports Mix Modding Tool : Encode png to tex0
 Encode png to tex0
 Hoi ! this app displays max 192 png in your current working directory.
-Done! (づ｡◕‿◕｡)づ
+Done!
 Colour Encoding
 Number of Mipmaps
 Output File Name (without extension)
 Mario Sports Mix Modding Tool : THP Compressor
-Compress THP Files
+THP Editor
 Heya :] ! this app display up to 192 thp files in your current working directory.
-(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧ done ✧ﾟ･:*ヽ(◕ヮ◕ヽ)
+done
+doesn't exists
+already there
+too much frames
+invalid entries
+Overwrite file
+want to create THP files? click here ->
+avthp GitHub
+Max buffer size
+Max audio samples
+Frames per second (float)
+Total frame count
+True
+False
+Version : 
+Contains audio : 
+Video width x height : #x%
+Has OffsetsDataOffset :
+Number of audio channels : 
+Audio frequency : 
+Number of samples : 
+Duration : # min % seconds
+Select Mode
+Keep only the first frame
+Keep first frame and vanilla video duration
+Add OffsetsDataOffset
+Remove OffsetsDataOffset
+Use entry values
+Display info
 Mario Sports Mix Modding Change root bone attributes
-Done ! (◕‿◕✿)
+Done !
 oof! check help
 default scale
 custom scale
