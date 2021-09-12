@@ -1,0 +1,347 @@
+/* msm.pyw :0:   hashtag :42:   short :53:   arc.py :93:   bstick.pyw :104:   dump.py :133:   isox.py :143:   lh.py :149:   map.pyw :160:   pack.py :168:   tex.py :174:   thp.pyw :181:   trib.py :213:    web.pyw :222:   old cli :238:   msmhelp.pyw :281: ---- */
+Mario Sports Mix Modding App
+Mario Sports Mix Modding App Menu
+Pack Textures
+Compresseur de THP
+Patcheur de Brsar pour tous les jeux
+Extraire et compresser les fichiers
+Site Web
+extraire/créer des iso/wbfs
+Extracteur de Textures (Dump)
+MSM iso patcher (bientôt)
+extraire/compresser les arc
+Changer la couleur de bstick
+Convertir png en tex0
+Symbol Map
+Editeur de cmn_test.bin
+Changer les attributs de l'os "root"
+le répertoire actuel est :
+Ouvrir l'explorateur
+Entrée
+Changer de Langue
+Aide
+????
+Config
+Scripts sans Interface
+Compresser les fichiers
+Extraire les fichiers
+Fixer les textures en v3
+Hex-flottant vers Décimal
+Décimal vers Hex-flottant
+Lire un nombre hexadécimal
+CaPiTaLiSeR
+V a p o r w a v e
+Télécharger une Miniature YouTube
+taille des fichiers C:/*.sys
+[vieux] Png texture replace no ext
+[vieux] Encoded texture replace
+[vieux] Png texture replace ext
+Quitter
+Entrée
+Changer le slot des Persos
+$$change entre les hashtags$$    # <- cette texture a # mipmaps tandis que # en a #
+$$change entre les hashtags$$    # <- cette texture est encodée dans le format # alors que # est en #
+# brstm patchés
+# textures extraites
+# textures remplacées :D
+# textures changées en version 3
+dans # fichiers
+suppression de #
+$$ a.png is 512x512 while ...$$     # a pour dimensions #x# tandis que la texture dans # a pour taille #x#
+qu'est-ce qui se passe avec >#< ?? ce fichier n'existe plus
+le fichier >#< ne rentre pas dans les données de la texture originale, ne changez pas la taille des images (ou faites en sorte que la taille des données soit la même en changeant la format coleur et le nombre de mipmaps dans zzzdump.txt pour faire la même taille d'image aves des dimensions différentes)
+Bienvenue ! cette application est un convertisseur de nombre hex-flottant (de 4 octets) en nombre décimal 
+nombre hex-flottant : 
+la valeur ci-dessous a été copié dans le presse papier
+Bienvenue ! catte application est un convertisseur de nombre décimal vers hex-flottant (taille fixée à 4 octets)
+valeur décimale : 
+Coucou ! Ce script va convertir des valeurs hexadécimales comme '7F FF  ffa0' en un seul nombre décimal (peu importe la taille)
+valeurs hexadécimales : 
+texte = 
+Taille des fichiers de Windows
+pas un lien YouTube valide
+(il ne contient pas v=)
+téléchargement réussi
+erreur lors du téléchargement !?ยง?!?ยง
+Script des outils deluxe de Mario Sports Mix : Patcheur de Brsar pour tous les jeux
+Patcheur de Brsar pour tous les jeux
+Ce nombre n'est pas dans la liste au dessus
+Choisissez un nombre :
+liste des fichiers qui vont être renommés :
+00 = Mario
+01 = Luigi
+02 = Peach
+03 = Daisy
+04 = Yoshi
+05 = Wario
+06 = Waluigi
+07 = Donkey Kong
+08 = Diddy Kong
+09 = Toad
+10 = Bowser
+11 = Bowser.jr
+12 = Mog
+13 = Pampa
+14 = Ninja
+15 = Mage Blanc
+16 = Gluant
+17 = Mage Noir
+Entrez le numéro du slot souhaité. Les fichiers concernés vont être renommés pour correspondre au personnage choisi
+Tenue n°
+Choisissez le numéro de la tenue :
+Appuyez sur entrée pour remplacer les fichiers existants du même nom...
+Outil MSM : Extraction et compression de fichiers arc
+Succès !
+Brawlcrate est recommendé
+pour éditer les brres (surtout dans MSM)
+Extraire
+Le processus peut prendre 1 minute
+Extraire tous les fichiers
+Créer
+type de fichier d'archive en sortie
+compression
+défaut
+Mario Sports Mix Modding : Changer la couleur de bstick
+Terminé !
+Changeur de couleur de bstick
+Alternative au selecteur de couleur windows
+pas de nouvelle couleur
+Lancer le selecteur de colour sur Google (en ligne)
+Rouge
+Orange
+Jaune
+Chartreuse
+Vert Clair
+Vert
+Vert Cyan
+Bleu Cyan
+Bleu
+Violet (Magenta Bleu)
+Magenta (Fushia)
+Fushia Rouge
+arranger la couleur
+Image D'aperçu
+Ferme et réouvre
+l'appli pour voir
+l'aperçu à nouveau
+ou clique ici
+ça va
+lancer cette appli
+à nouveau et fermer
+celle actuelle
+Sélecteur de couleur Windows
+Outil Mario Sports Mix Modding : extracteur de texture en png (Textures Dump to png)
+Extracteur de Textures
+Salut :D ! cette appli va afficher au max 192 brres ou arc dans le répertoire actuel.
+elle va copier en brute tex0 contenu dedans puis va les convertir en png avec wimgt
+Conserver les tex0
+Extraire les mipmaps
+L'extraction peut prendre jusqu'à 2 minutes
+fichier généré automatiquement par l'application MSM pour extraire les textures. Ne le supprimez pas sinon vous ne pourrez pas utiliser l'appli "Pack Textures".
+Il contient toutes les tailles des tex0, leur nombre de mipmaps, le format couleur, leur nom, et enfin leur hash en Sha256 (pour savoir quel fichier a été édité)
+Aussi, vous devriez savoir que vous ne pouvez modifier la taille d'aucune png, sinon elle ne va pas rentrer dans les données de la texture du brres ou arc.
+Outil MSM : extractraire et créer des iso, wbfs ou ciso
+Fini !
+zut ! ce dossier n'est pas reconnu comme un jeu
+Supprimer le dossier Update
+format du fichier de sortie
+Le Processus peut prendre jusqu'à 5 minutes
+Mario Sports Mix Modding : extraction et compression des fichiers mdl, bin, cmp, ou mot
+Extraire un fichier
+extraire tous les fichiers
+extraire tous les mdl
+extraire tous les bin
+extraire tous les cmp
+extraire tous les mot
+Compresser un fichier
+Compression manuelle
+Compresser
+compresser tous les fichiers
+Mario Sports Mix Modding : Visionneuse de Symbol Map
+Mario Sports Mix Symbol Map de Main.dol
+Aide sur la Symbol Map
+Sauvegarder toutes les Symbol Map
+Symbol Map PAL
+Symbol Map NTSC-U
+Symbol Map NTSC-J
+Sauvegarder toutes les Symbol Map (sans filtre)
+Appli de Modding Mario Sports Mix : Pack Textures
+MSM Pack Textures
+Cette application est à la recherche de "zzzdump.txt" qui contient tous les hash des png,
+elle va chercher dans le répertoire actuel et ceux sous celui actuel (le fichier et le dossier doivent avoir le même nom sans l'extension)
+Utilise l'appli pour Extraire les Textures pour avoir ce fichier, puis cette application va insérer les png éditées dans le brres ou l'arc que vous voulez
+Conserver le dossier encoded
+Outil Mario Sports Mix Modding : Convertir png en tex0
+Convertir png en tex0
+Hey ! Cette app a une capacité maximale d'affichage de 192 png dans le dossier actuel.
+Accompli !
+Format Couleur
+Nombre de Mipmaps
+Nom du fichier créé (sans extension)
+Mario Sports Mix Modding Tool : Outils THP
+Editeur de THP
+Coucou :] ! Cette application peut afficher jusqu'à 192 thp dans le dossier actuel.
+Réglé !
+n'existe pas
+déjà présent
+trop d'images
+entrées invalides
+écraser l'ancien fichier
+pour créer des fichier THP c'est ici ->
+avthp GitHub
+Taille max du buffer
+Nombre max de samples audio
+Images par seconde (décimal)
+Nombre Total D'images
+Vrai
+Faux
+Version : 
+Contient de l'audio : 
+Ratio largeur x hauteur : #x%
+Contient OffsetsDataOffset :
+Nombre de canals audio : 
+Fréquence audio : 
+Nombre de samples : 
+Durée : # min et % secondes
+Sélectionnez une action
+Garder seulement la première image
+Garder la première image et la durée de la vidéo
+Ajouter OffsetsDataOffset
+Retirer OffsetsDataOffset
+Utiliser les valeurs des entrées
+Afficher des infos
+Mario Sports Mix Modding Changer les attributs de l'os "root"
+Succès !
+zut! regarde l'aide
+taille par default
+taille dans chaque axe
+rotation dans (x, y, z)
+translation (déplacement)
+vous pouvez mettre
+des nombres négatifs
+Site Internet de Mario Sports Mix Modding
+Getting Started
+Texture Hack Tutorial
+Red_Star.brsar index
+French ID-List
+French Texture Hack Tutorial
+English ID-List
+Characters Info
+Filesystem
+Custom Character Tutorial
+Showcased Mods
+Msbt text index
+The Cutting Room Floor Webpage
+Google Sheet with all Custom Characters, Stages Texture Hacks, and pack 2 Character List
+Join our Discord
+Chaine YouTube de Yosh
+a number was intended or there are less textures than your number
+count the texture position in BrawlCrate
+BrawlCrate doesn't only edit the texture data as this app does, but rebuild the whole brres when saving
+that can damage the file (like destroy bind skin in Mario Sports Mix)
+the number can be negative if you start counting by the bottom
+no brres or arc file found
+press enter to exit
+this script will be replacing textures in this file
+press enter to continue (compress + don't keep encoded textures) or
+- type 1 if that's not the file you want
+- type 2 to continue and keep the encoded textures when the program ends
+- type 3 if that's not the file you want and you want to keep the encoded textures
+-type 4 don't compress the edited file
+-type 5 don't compress + keep encoded textures
+-type 6 don't compress + keep encoded textures + that's not the file you want
+Your choice : 
+file name with extension
+this file is not a brres or an arc file
+Spotting all texture offsets in the file, please wait...
+png name without extension
+was not found in the current working directory
+a png picture is intended
+This file isn't a png
+texture position
+Error: the number can't be 0 (it can be -1 or -2 and more if you start counting by the bottom)
+press 1 then enter to encode all png to tex0
+or type anything else to add another png
+replacing texture will override next header, this happens when you use twice the same png.
+this texture will not be replaced, press enter to replace all other textures...
+png name with extension
+Did you opened external folder ???
+Note also that all textures are counted for all brres in an arc or brres file.
+press enter to go try again...
+press enter to continue (compress at the end) or
+- type 2 if that's not the file you want + don't compress
+- type 3 if you don't want to compress your file when the program ends
+texture name with extension :
+a texture is intended
+You didn't used a tex0 on this app that only works with already encoded textures.
+try again
+replacing texture will override next header
+Success, press 1 then enter to exit
+or type anything else to replace another texture
+Mario Sports Mix Modding App Help
+Mario Sports Mix Modding Help Menu
+Click on the pictures to view on fullscreen
+Pack Textures
+Compresseur de THP
+Patcheur de Brsar pour tous les jeux
+???
+Extraire et compresser les fichiers
+Extracteur de Textures (Dump)
+Nom des Scripts (Raccourcis)
+MSM iso patcher (bientôt)
+extraire/compresser les arc
+Changer la couleur de bstick
+Convertir png en tex0
+Comment lancer un script
+Visionneuse de Symbol Map
+Scripts sans Interface
+Changer les attributs de l'os "root"
+Credits
+123456789a123456789b
+123456789a123456789b
+123456789a123456789b
+123456789a123456789b123456789c
+123456789a123456789b123456789c
+123456789a123456789b123456789c
+big-pic-3-title
+big-pic-3-left
+big-pic-3-right
+big-pic-4-title
+big-pic-4-left
+big-pic-4-right
+big-pic-5-title
+big-pic-5-left
+big-pic-5-right
+big-pic-6-title
+big-pic-6-left
+big-pic-6-right
+big-pic-7-title
+big-pic-7-left
+big-pic-7-right
+dummy
+dummy2
+dummy3
+big-pic-9-title
+big-pic-9-left
+big-pic-9-right
+fat-ma-title
+fat-ma-left
+fat-ma-right
+fat-mb-title
+fat-mb-left
+fat-mb-right
+fat-mc-title
+fat-mc-left
+fat-mc-right
+fat-md-title
+fat-md-left
+fat-md-right
+fat-me-title
+fat-me-left
+fat-me-right
+fat-mf-title
+fat-mf-left
+fat-mf-right
+fat-mm-title
+fat-mm-left
+fat-mm-right
