@@ -89,13 +89,15 @@ msm = int(language[1].split(":")[1])
 button_row = []
 for j in range(11, 20):
     button_row += [j, j, j]
-for j in range(11, 20):
-    button_row += [j, j, j, j, j]
+for _ in range(5):
+    for j in range(11, 20):
+        button_row += [j]
 for j in range(20, 32):
     button_row += [j, j, j, j, j, j, j, j]
 
 print(f"{language[start + 2]}\n")
-button_col = [0, 1, 2] * 10 + [3, 4, 5, 6, 7] * 10 + [0, 1, 2, 3, 4, 5, 6, 7] * 12
+button_col = [0, 1, 2] * 9 + [3] * 9 + [4] * 9 + [5] * 9 + [6] * 9 + [7] * 9 + [0, 1, 2, 3, 4, 5, 6, 7] * 11
+print(button_col)
 button_list = []
 a = Tk()
 a.title(language[start])
@@ -479,11 +481,10 @@ def display_info(file, overwrite):
         ltable = Label(a, text=result, bg='#eda187')
         ltable.grid(row=8, column=2)
 
-        if duration > 60.0:
-            content = language[start + 24].replace('#', str(duration // 60)).replace('%', str(duration % 60))
-        else:
-            time = language[start + 24].split('#')
-            content = time[0] + str(duration) + time[-1]
+        content = language[start + 24].replace('#', str(duration // 60)).replace('%', str(duration % 60))
+        #else:
+        #    time = language[start + 24].split('#')
+        #    content = time[0] + str(duration) + time[-1]
 
         lduration = Label(a, text=content, bg='#eda187')
         lduration.grid(row=9, column=0, columnspan=2)
@@ -644,7 +645,7 @@ title = Label(a, text=language[start + 1], font=m, bg='#eda187')
 title.grid(row=3, columnspan=9)
 
 mode = []
-for i in range(26, 31):
+for i in range(26, 32):
     mode.append(' ' * (90 - len(language[start + i])) + language[start + i] + ' ' * (90 - len(language[start + i])))
 
 MODE = StringVar()

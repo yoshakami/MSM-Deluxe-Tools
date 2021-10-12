@@ -30,7 +30,7 @@ extract_list = []
 create_list = []
 a = Tk()
 a.title(language[start])
-a.minsize(660, 440)
+a.minsize(880, 440)
 a.config(bg='#aacfff')
 a.iconbitmap('C:\\Yosh\\msm_stuff\\arc.ico')
 

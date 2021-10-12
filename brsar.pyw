@@ -50,7 +50,7 @@ def patch_brsar(file, index):
                 brsar.write(brstm_max_size)
                 cursor = cursor_save
     button_list[index].destroy()
-    patched = Label(a, text=language[hashtag + 2].replace("#", patched_num), bg='#ffffaa', width=30)
+    patched = Label(a, text=language[hashtag + 2].replace("#", str(patched_num)), bg='#ffffaa', width=30)
     patched.grid(row=button_row[index], column=button_col[index])
 
 
@@ -113,10 +113,10 @@ cwd_label.grid(row=0, column=1, columnspan=2)
 entry_dir = Entry(a, width=30)
 entry_dir.grid(row=1, column=1)
 
-refreshbu = Button(a, text=language[msm + 19], command=change_directory, activebackground='#ff9999', width=30)
+refreshbu = Button(a, text=language[msm + 40], command=change_directory, activebackground='#ff9999', width=30)
 refreshbu.grid(row=1, column=2)
 
-open_explorerbu = Button(a, text=language[msm + 40], command=open_explorer, activebackground='#96c7ff', width=15)
+open_explorerbu = Button(a, text=language[msm + 19], command=open_explorer, activebackground='#96c7ff', width=15)
 open_explorerbu.grid(row=1, column=0)
 
 title = Label(a, text=language[start + 14], font=500, bg='#ffffaa', height=3)

@@ -41,8 +41,8 @@ def encode(file, index):
     nmipmap = nmipmap.strip(space25)
     out = output.get()
     if out == '':
-        out = os.path.splitext(file)
-    os.system(f'wimgt encode "{file}" -x {colourenc} --n-mm {nmipmap} -d "{out}.tex0"')
+        out = os.path.splitext(file)[0]
+    os.system(f'wimgt encode "{file}" -x {colourenc} --n-mm {nmipmap} -d "{out}.tex0" -o')
 
     button_list[index].destroy()
     patched = Label(a, text=language[start + 3], bg='#bfaaff', width=30)

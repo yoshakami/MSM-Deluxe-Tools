@@ -136,7 +136,7 @@ def dump(file, index):
                 with open(png_list[i], 'rb') as png:
                     zzzdump.write(sha256(png.read()).hexdigest())  # sha256 hash of the png
     button_list[index].destroy()
-    dumped = Label(a, text=language[hashtag + 3].replace("#", counter), bg='#aaffbf', width=30)
+    dumped = Label(a, text=language[hashtag + 3].replace("#", str(counter)), bg='#aaffbf', width=30)
     dumped.grid(row=button_row[index], column=button_col[index])
 
 

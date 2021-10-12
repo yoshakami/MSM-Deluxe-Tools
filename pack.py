@@ -70,7 +70,7 @@ def pack(file, index):
                 name = line.split(' ', 3)[3]
     # now just replace them inside the file
     tex0 = -1
-    current = 0
+    current = -1
     with open(file, 'r+b') as u8:  # works with arc and brres, so it's just a basic u8 archive format I would say
         for cursor in range(0, filesize - 17, 16):
             u8.seek(cursor)
@@ -91,7 +91,7 @@ def pack(file, index):
     if keep_encoded == b'0':
         shutil.rmtree(encoded)
     button_list[index].destroy()
-    patched = Label(a, text=language[hashtag + 4].replace("#", counter), bg='#ffaaaa', width=30)
+    patched = Label(a, text=language[hashtag + 4].replace("#", str(counter)), bg='#ffaaaa', width=30)
     patched.grid(row=button_row[index], column=button_col[index])
 
 
@@ -172,13 +172,13 @@ refreshbu.grid(row=1, column=2)
 open_explorerbu = Button(a, text=language[msm + 19], command=open_explorer, activebackground='#96c7ff', width=15)
 open_explorerbu.grid(row=1, column=0)
 
-T = Label(a, text=language[isox + 5].replace('5', '2'), bg='#ffaaaa', width=30)
-T.grid(row=2, column=0, columnspan=3)
+T = Label(a, text=language[isox + 5].replace('5', '2'), bg='#ffaaaa', width=40)
+T.grid(row=2, column=1, columnspan=2)
 
 title = Label(a, text=language[start + 1], font=(None, 15), bg='#ffaaaa', height=3)
 title.grid(row=3, columnspan=9)
 
-keep_tex0 = Checkbutton(a, text=language[start + 5], command=keep, bg="#ffaaaa", width=20)
+keep_tex0 = Checkbutton(a, text=language[start + 5], command=keep, bg="#ffaaaa", width=25)
 keep_tex0.grid(row=2, column=0)
 
 with open('C:\\Yosh\\a', 'rb') as config:

@@ -20,7 +20,7 @@ start = int(language[1].split(":")[9])
 msm = int(language[1].split(":")[1])
 a = Tk()
 a.title(language[start])
-a.minsize(660, 440)
+a.minsize(880, 724)
 a.config(bg='#aaaaff')
 a.iconbitmap('C:\\Yosh\\msm_stuff\\bstick.ico')
 

@@ -27,4 +27,4 @@ for element in os.listdir('./'):
             continue
 
 toaster = ToastNotifier()
-toaster.show_toast(language[hashtag + 5].replace("#", count_tex), language[hashtag + 6].replace("#", count_files), icon_path="C:/Yosh/tex3.ico", duration=5)
+toaster.show_toast(language[hashtag + 5].replace("#", str(count_tex)), language[hashtag + 6].replace("#", str(count_files)), icon_path="C:/Yosh/tex3.ico", duration=5)
