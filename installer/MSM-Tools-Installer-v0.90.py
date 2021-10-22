@@ -8,6 +8,10 @@ import string
 import sys
 import os
 
+apps = ['arc.py', 'brsar.pyw', 'bstick.pyw', 'c.py', 'dec.py', 'dump.py', 'hexf.py', 'int.py', 'iso.py', 'isox.py',
+        'lh.py', 'map.pyw', 'msm.pyw', 'msmhelp.pyw', 'p.py', 'pack.py', 'png.py', 'rEtUrN-tExT.py', 'sizeC.pyw',
+        'slot.py', 't.py', 'tex.py', 'tex3.pyw', 'thp.pyw', 'trib.py', 'vaporwave.py', 'web.pyw', 'x.py', 'yt.pyw']
+
 root = sys.argv[0]
 root = os.path.splitext(root)[0]
 a = Tk()
@@ -218,9 +222,7 @@ png = ['how-to-run-msm.png', 'MSM Shortcuts.png', 'm.png', 'm2.png', 'm3.png', '
        'm8.png', 'm9.png', 'ma.png', 'mb.png', 'mc.png', 'md.png', 'me.png', 'mf.png', 'mm.png']
 # delete = []
 delete = ['jpg.zip', 'Common.zip', 'exe.zip', 'MSM-tools-installer.bat', "run this if installer doesn't open.bat"]
-apps = ['arc.py', 'brsar.pyw', 'bstick.pyw', 'c.py', 'dec.py', 'dump.py', 'hexf.py', 'int.py', 'iso.py', 'isox.py',
-        'lh.py', 'map.pyw', 'msm.pyw', 'msmhelp.pyw', 'p.py', 'pack.py', 'png.py', 'rEtUrN-tExT.py', 'sizeC.pyw',
-        'slot.py', 't.py', 'tex.py', 'tex3.pyw', 'thp.pyw', 'trib.py', 'vaporwave.py', 'web.pyw', 'x.py', 'yt.pyw']
+
 run = [language[lang[0]][24], language[lang[0]][25], language[lang[0]][26]]
 with ZipFile('jpg.zip', 'r') as zipObj:
     zipObj.extractall()  # extracts jpg.zip (its content is in the jpg list)
@@ -380,9 +382,6 @@ def step4_drive(letter, clean_inst):
 
 
 def step4_appdata(clean_inst):
-    for el in delete:
-        if os.path.exists(el):
-            os.system(f'del "{el}"')
     path = b'C:\\\\Yosh\\\\'
     for filee in os.listdir('./Yosh/'):
         if os.path.splitext(filee)[-1] in ['.pyw', '.py']:
@@ -470,8 +469,8 @@ def step4_local():
         data = data.splitlines()
         new_data = ''
         for line in data:
-            if line == '    Popen(("wscript.exe", "Z:\\Yosh\\bstick.vbs"))':
-                new_data += '    # Popen(("wscript.exe", "Z:\\Yosh\\bstick.vbs"))\n'
+            if line == '    Popen(("wscript.exe", "C:\\Yosh\\bstick.vbs"))':
+                new_data += '    # Popen(("wscript.exe", "C:\\Yosh\\bstick.vbs"))\n'
             elif line == '    # Popen((sys.executable, "C:\\Yosh\\bstick.pyw"))':
                 new_data += '    Popen((sys.executable, "C:\\Yosh\\bstick.pyw"))\n'
             else:
