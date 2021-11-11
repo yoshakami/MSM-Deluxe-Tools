@@ -74,7 +74,7 @@ def dump(file, index):
                     pointer = model.read(4)
                     # print(f'pointer = {pointer}')
                     # tex_size = (byte[0] * 16777216) + (byte[1] * 65536) + (byte[2] * 256) + byte[3] - 64  # 4 bytes integer
-                    tex_size = (byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3] - 64  # 4 bytes integer minus the header
+                    tex_size = (byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3]  # 4 bytes integer WITH the 64 bytes header
                     tex_name_offset = (pointer[0] << 24) + (pointer[1] << 16) + (pointer[2] << 8) + pointer[3]  # 4 bytes integer
                     # print(tex_name_offset)
                     model.seek(z + tex_name_offset - 1)

@@ -21,11 +21,11 @@ button_row = []
 for j in range(8, 20):
     button_row += [j, j, j]
 for j in range(8, 20):
-    button_row += [j, j, j, j, j]
+    button_row += [j, j, j, j]
 for j in range(20, 32):
-    button_row += [j, j, j, j, j, j, j, j]
+    button_row += [j, j, j, j, j, j, j]
 
-button_col = [0, 1, 2] * 12 + [3, 4, 5, 6, 7] * 12 + [0, 1, 2, 3, 4, 5, 6, 7] * 12
+button_col = [0, 1, 2] * 12 + [3, 4, 5, 6] * 12 + [0, 1, 2, 3, 4, 5, 6] * 12
 button_list = []
 a = Tk()
 a.title(language[start])
@@ -79,8 +79,8 @@ def pack(file, index):
                 if tex0 in index_edited:
                     current += 1
                     byte = u8.read(4)
-                    data_size = (byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3] - 64  # 4 bytes integer
-                    if data_size != int(size_list[current]):  # will not replace data if it's not the vanilla size
+                    data_size = (byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3] - 64  # 4 bytes integer WITHOUT THAT MINUS SIXTY FOUR
+                    if data_size + 64 != int(size_list[current]):  # will not replace data if it's not the vanilla size
                         print(language[51].replace('#', name) + '\n')
                         continue
                     with open(f'./{encoded}/{edited[current]}', 'rb') as texture:
