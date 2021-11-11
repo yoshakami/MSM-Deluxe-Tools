@@ -90,8 +90,10 @@ def pack(file, index):
                         if mip[:3] == "TPL":
                             if mip[-1] == "P":
                                 os.system(f'wimgt encode "./{fil}/{name}" -x TPL.{color} -d "./{encoded}/{nam}.tpl" -o')
+                                counter += 1
                                 continue
                             else:
+                                counter += mip[-1] + 1
                                 skip = mip[-1] * 2
                                 tpl(file, mip[-1], name, color, num, size)
                                 continue
@@ -154,7 +156,7 @@ def scan_directory():
                 continue
             with open(files, 'rb') as check_file:
                 header = check_file.read(4)
-            if header in [b'bres', b'U\xaa8-'] and os.path.exists(os.path.splitext(files)[0] + '\\zzzdump.txt'):
+            if header in [b'bres', b'U\xaa8-', b'\x00 \xaf0'] and os.path.exists(os.path.splitext(files)[0] + '\\zzzdump.txt'):
                 patch = partial(pack, files, i)
                 packbu = Button(a, text=files, command=patch, activebackground='#a9ff99', width=30)
                 packbu.grid(row=button_row[i], column=button_col[i])
