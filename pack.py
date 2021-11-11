@@ -35,7 +35,35 @@ a.iconbitmap('C:\\Yosh\\msm_stuff\\pack.ico')
 print(f"{language[dump + 2]}\n{language[start + 2]}\n{language[start + 3]}\n{language[start + 4]}\n")
 
 
+def tpl(file, mip, name, color, num, size):  # assuming file is the name of a tpl file
+    sizelist = []
+    nam = os.path.splitext(name)[0]
+    fil = os.path.splitext(file)[0]
+    encoded = fil + '/encoded'
+    with open(fil + '\\zzzdump.txt', 'r') as zzzdump:
+        text = zzzdump.read().splitlines()[3:]  # the first three lines are explaining the purpose of this file
+        sizelist.append(size)
+        os.system(f'wimgt encode "./{fil}/{name}" -x {color} --n-mm 0 -d "./{encoded}/{nam}-0.tex0" -o')
+        for i in range(mip):
+            os.rename(f"{nam}.mm{i + 1}.png", f"{nam}-{i+1}.png")
+            line = text[num*2 + ((i+1)*2)]
+            sizelist.append(line.split(' ', 3)[0])
+            color = line.split(' ', 3)[2]
+            os.system(f'wimgt encode "./{fil}/{nam}-{i+1}.png" -x {color} --n-mm 0 -d "./{encoded}/{nam}-{i+1}.tex0" -o')
+        with open(file, 'r+b') as multi_tpl:
+            for i in range(len(sizelist)):
+                with open("./{encoded}/{nam}- {i}.tex0", "rb") as tex0:
+                    tex0.seek(4)
+                    byte = tex0.read(4)
+                    data_size = (byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3] - 64  # 4 bytes integer
+                    tex0.seek(64)
+                    tex_data = tex0.read(data_size)
+                    multi_tpl.seek(sizelist[i])
+                    multi_tpl.write(tex_data)
+
+
 def pack(file, index):
+    fil = os.path.splitext(file)[0]
     with open('C:\\Yosh\\a', 'r+b') as checcbutton:
         checcbutton.seek(16)
         keep_encoded = checcbutton.read(1)
@@ -43,26 +71,41 @@ def pack(file, index):
     index_edited = []
     size_list = []
     filesize = os.path.getsize(file)
-    counter = clock = num = 0
+    counter = clock = num = skip = 0
     # compare the current hashes with these written in zzzdump.txt and establish a list of edited pictures
     # encode these png to tex0
-    encoded = os.path.splitext(file)[0] + '/encoded'
+    encoded = fil + '/encoded'
     if not os.path.exists(encoded):
         os.mkdir(encoded)
-    with open(os.path.splitext(file)[0] + '\\zzzdump.txt', 'r') as zzzdump:
+    with open(fil + '\\zzzdump.txt', 'r') as zzzdump:
         text = zzzdump.read().splitlines()[3:]  # the first three lines are explaining the purpose of this file
         for line in text:
             if clock:  # one line on two, there's a sha256, then size + mipmaps + color + name
                 clock = False
-                with open(f"./{os.path.splitext(file)[0]}/{name}", 'rb') as png:
+                with open(f"./{fil}/{name}", 'rb') as png:
                     if line != sha256(png.read()).hexdigest():
+                        if skip > 0:
+                            skip -= 1
+                            continue
+                        if mip[:3] == "TPL":
+                            if mip[-1] == "P":
+                                os.system(f'wimgt encode "./{fil}/{name}" -x TPL.{color} -d "./{encoded}/{nam}.tpl" -o')
+                                continue
+                            else:
+                                skip = mip[-1] * 2
+                                tpl(file, mip[-1], name, color, num, size)
+                                continue
+                        nam = os.path.splitext(name)[0]
                         counter += 1
-                        edited.append(f'{os.path.splitext(name)[0]}.tex0')
                         index_edited.append(num)
                         size_list.append(size)
-                        os.system(f'wimgt encode "./{os.path.splitext(file)[0]}/{name}" -x {color} --n-mm {mip} -d "./{encoded}/{os.path.splitext(name)[0]}.tex0" -o')
+                        edited.append(f'{nam}.tex0')
+                        os.system(f'wimgt encode "./{fil}/{name}" -x {color} --n-mm {mip} -d "./{encoded}/{nam}.tex0" -o')
                 num += 1
             else:
+                if skip > 0:
+                    skip -= 1
+                    continue
                 clock = True
                 size = line.split(' ', 3)[0]
                 mip = line.split(' ', 3)[1]
@@ -79,7 +122,7 @@ def pack(file, index):
                 if tex0 in index_edited:
                     current += 1
                     byte = u8.read(4)
-                    data_size = (byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3] - 64  # 4 bytes integer WITHOUT THAT MINUS SIXTY FOUR
+                    data_size = (byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3] - 64  # 4 bytes integer WITH THAT MINUS SIXTY FOUR
                     if data_size + 64 != int(size_list[current]):  # will not replace data if it's not the vanilla size
                         print(language[51].replace('#', name) + '\n')
                         continue

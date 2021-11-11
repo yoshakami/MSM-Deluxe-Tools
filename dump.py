@@ -62,7 +62,39 @@ def dump(file, index):
     color_list = []
     with open(file, 'rb') as model:
         header = model.read(4)
-        if header in [b'U\xaa8-', b'bres']:
+        if header == b'\x00 \xaf0':  # TPL File
+            img_header = []
+            model.seek(4)
+            byte = model.read(4)
+            img_count = (byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3]  # 4 bytes integer
+            byte = model.read(4)
+            table_offset = (byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3]  # 4 bytes integer
+            for i in range(img_count):
+                model.seek(table_offset + (i * 8))
+                byte = model.read(4)
+                img_header.append((byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3])  # 4 bytes integer
+            for i in range(len(img_header)):
+                model.seek(img_header[i] + 7)
+                tex_color = model.read(1)[0]
+                if i == 0:
+                    png_list.append(f"{folder}/{file}.png")
+                else:
+                    png_list.append(f"{folder}/{file}.mm{i}.png")
+                size_list.append(img_header[i])
+                if len(img_header) == 1:
+                    mips_list.append(f"TPL")
+                else:
+                    mips_list.append(f"TPL{img_count - 1}")
+                color_list.append(colourenc[tex_color])
+                os.system(f'wimgt decode "{file}" -d "{folder}/{file}.png" -o --strip')
+
+            png_list.append(f"{folder}/{file}.png")
+            size_list.append(y)
+            mips_list.append("TPL")
+            color_list.append(colourenc[tex_color])
+            os.system(f'wimgt decode "{file}" -d "{folder}/{file}.png" -o --strip')
+
+        elif header in [b'U\xaa8-', b'bres']:
             tex0 = False
             while y - 17 > z:
                 model.seek(z)
@@ -92,7 +124,7 @@ def dump(file, index):
                         num = 0
                         tex_name += '-0'
                         while os.path.exists(f'{folder}/tex0/{tex_name}.tex0'):
-                            tex_name = tex_name.rstrip(num)
+                            tex_name = tex_name[:-len(str(num))]
                             num += 1
                             tex_name += str(num)
                     # padding = b'\x00' * 3 + bytes(chr(len(tex_name)), 'latin_1') + bytes(tex_name, 'latin_1')
@@ -105,18 +137,18 @@ def dump(file, index):
                     with open(f'{folder}/tex0/{tex_name}.tex0', 'wb') as tex:
                         tex.write(texture)  # + padding
                     if dumpmip:
-                        os.system(f'wimgt decode "{folder}/tex0/{tex_name}.tex0" -d "{folder}/{tex_name}.png" -o')
+                        os.system(f'wimgt decode "{folder}/tex0/{tex_name}.tex0" -d "{folder}/{tex_name}.png" -o --strip')
                     else:
-                        os.system(f'wimgt decode "{folder}/tex0/{tex_name}.tex0" --no-mm -d "{folder}/{tex_name}.png" -o')
+                        os.system(f'wimgt decode "{folder}/tex0/{tex_name}.tex0" --no-mm -d "{folder}/{tex_name}.png" -o --strip')
                     png_list.append(f"{folder}/{tex_name}.png")
                     size_list.append(tex_size)
                     mips_list.append(tex_mips)
                     color_list.append(colourenc[tex_color])
                 z += 16
         elif dumpmip:
-            os.system(f'wimgt decode "{file}" -o')
+            os.system(f'wimgt decode "{file}" -o --strip')
         else:
-            os.system(f'wimgt decode --no-mm "{file}" -o')
+            os.system(f'wimgt decode --no-mm "{file}" -o --strip')
     if remtex0:
         shutil.rmtree(folder + '/tex0')
         print(language[hashtag + 7].replace('#', folder + '/tex0'))
@@ -126,7 +158,7 @@ def dump(file, index):
         #        if os.path.exists(f'{folder}/tex0/{element}'):
         #            os.remove(f'{folder}/tex0/{element}')
         #        print(language[msm + 48].replace('#', element))
-    if not tex0:
+    if not tex0:  # if the file isn't a single tex0 but rather an arc, brres, or tpl file
         with open(folder + '/zzzdump.txt', 'w') as zzzdump:
             zzzdump.write('\n'.join([language[start + 7], language[start + 8], language[start + 9]]))
             for i in range(len(png_list)):
