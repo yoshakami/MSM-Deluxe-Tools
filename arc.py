@@ -16,15 +16,15 @@ extract_row = []
 for j in range(6, 18):
     extract_row += [j, j, j, j]
 for j in range(6, 18):
-    extract_row += [j, j, j, j]
-extract_col = [0, 1, 2, 3] * 12 + [4, 5, 6, 7] * 12
+    extract_row += [j, j, j]
+extract_col = [0, 1, 2, 3] * 12 + [4, 5, 6] * 12
 
 create_row = []
 for j in range(20, 32):
     create_row += [j, j, j, j]
 for j in range(20, 32):
-    create_row += [j, j, j, j]
-create_col = [0, 1, 2, 3] * 12 + [4, 5, 6, 7] * 12
+    create_row += [j, j, j]
+create_col = [0, 1, 2, 3] * 12 + [4, 5, 6] * 12
 
 extract_list = []
 create_list = []
@@ -116,7 +116,7 @@ def scan_directory():  # triggered each time Enter button / Open File Explorer b
             if not os.path.isfile(files):
                 continue
             size = os.path.getsize(files)
-            if size < 5 or i > 96:
+            if size < 5 or i >= len(extract_col):
                 continue
             with open(files, 'rb') as check_file:
                 header = check_file.read(4)
@@ -132,7 +132,7 @@ def scan_directory():  # triggered each time Enter button / Open File Explorer b
             continue
 
     for folder in os.listdir('./'):  # display a button for each folder found
-        if os.path.isdir(folder) and n < 96:
+        if os.path.isdir(folder) and n < len(create_col):
             launch_func = partial(create, folder, n)
             createbu = Button(a, text=folder, command=launch_func, activebackground='#a9ff99', width=30)
             createbu.grid(row=create_row[n], column=create_col[n])

@@ -107,7 +107,7 @@ def scan_directory():
             if not os.path.isfile(files):
                 continue
             size = os.path.getsize(files)
-            if size < 10 or i > 192:
+            if size < 10 or i >= len(button_col):
                 continue
             with open(files, 'rb') as check_file:
                 header = check_file.read(4)

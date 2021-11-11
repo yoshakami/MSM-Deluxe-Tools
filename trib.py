@@ -81,7 +81,7 @@ def scan_directory():
 
     mdl = mdln = 0
     for files in os.listdir('./'):
-        if mdl > 800:
+        if mdl >= len(button_col):
             break
         try:
             if not os.path.isfile(files):
@@ -94,6 +94,8 @@ def scan_directory():
                 header = bfile.read(4)
                 if header == b'MDL0':
                     edit = partial(change_scale, files, mdl)
+                    if mdl >= len(button_col):
+                        break
                     filebu = Button(a, text='MDL0 ' + files, command=edit, activebackground='#a9ff99', width=30, fg='#0050ff')
                     filebu.grid(row=button_row[mdl], column=button_col[mdl])
                     button_list.append(filebu)
@@ -113,6 +115,8 @@ def scan_directory():
                         continue
                     out = subprocess.check_output(['wszst', 'list', files, '-R'])  # returns all file names
                     first = True
+                    if mdl >= len(button_col):
+                        break
                     filabel = Label(a, text=files, bg='#bfaaff', font=2, fg='#ff2222', width=19)
                     filabel.grid(row=button_row[mdl], column=button_col[mdl])
                     mdl += 1
@@ -124,6 +128,8 @@ def scan_directory():
                                 count = 1
                                 while b'\n' not in out[k - count:k]:
                                     count += 1
+                                if mdl >= len(button_col):
+                                    break
                                 flabel = Label(a, text=str(out[k - count + 1:k + 5])[2:-1] + " ->", bg='#bfaaff',
                                                fg='#2222ff', width=30)
                                 flabel.grid(row=button_row[mdl], column=button_col[mdl])
@@ -133,6 +139,8 @@ def scan_directory():
                             while b'\n' not in out[k + 15:k + z]:
                                 z += 1
                             edit = partial(change_scale, files, mdln)
+                            if mdl >= len(button_col):
+                                break
                             filebu = Button(a, text=str(out[k + 15:k + z])[2:-3], command=edit, activebackground='#a9ff99', width=30)
                             filebu.grid(row=button_row[mdl], column=button_col[mdl])
                             button_list.append(filebu)

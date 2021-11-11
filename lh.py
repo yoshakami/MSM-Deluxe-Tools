@@ -21,8 +21,18 @@ a.iconbitmap('C:\\Yosh\\msm_stuff\\lh.ico')
 thrice = [b'U\xaa8-', b'bres', b'\x00 \xaf0', b'\x00\x00\x00\x00']  # arc, brres, tpl and rso files
 twice = thrice[:2]
 extensions = ['.mdl', '.bin', '.cmp']  # extensions of compressed files recognized
-burow_extract = [6, 6, 6, 6, 7, 7, 7, 8, 8, 8, 9, 9, 9, 10, 10, 10] + [6, 7, 8, 9, 10] * 5 + [11] * 8 + [12] * 8 + [13] * 8 + [14] * 8 + [15] * 8 + [16] * 8 + [17] * 8
-bucolumn = [0] + [0, 1, 2] * 5 + [3] * 5 + [4] * 5 + [5] * 5 + [6] * 5 + [7] * 5 + [0, 1, 2, 3, 4, 5, 6, 7] * 7
+# burow_extract = [6, 6, 6, 6, 7, 7, 7, 8, 8, 8, 9, 9, 9, 10, 10, 10] + [6, 7, 8, 9, 10] * 5 + [11] * 8 + [12] * 8 + [13] * 8 + [14] * 8 + [15] * 8 + [16] * 8 + [17] * 8
+# bucolumn = [0] + [0, 1, 2] * 5 + [3] * 5 + [4] * 5 + [5] * 5 + [6] * 5 + [7] * 5 + [0, 1, 2, 3, 4, 5, 6, 7] * 7
+burow_extract = []
+for j in range(6, 11):
+    burow_extract += [j, j, j]
+for j in range(6, 11):
+    burow_extract += [j, j, j, j]
+for j in range(11, 18):
+    burow_extract += [j, j, j, j, j, j, j]
+
+bucolumn = [0, 1, 2] * 5 + [3, 4, 5, 6] * 5 + [0, 1, 2, 3, 4, 5, 6] * 7
+
 burow_compress = [burow_extract[i] + 16 for i in range(len(burow_extract))]
 
 extract_list = []
@@ -89,9 +99,9 @@ def scan_directory():
             shortname = os.path.splitext(cfile)[0]  # if there is a . in the file name
         else:
             shortname = cfile  # else compressed file name will be the file name + its right extension
-        for j in range(3):
-            if f"{shortname}{extensions[j]}" != cfile:  # don't delete the file the script will compress!
-                os.system(f'del "{shortname}{extensions[j]}"')  # delete the mdl, cmp, or bin file with the same name as the
+        for k in range(3):
+            if f"{shortname}{extensions[k]}" != cfile:  # don't delete the file the script will compress!
+                os.system(f'del "{shortname}{extensions[k]}"')  # delete the mdl, cmp, or bin file with the same name as the
         if ismodel:  # future compressed file if it exists  ( == overwrite )
             os.system(f'C:\\Yosh\\n.exe "{cfile}" -lh -o "{shortname}.mdl" -A32')  # create a compressed file with mdl extension
         elif iscmp:
@@ -146,22 +156,22 @@ def scan_directory():
     extract_motbu.config(command=extract_mot)
     extract_motbu.grid(row=5, column=2)
 
-    i = 0
+    n = 0
     for file_to_extract in os.listdir('./'):
         try:
             if os.path.isfile(file_to_extract):
                 size = os.path.getsize(file_to_extract)
-                if size < 5 or i > 96:
+                if size < 5 or n >= len(bucolumn):
                     continue
                 with open(file_to_extract, 'rb') as check_xfile:
                     header = check_xfile.read(4)
                 if header[:1] in [b'@', b'\x10', b'\x11', b'\x81', b'\x82', b'$', b'(', b'0', b'P'] and header != b'PK\x03\x04':  # lh @, old lz \x10, lz77 \x11, diff8 \x81, diff16 \x82, huff4 $, huff8 (, runlength 0, lrc P
-                    run_extract_file = partial(extract_file, file_to_extract, i)
+                    run_extract_file = partial(extract_file, file_to_extract, n)
                     temp = Button(a, text=file_to_extract, command=run_extract_file, activebackground='#a9ff99', width=30)
-                    temp.grid(row=burow_extract[i], column=bucolumn[i])
+                    temp.grid(row=burow_extract[n], column=bucolumn[n])
                     extract_list.append(temp)
-                    print(file_to_extract, i)
-                    i += 1
+                    print(file_to_extract, n)
+                    n += 1
 
         except PermissionError as error:
             print(error)
@@ -192,7 +202,7 @@ def scan_directory():
         try:
             if os.path.isfile(file_to_compress):
                 size = os.path.getsize(file_to_compress)
-                if size < 5 or i > 96:
+                if size < 5 or i >= len(bucolumn):
                     continue
                 with open(file_to_compress, 'rb') as check_cfile:
                     header4 = check_cfile.read(4)
@@ -206,6 +216,10 @@ def scan_directory():
         except PermissionError as error:
             print(error)
             continue
+    if i > 50 or n > 50:  # creates a big exit button and make the window fullscreen as it was too tiny to display all buttons
+        exitbu2 = Button(a, text=language[msm + 40], command=a.quit, activebackground='#d9ff8c', bg='#d9ff8c', fg='#ff2222', width=58, height=3, font=100)
+        exitbu2.grid(row=0, column=4, rowspan=2, columnspan=3)
+        a.attributes('-fullscreen', True)
 
 
 def change_directory():  # enter button to change directory (take the entry content)

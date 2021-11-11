@@ -20,12 +20,12 @@ button_row = []
 for j in range(8, 20):
     button_row += [j, j, j]
 for j in range(8, 20):
-    button_row += [j, j, j, j, j]
+    button_row += [j, j, j, j]
 for j in range(20, 32):
-    button_row += [j, j, j, j, j, j, j, j]
+    button_row += [j, j, j, j, j, j, j]
 
+button_col = [0, 1, 2] * 12 + [3, 4, 5, 6] * 12 + [0, 1, 2, 3, 4, 5, 6] * 12
 colourenc = ['I4', 'I8', 'IA4', 'IA8', 'RGB565', 'RGB5A3', 'RGBA8', 0, 'CI4', 'CI8', 'CI14x2', 0, 0, 0, 'CMPR']
-button_col = [0, 1, 2] * 12 + [3, 4, 5, 6, 7] * 12 + [0, 1, 2, 3, 4, 5, 6, 7] * 12
 button_list = []
 a = Tk()
 a.title(language[start])
@@ -152,7 +152,7 @@ def scan_directory():
             if not os.path.isfile(files):
                 continue
             size = os.path.getsize(files)
-            if size < 10 or i > 192:
+            if size < 10 or i >= len(button_col):
                 continue
             with open(files, 'rb') as check_file:
                 header = check_file.read(4)

@@ -89,14 +89,14 @@ msm = int(language[1].split(":")[1])
 button_row = []
 for j in range(11, 20):
     button_row += [j, j, j]
-for _ in range(5):
+for _ in range(4):
     for j in range(11, 20):
         button_row += [j]
 for j in range(20, 32):
-    button_row += [j, j, j, j, j, j, j, j]
+    button_row += [j, j, j, j, j, j, j]
 
 print(f"{language[start + 2]}\n")
-button_col = [0, 1, 2] * 9 + [3] * 9 + [4] * 9 + [5] * 9 + [6] * 9 + [7] * 9 + [0, 1, 2, 3, 4, 5, 6, 7] * 11
+button_col = [0, 1, 2] * 9 + [3] * 9 + [4] * 9 + [5] * 9 + [6] * 9 + [0, 1, 2, 3, 4, 5, 6] * 12
 print(button_col)
 button_list = []
 a = Tk()
@@ -549,7 +549,7 @@ def scan_directory():
             if not os.path.isfile(files):
                 continue
             size = os.path.getsize(files)
-            if size < 10 or k > 192:
+            if size < 10 or k >= len(button_col):
                 continue
             with open(files, 'rb') as check_file:
                 header = check_file.read(4)

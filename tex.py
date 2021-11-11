@@ -19,13 +19,13 @@ button_row = []
 for j in range(8, 20):
     button_row += [j, j, j]
 for j in range(8, 20):
-    button_row += [j, j, j, j, j]
+    button_row += [j, j, j, j]
 for j in range(20, 32):
-    button_row += [j, j, j, j, j, j, j, j]
+    button_row += [j, j, j, j, j, j, j]
+
+button_col = [0, 1, 2] * 12 + [3, 4, 5, 6] * 12 + [0, 1, 2, 3, 4, 5, 6] * 12
 
 print(f"{language[start + 2]}\n")
-
-button_col = [0, 1, 2] * 12 + [3, 4, 5, 6, 7] * 12 + [0, 1, 2, 3, 4, 5, 6, 7] * 12
 button_list = []
 a = Tk()
 a.title(language[start])
@@ -61,7 +61,7 @@ def scan_directory():
             if not os.path.isfile(files):
                 continue
             size = os.path.getsize(files)
-            if size < 10 or i > 192:
+            if size < 10 or i >= len(button_col):
                 continue
             with open(files, 'rb') as check_file:
                 header = check_file.read(4)
@@ -76,7 +76,7 @@ def scan_directory():
             print(error)
             continue
 
-    if i > 36:  # if many png are found, then it puts the window on fullscreen and create a big exit button
+    if i > 50:  # if many png are found, then it puts the window on fullscreen and create a big exit button
         exitbu2 = Button(a, text=language[msm + 39], command=a.quit, activebackground='#d9ff8c', bg='#d9ff8c', fg='#ff2222', width=58, height=3, font=100)
         exitbu2.grid(row=0, column=4, rowspan=2, columnspan=3)
         a.attributes('-fullscreen', True)
