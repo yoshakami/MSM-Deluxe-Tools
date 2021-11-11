@@ -1,4 +1,4 @@
-/* msm.pyw :0:   short :52:   arc.py :67:   bstick.pyw :78:   dump.py :107:   isox.py :117:   lh.py :123:   map.pyw :134:   pack.py :142:   tex.py :148:   thp.pyw :155:   trib.py :187:    web.pyw :196:   cli :212:   msmhelp.pyw :255:
+/* msm.pyw :0:   hashtag :42:   short :54:   arc.py :94:   bstick.pyw :105:   dump.py :134:   isox.py :144:   lh.py :150:   map.pyw :161:   pack.py :169:   tex.py :175:   thp.pyw :182:   trib.py :214:    web.pyw :223:   old cli :239:   msmhelp.pyw :282: ---- */
 Mario Sports Mix Modding App
 Mario Sports Mix Modding App Menu
 Pack Textures
@@ -13,7 +13,7 @@ MSM arc extract and compress
 Change bstick colour
 Encode png to tex0
 MSM Symbol Map Viewer
-cmn_test.bin Editor
+Kill All Apps
 Change root bone attributes
 Current working directory is :
 Open file Explorer
@@ -38,17 +38,19 @@ Encoded texture replace
 Png texture replace ext
 Exit
 Enter
+Change Character Slot in cwd
 $$change between the hashtags$$    # texture has # mipmaps while # has #
 $$change between the hashtags$$    # texture is in # colour encoding format while # is in #
 patched # brstm
 dumped # textures
-replaced # textures :D
+replaced # textures
 fixed # textures
 on # files
 deleting #
 $$ a.png is 512x512 while ...$$     # is #x# while # texture is #x#
 what's happening with >#< ?? this file no longer exists
 the file >#< doesn't fit in the texture data. you can't edit texture sizes (but if you insist you can change colour encoding and number of mipmaps in zzzdump.txt to make the same data size with different dimensions)
+Your screen dimensions §are #x% pixels
 Welcome ! this app is used to convert hexadecimal float values to decimal float
 hex-float : 
 copied to clipboard the value below
@@ -61,9 +63,34 @@ Size of Windows root files
 not a valid YouTube video link
 (doesn't contain v=)
 Successfully downloaded
-download failed !?§?!?§
+download failed !?ยง?!?ยง
 MSM Tools : Every game brsar patch
 Every Game Brsar Patcher
+this is not a number in the list above
+Your number :
+list of files that will be renamed:
+00 = Mario
+01 = Luigi
+02 = Peach
+03 = Daisy
+04 = Yoshi
+05 = Wario
+06 = Waluigi
+07 = Donkey Kong
+08 = Diddy Kong
+09 = Toad
+10 = Bowser
+11 = Bowser.jr
+12 = Moogle
+13 = Cacturar
+14 = Ninja
+15 = White Mage
+16 = Slime
+17 = Black Mage
+Enter the desired destination slot number. All files above will be renamed corresponding to this character
+Outfit Variant
+Choose your Outfit Number :
+Press enter to overwrite...
 MSM Tools : arc extract and compress
 done!
 Brawlcrate is recommended
@@ -255,67 +282,56 @@ or type anything else to replace another texture
 Mario Sports Mix Modding App Help
 Mario Sports Mix Modding Help Menu
 Click on the pictures to view on fullscreen
-Pack Textures
-THP Compressor
-Every Game Brsar Patcher
-???
-Files Extract and Compress
-Dump Textures
-Script's Names (Shortcuts)
-iso patcher (soon)
-Arc Extract and Compress
-Change bstick colour
-Encode png to tex0
-How to Launch MSM
-Symbol Map Viewer
-Instant Run Apps
-Change root bone attributes
-Credits
-123456789a123456789b
-123456789a123456789b
-123456789a123456789b
-123456789a123456789b123456789c
-123456789a123456789b123456789c
-123456789a123456789b123456789c
-big-pic-3-title
-big-pic-3-left
-big-pic-3-right
-big-pic-4-title
-big-pic-4-left
-big-pic-4-right
-big-pic-5-title
-big-pic-5-left
-big-pic-5-right
-big-pic-6-title
-big-pic-6-left
-big-pic-6-right
-big-pic-7-title
-big-pic-7-left
-big-pic-7-right
-dummy
-dummy2
-dummy3
-big-pic-9-title
-big-pic-9-left
-big-pic-9-right
-fat-ma-title
-fat-ma-left
-fat-ma-right
-fat-mb-title
-fat-mb-left
-fat-mb-right
-fat-mc-title
-fat-mc-left
-fat-mc-right
-fat-md-title
-fat-md-left
-fat-md-right
-fat-me-title
-fat-me-left
-fat-me-right
-fat-mf-title
-fat-mf-left
-fat-mf-right
-fat-mm-title
-fat-mm-left
-fat-mm-right
+55             Pack Textures
+50            THP Compressor
+50      Every Game Brsar Patcher
+50                          ???
+50      Files Extract and Compress
+55             Dump Textures
+50      Script's Names (Shortcuts)
+50         iso patcher (soon)
+50       Arc Extract and Compress
+50         Change bstick colour
+50         Encode png to tex0
+50         How to Launch MSM
+50         Instant Run Apps
+50         Instant Run Apps 2
+40     Change root bone attributes
+50                Credits
+50 18 (no need to translate this line) the first number is the font size, and the second is the colour ID. '\n' or '§' is a new line, '\t' is a tabulation, and ¤36 16 is a new color (use spaces to fit it on where it was before, else it starts again at the beginning of the line) ---- Problems : changing font size also changes line size so using a big then a small font will make text collapse ---------- the function to auto-wrap at the right spot isn't perfect, to counter this you can make your line start with * so it won't auto-wrap and you'll have to manually do it.  /******************************************************************************************************/
+23 31 Use this app after launching "Dump Textures". §§§¤20 23 This app will look for brres and arc in the current directory, which were already dump before.§§¤20 9 It'll then check which png were changed (with help from the file zzzdump.txt by calculating the sha256), finally, it will replace all of them in the file chosen.§§§¤18 9 (by encoding them to tex0 with wimgt)
+20 30 The file changed isn't rebuilded, so it won't be corrupted because only the texture data changes.§§¤20 17 this software is useful to edit textures in external folder or do custom stages.
+20 19 This app displays all thp files in the current directory. §§¤20 23 there are 6 different functions to manipulate these thp files (by clicking in the drop down menu). §§§¤20 22 OffsetsDataOffset is an int array (of 4 bytes each) with a length of 4 times the number of frame, and each int is the start offset of their corresponding frame
+20 3 A checkbox can be ticked to overwrite the old file, else the app will create a new one
+20 18 When using your custom brstm in game, if the song cuts out at the middle, it's because you didn't patched the brsar, brstm's max size are defined in it. §§¤20 0 This application is used to edit a brsar file by setting the max size of brstm files (linked into it) to the max value of a 4 bytes signed int (7F FF FF FF) which equals to 2GB max per brstm. You can also use PCM16 encoding, which uses 16 bits per sample, while ADPCM uses 4 bits per sample.
+20 2 This software is compatible with every brsar, no matter their size or the game they're from. (please note that some brsar don't have any brstm link into them) §§¤20 3 In order to save Red_Star.brsar in Brawlcrate, you'll need to double click on the empty "External" element at the index 788, then click on the [...] next to the text entry, select Music00.mus, and click on OK.
+30 5 haha, that's a surprise, click on it to know what it does
+20 8 (off-topic)\n a Symbol Map is a heavy text containing a lot of in-game functions name, their size, alongside their offset in the ram. A Symbol Map is useful to create gecko codes because it helps to reverse engineer the game's code. §(it consists on understanding the game code by doing the inverse process of compilation to machine code)
+25 24 The game's files are compressed with a special algorithm. §§¤25 17 In order to decompress them to arc or brres, you will need to use this application. It can also compress them back !
+20 25 When decompressing them, it creates a file _DECOMP.bin §§¤20 28 A file extension is determined by the data inside it, not by its name. ¤20 29 §§When compressing again, the program tries to name the file with an adequate extension. In case its not the file name you want, simply rename the file. (don't forget to enable the option to see file extensions in Windows File Explorer)
+20 2 This application is used to extract textures from an arc or a brres file, as well as making them compatible with the "Pack Textures" app, which can be used to replace them in the file afterwards. §§§¤20 18 With this goal, simply edit the png files right after dumping them from the file.
+20 8 This Software can also convert a tex0 to png. §§¤20 21 A mipmap is a smaller version of a texture, used by the game when you're far away from the texture. §§¤20 27 All textures must have the dame dimensions in power of 2 ( 2, 4, 8, 16, 32, 64, 128, 256, 512, or 1024 ) else your Wii or any console (or dolphin) won't display it correctly.
+*20 0 §Pack Textures\n    ¤20 1 THP Compressor\n    ¤20 2 Every Game Brsar Patcher\n    ¤20 3 MSM Files extract and compress\n    ¤20 4 Dump Textures\n    ¤20 6 MSM iso patcher\n    ¤20 7 Arc Extract and Compress\n    ¤20 8 iso/wbfs/ciso extract and compress\n    ¤20 9 Change bstick colour\n    ¤20 10 Encode png to tex0\n    ¤20 11 MSM Symbol Map Viewer\n    ¤20 12 Change root bone attributes\n    ¤20 13 Change Character Slot in cwd\n    ¤20 14 Compress files in cwd\n    ¤20 15 Extract files in cwd\n    ¤20 16 YouTube Thumbnail Download
+*20 0 pack.py\n    ¤20 1 thp.pyw\n    ¤20 2 brsar.pyw\n    ¤20 3 lh.py\n    ¤20 4 dump.py\n    ¤20 6 iso.py\n    ¤20 7 arc.py\n    ¤20 8 isox.py\n    ¤20 9 bstick.pyw\n    ¤20 10 tex.py\n    ¤20 11 map.pyw\n    ¤20 12 trib.py\n    ¤20 13 slot.py\n    ¤20 14 c.py\n    ¤20 15 x.py\n    ¤20 16 yt.pyw\n    ¤20 17 tex3.pyw
+20 0 soon
+20 20 This app will be available after Mario Sports Mix V2 comes out
+19 20 You must use this software to decompress Menu_DECOMP.bin or Tour_DECOMP.bin as well as other arc files (in the lyt folder). §§§¤19 23 Brawlcrate corrupts arc files when saving them, while Wiimms SZS Tools can create arc files with exactly the same data as the game's vanilla files. It always packs correctly (so if your file crashes, the cause should be the files inside the archive)
+19 17 these files are called u8 archives because their first bytes are u8 when you open them in hex editor. §§¤19 18 Mario Sports Mix uses u8 files without compression (another app on this toolpack is used to compress them). §§¤19 19 This program is a Graphical Interface of wszst, it can also decompress/repack brres, szs, wbz, and other formats supported by Wiimms SZS Tools.
+20 8 This app is only built to change the hockey cross colour when fighting Behemoth. It will only detect files having the model bstick.mdl0 (like c00B00_DECOMP.bin). §§¤22 27 A textbox entry is available to input your own colour like #7fff00, you'll then need to click on the button next to it for charging the new colour.
+20 30 The actual colour is displayed on a button as #RRGGBB. Click on a file to transform its bstick color by the colour loaded in this software. §§§¤20 12 fix color is used to reduce the light amount of your custom colour because the game's adding more light. (the preview is the same as in game)
+20 12 This program displays all png pictures found in the corrent working directory (cwd) and can convert them to tex0 with settings you choose. §§§¤19 27 Take a look at the Dump Textures image for an explanation on mipmaps, they correspond to LevelOfDetail + 1 on Brawlcrate.
+20 2 The CMPR format is the only compressed one and uses colour alongside a 1 bit alpha. (a pixel is either completely transparent or opaque). It's from far the best colour format for the Wii. §§¤20 3 If you want to use a semi-transparent colour, RGB5A3 is advised, but the texture size will be higher.
+1 1 dummy
+1 1 dummy
+*20 5 c.py - x.py §extract/compress all files §in the folder it's launched §§¤20 7 tex3.pyw §set all tex0 of brres or arc files §in cwd to version 3 §§¤20 8 dec.py §converts hex-float to decimal§§¤20 9 hexf.py §converts decimal to hex-float §§¤20 12 int.py §converts hexadedimal to decimal §(reads an integer).
+*21 29 Name \t-        CLI        -      Notification §c.py\t           ❎\t\t❎§x.py\t           ❎\t\t❎§tex3.pyw\t           ❎\t\t✅§c.py\t           ✅\t\t❎§dec.py\t           ✅\t\t❎§hexf.py\t           ✅\t\t❎§int.py\t           ✅\t\t❎§rEtUrN-t\t           ✅\t\t❎§vaporwav\t           ✅\t\t❎§yt.pyw\t           ❎\t\t✅§sizeC.pyw\t           ❎\t\t✅§slot.py\t           ✅\t\t❎§p - png - t\t           ✅\t\t❎
+*20 13 rEtUrN-tExT.py ¤19 13 §AlLoWs YoU tO wRiTe LiKe ThAt AnD §cOpIeS tHe FiNaL tExT iN yOuR cLiPbOaRd. §§¤20 14 vaporwave.py §I f    y o u    n e e d    t o    l i g h t e n    §y o u r    t e x t    a n d    b r e a t h e ,    §u s e    t h i s    s c r i p t . §§¤20 15 yt.pyw ¤19 15 §§Downloads the miniature of the §YouTube link in your clipboard, and §saves it in your folder Images/YouTube. §¤20 16 sizeC.pyw §Shows the size of C:\hiberfil.sys, §C:\pagefile.sys, and C:\swapfile.sys
+*30 18 slot.py §§¤20 18 Renames *.mdl and *.mot  files §from cwd to another character slot §free of choice. §¤30 19 p.py - t.py - png.py §§§§¤20 19 Old scripts. §They're the forbears of dump.py and §pack.py, so they're outdated.
+20 23 This app is useful to change the attributes of an armature bone of a mdl0. §§§¤22 30 By default, the application will find the root bone first. You can change the default values to fit another bone in order to change its values with the entries textboxes.
+20 25 The first line must stay to 1.0   1.0   1.0 except if you know what you're looking for. §§¤20 26 The other lines are your own custom values that will be replaced into the whole model, it's often used to distort and create memes, though it can also change the hitbox size of objects inside cmn_test.bin
+*50 36 Much Thanks §¤21 2 §§\t to everyone in the discord §\t server, and thanks to you §\t as well for using my apps :) §§§¤20 22 \t Without you, §the community would never exist, §it's really an awesome project §we can be proud of §§§¤20 29 This project is open source, ¤20 27 §feel free to edit it like you want ^-^
+*30 0 -Python\t-Windows\t-Linux§-Discord\t-My Friends§-Stack Overflow§-Notepad++          -utf-8§-HxD Hex Editor  -latin-1§-Pycharm  -Nuitka   -gcc§-Wiimms SZS Tools§-Wiimms ISO Tools§-Nintendo§¤30 19\t\t          yosh#0304
+
+you're done translating this text file :D feel free to put the two line below on the above lines to test the display and find the right color you want
+*30 0 0 hello¤30 1 \t1 hello¤30 2 \t\t2 hello§¤30 3 3 hello¤30 4 \t4 hello¤30 5 \t\t5 hello§¤30 6 6 hello¤30 7 \t7 hello¤30 8 \t\t8 hello§¤30 9 9 hello¤30 10 \t10 hello¤30 11 \t\t11 hello§¤30 12 12 hello¤30 13 \t13 hello¤30 14 \t\t14 hello§¤30 15 15 hello¤30 16 \t16 hello¤30 17 \t\t17 hello§¤30 18 18 hello¤30 19 \t19 hello¤30 20 \t\t20 hello§¤30 21 21 hello¤30 22 \t22 hello¤30 23 \t\t23 hello§¤30 24 24 hello¤30 25 \t25 hello¤30 26 \t\t26 hello§¤30 27 27 hello¤30 28 \t28 hello¤30 29 \t\t29 hello§¤30 30 30 hello¤30 31 \t31 hello¤30 32 \t\t32 hello§¤30 33 33 hello¤30 34 \t34 hello¤30 35 \t\t35 hello§¤30 36 36 hello
+*30 0 0 hello¤30 1 \t1 hello¤30 2 \t\t2 hello§¤30 3 3 hello¤30 4 \t4 hello¤30 5 \t\t5 hello§¤30 6 6 hello¤30 7 \t7 hello¤30 8 \t\t8 hello§¤30 9 9 hello¤30 10 \t10 hello¤30 11 \t\t11 hello§¤30 12 12 hello¤30 13 \t13 hello¤30 14 \t\t14 hello§¤30 15 15 hello¤30 16 \t16 hello¤30 17 \t\t17 hello§¤30 18 18 hello¤30 19 \t19 hello¤30 20 \t\t20 hello§¤30 21 21 hello¤30 22 \t22 hello¤30 23 \t\t23 hello§¤30 24 24 hello¤30 25 \t25 hello¤30 26 \t\t26 hello§¤30 27 27 hello¤30 28 \t28 hello¤30 29 \t\t29 hello§¤30 30 30 hello¤30 31 \t31 hello¤30 32 \t\t32 hello§¤30 33 33 hello¤30 34 \t34 hello¤30 35 \t\t35 hello§¤30 36 36 hello
