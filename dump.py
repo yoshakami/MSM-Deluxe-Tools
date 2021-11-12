@@ -61,6 +61,7 @@ def dump(file, index):
     mips_list = []
     color_list = []
     with open(file, 'rb') as model:
+        fil = os.path.splitext(file)[0]
         header = model.read(4)
         if header == b'\x00 \xaf0':  # TPL File
             tex0 = False
@@ -77,22 +78,15 @@ def dump(file, index):
             for i in range(len(img_header)):
                 model.seek(img_header[i] + 7)
                 tex_color = model.read(1)[0]
+                byte = model.read(4)
+                size_list.append((byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3])
                 if i == 0:
-                    png_list.append(f"{folder}/{file}.png")
+                    png_list.append(f"{folder}/{fil}.png")
                 else:
-                    png_list.append(f"{folder}/{file}.mm{i}.png")
-                size_list.append(img_header[i])
-                if len(img_header) == 1:
-                    mips_list.append(f"TPL")
-                else:
-                    mips_list.append(f"TPL{img_count - 1}")
+                    png_list.append(f"{folder}/{fil}.mm{i}.png")
+                mips_list.append(f"TPL{i}")
                 color_list.append(colourenc[tex_color])
-
-            png_list.append(f"{folder}/{file}.png")
-            size_list.append(y)
-            mips_list.append("TPL")
-            color_list.append(colourenc[tex_color])
-            os.system(f'wimgt decode "{file}" -d "{folder}/{file}.png" -o --strip')
+            os.system(f'wimgt decode "{file}" -d "{folder}/{fil}.png" -o --strip')
             counter += img_count
 
         elif header in [b'U\xaa8-', b'bres']:

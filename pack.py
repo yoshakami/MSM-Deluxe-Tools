@@ -35,32 +35,21 @@ a.iconbitmap('C:\\Yosh\\msm_stuff\\pack.ico')
 print(f"{language[dump + 2]}\n{language[start + 2]}\n{language[start + 3]}\n{language[start + 4]}\n")
 
 
-def tpl(file, mip, name, color, num, size):  # assuming file is the name of a tpl file
-    sizelist = []
+def tpl(file: str, size: int, mip: int, color: str, name: str):  # assuming file is the name of a tpl file
     nam = os.path.splitext(name)[0]
     fil = os.path.splitext(file)[0]
     encoded = fil + '/encoded'
-    with open(fil + '\\zzzdump.txt', 'r') as zzzdump:
-        text = zzzdump.read().splitlines()[3:]  # the first three lines are explaining the purpose of this file
-        sizelist.append(size)
-        os.system(f'wimgt encode "./{fil}/{name}" -x {color} --n-mm 0 -d "./{encoded}/{nam}-0.tex0" -o')
-        for i in range(mip):
-            os.rename(f"{nam}.mm{i + 1}.png", f"{nam}-{i+1}.png")
-            line = text[num*2 + ((i+1)*2)]
-            sizelist.append(line.split(' ', 3)[0])
-            color = line.split(' ', 3)[2]
-            os.system(f'wimgt encode "./{fil}/{nam}-{i+1}.png" -x {color} --n-mm 0 -d "./{encoded}/{nam}-{i+1}.tex0" -o')
-        with open(file, 'r+b') as multi_tpl:
-            for i in range(len(sizelist)):
-                with open("./{encoded}/{nam}- {i}.tex0", "rb") as tex0:
-                    tex0.seek(4)
-                    byte = tex0.read(4)
-                    data_size = (byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3] - 64  # 4 bytes integer
-                    tex0.seek(64)
-                    tex_data = tex0.read(data_size)
-                    multi_tpl.seek(sizelist[i])
-                    multi_tpl.write(tex_data)
-# alors, ça va pas du tout là, ce qu'il faut faire c'est remplacer juste la png éditée!!
+    os.system(f'wimgt encode "./{fil}/{name}" -x {color} --n-mm 0 -d "./{encoded}/{nam}-{mip}.tex0" -o')
+    with open(file, 'r+b') as new_tpl:
+        with open(f"./{encoded}/{nam}-{mip}.tex0", "rb") as tex0:
+            tex0.seek(4)
+            byte = tex0.read(4)
+            data_size = (byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3] - 64  # 4 bytes integer minus SIXTY FOUR
+            tex0.seek(64)
+            tex_data = tex0.read(data_size)
+            new_tpl.seek(size)
+            new_tpl.write(tex_data)
+
 
 def pack(file, index):
     fil = os.path.splitext(file)[0]
@@ -71,7 +60,7 @@ def pack(file, index):
     index_edited = []
     size_list = []
     filesize = os.path.getsize(file)
-    counter = clock = num = skip = 0
+    counter = clock = num = 0
     # compare the current hashes with these written in zzzdump.txt and establish a list of edited pictures
     # encode these png to tex0
     encoded = fil + '/encoded'
@@ -84,20 +73,10 @@ def pack(file, index):
                 clock = False
                 with open(f"./{fil}/{name}", 'rb') as png:
                     if line != sha256(png.read()).hexdigest():
-                        if skip > 0:
-                            skip -= 1
-                            continue
-                        print(mip)
                         if mip[:3] == "TPL":
-                            if mip[-1] == "L":
-                                os.system(f'wimgt encode "./{fil}/{name}" -x TPL.{color} -d "./{encoded}/{nam}.tpl" -o')
-                                counter += 1
-                                continue
-                            else:
-                                counter += mip[-1] + 1
-                                skip = mip[-1] * 2
-                                tpl(file, mip[-1], name, color, num, size)
-                                continue
+                            counter += 1
+                            tpl(file, int(size), int(mip[3:]), color, name)
+                            continue
                         nam = os.path.splitext(name)[0]
                         counter += 1
                         index_edited.append(num)
@@ -106,9 +85,6 @@ def pack(file, index):
                         os.system(f'wimgt encode "./{fil}/{name}" -x {color} --n-mm {mip} -d "./{encoded}/{nam}.tex0" -o')
                 num += 1
             else:
-                if skip > 0:
-                    skip -= 1
-                    continue
                 clock = True
                 size = line.split(' ', 3)[0]
                 mip = line.split(' ', 3)[1]
