@@ -60,7 +60,7 @@ def tpl(file, mip, name, color, num, size):  # assuming file is the name of a tp
                     tex_data = tex0.read(data_size)
                     multi_tpl.seek(sizelist[i])
                     multi_tpl.write(tex_data)
-
+# alors, ça va pas du tout là, ce qu'il faut faire c'est remplacer juste la png éditée!!
 
 def pack(file, index):
     fil = os.path.splitext(file)[0]
@@ -87,8 +87,9 @@ def pack(file, index):
                         if skip > 0:
                             skip -= 1
                             continue
+                        print(mip)
                         if mip[:3] == "TPL":
-                            if mip[-1] == "P":
+                            if mip[-1] == "L":
                                 os.system(f'wimgt encode "./{fil}/{name}" -x TPL.{color} -d "./{encoded}/{nam}.tpl" -o')
                                 counter += 1
                                 continue

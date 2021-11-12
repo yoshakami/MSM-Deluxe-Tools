@@ -63,6 +63,7 @@ def dump(file, index):
     with open(file, 'rb') as model:
         header = model.read(4)
         if header == b'\x00 \xaf0':  # TPL File
+            tex0 = False
             img_header = []
             model.seek(4)
             byte = model.read(4)
@@ -86,13 +87,13 @@ def dump(file, index):
                 else:
                     mips_list.append(f"TPL{img_count - 1}")
                 color_list.append(colourenc[tex_color])
-                os.system(f'wimgt decode "{file}" -d "{folder}/{file}.png" -o --strip')
 
             png_list.append(f"{folder}/{file}.png")
             size_list.append(y)
             mips_list.append("TPL")
             color_list.append(colourenc[tex_color])
             os.system(f'wimgt decode "{file}" -d "{folder}/{file}.png" -o --strip')
+            counter += img_count
 
         elif header in [b'U\xaa8-', b'bres']:
             tex0 = False
@@ -188,7 +189,7 @@ def scan_directory():
                 continue
             with open(files, 'rb') as check_file:
                 header = check_file.read(4)
-            if header in [b'bres', b'U\xaa8-', b'TEX0']:
+            if header in [b'bres', b'U\xaa8-', b'TEX0', b'\x00 \xaf0']:
                 patch = partial(dump, files, i)
                 dumpbu = Button(a, text=files, command=patch, activebackground='#a9ff99', width=30)
                 dumpbu.grid(row=button_row[i], column=button_col[i])
