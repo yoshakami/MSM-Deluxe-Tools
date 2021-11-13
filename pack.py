@@ -35,7 +35,8 @@ a.iconbitmap('C:\\Yosh\\msm_stuff\\pack.ico')
 print(f"{language[dump + 2]}\n{language[start + 2]}\n{language[start + 3]}\n{language[start + 4]}\n")
 
 
-def tpl(file: str, size: int, mip: int, color: str, name: str):  # assuming file is the name of a tpl file
+# this function will seek to the start offset of the edited texture inside the file given then will encode and write it.
+def tpl(file: str, mip: int, color: str, offset: int, name: str):  # assuming file is the name of a tpl file
     nam = os.path.splitext(name)[0]
     fil = os.path.splitext(file)[0]
     encoded = fil + '/encoded'
@@ -45,9 +46,9 @@ def tpl(file: str, size: int, mip: int, color: str, name: str):  # assuming file
             tex0.seek(4)
             byte = tex0.read(4)
             data_size = (byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3] - 64  # 4 bytes integer minus SIXTY FOUR
-            tex0.seek(64)
+            tex0.seek(64)  # jump over the tex0 header
             tex_data = tex0.read(data_size)
-            new_tpl.seek(size)
+            new_tpl.seek(offset)  # yea, offset is the texture start offset inside a tpl (which can be inside an arc file)
             new_tpl.write(tex_data)
 
 
@@ -59,7 +60,7 @@ def pack(file, index):
     edited = []
     index_edited = []
     size_list = []
-    filesize = os.path.getsize(file)
+    offset_list = []
     counter = clock = num = 0
     # compare the current hashes with these written in zzzdump.txt and establish a list of edited pictures
     # encode these png to tex0
@@ -75,41 +76,37 @@ def pack(file, index):
                     if line != sha256(png.read()).hexdigest():
                         if mip[:3] == "TPL":
                             counter += 1
-                            tpl(file, int(size), int(mip[3:]), color, name)
+                            tpl(file, int(mip[3:]), color, int(offset), name)
                             continue
                         nam = os.path.splitext(name)[0]
                         counter += 1
                         index_edited.append(num)
-                        size_list.append(size)
+                        size_list.append(int(size))
+                        offset_list.append(int(offset))
                         edited.append(f'{nam}.tex0')
                         os.system(f'wimgt encode "./{fil}/{name}" -x {color} --n-mm {mip} -d "./{encoded}/{nam}.tex0" -o')
                 num += 1
             else:
                 clock = True
-                size = line.split(' ', 3)[0]
-                mip = line.split(' ', 3)[1]
-                color = line.split(' ', 3)[2]
-                name = line.split(' ', 3)[3]
+                size = line.split(' ', 4)[0]
+                mip = line.split(' ', 4)[1]
+                color = line.split(' ', 4)[2]
+                offset = line.split(' ', 4)[3]
+                name = line.split(' ', 4)[4]
     # now just replace them inside the file
-    tex0 = -1
-    current = -1
     with open(file, 'r+b') as u8:  # works with arc and brres, so it's just a basic u8 archive format I would say
-        for cursor in range(0, filesize - 17, 16):
-            u8.seek(cursor)
-            if u8.read(4) == b'TEX0':
-                tex0 += 1
-                if tex0 in index_edited:
-                    current += 1
-                    byte = u8.read(4)
-                    data_size = (byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3] - 64  # 4 bytes integer WITH THAT MINUS SIXTY FOUR
-                    if data_size + 64 != int(size_list[current]):  # will not replace data if it's not the vanilla size
-                        print(language[51].replace('#', name) + '\n')
-                        continue
-                    with open(f'./{encoded}/{edited[current]}', 'rb') as texture:
-                        texture.seek(64)
-                        tex = texture.read(data_size)
-                    u8.seek(cursor + 64)
-                    u8.write(tex)
+        for i in range(len(offset_list)):
+            u8.seek(offset_list[i])
+            byte = u8.read(4)
+            data_size = (byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3] - 64  # 4 bytes integer WITH THAT MINUS SIXTY FOUR
+            if data_size + 64 != size_list[i]:  # will not replace data if it's not the vanilla data size
+                print(language[51].replace('#', name) + '\n')
+                continue
+            with open(f'./{encoded}/{edited[i]}', 'rb') as texture:
+                texture.seek(64)
+                tex = texture.read(data_size)
+            u8.seek(offset_list[i] + 64)
+            u8.write(tex)
     if keep_encoded == b'0':
         shutil.rmtree(encoded)
     button_list[index].destroy()

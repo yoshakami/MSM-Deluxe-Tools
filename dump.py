@@ -37,7 +37,7 @@ print(f"{language[start + 2]}\n{language[start + 3]}\n")
 
 def dump(file, index):
     y = os.path.getsize(file)
-    counter = z = 0
+    counter = z = k = filepath = 0
     with open('C:\\Yosh\\a', 'rb') as config3:
         config3.seek(13)
         keeptex = config3.read(1)
@@ -60,36 +60,58 @@ def dump(file, index):
     size_list = []
     mips_list = []
     color_list = []
+    offset_list = []
+    tpl_name_list = []
     with open(file, 'rb') as model:
         fil = os.path.splitext(file)[0]
         header = model.read(4)
         if header == b'\x00 \xaf0':  # TPL File
             tex0 = False
-            img_header = []
-            model.seek(4)
-            byte = model.read(4)
-            img_count = (byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3]  # 4 bytes integer
-            byte = model.read(4)
-            table_offset = (byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3]  # 4 bytes integer
-            for i in range(img_count):
-                model.seek(table_offset + (i * 8))
-                byte = model.read(4)
-                img_header.append((byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3])  # 4 bytes integer
-            for i in range(len(img_header)):
-                model.seek(img_header[i] + 7)
-                tex_color = model.read(1)[0]
-                byte = model.read(4)
-                size_list.append((byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3])
-                if i == 0:
-                    png_list.append(f"{folder}/{fil}.png")
-                else:
-                    png_list.append(f"{folder}/{fil}.mm{i}.png")
-                mips_list.append(f"TPL{i}")
-                color_list.append(colourenc[tex_color])
-            os.system(f'wimgt decode "{file}" -d "{folder}/{fil}.png" -o --strip')
-            counter += img_count
-
+            tpl_name_list = [file]
+            tpl_start_offset_list = [0]
+            tpl_size_list = [y]
+            filepath = file
         elif header in [b'U\xaa8-', b'bres']:
+            if header in [b'U\xaa8-']:  # brres files doesn't have tpl in them
+                # uh, what I'm doing here is getting all the names, offset, and sizes of every TPL file in the archive
+                # and what's funny, is that I have no clue of where the name string pool starts,
+                # that's why I written a workaround based on the bytes values to get that string pool table start offset
+                tpl_name_list = []
+                tpl_index_list = []
+                tpl_start_offset_list = []
+                tpl_size_list = []
+
+                byte = model.read(4)
+                filesystem_offset = (byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3]  # 4 bytes integer
+                byte = model.read(4)
+                string_pool_table_end_offset = (byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3] + filesystem_offset
+                z = filesystem_offset
+                while model.read(1)[0] < 2:
+                    model.seek(z)
+                    z += 12
+                z -= 13
+                while 0x1F < k < 0x7F or k == 0:
+                    model.seek(z)
+                    k = model.read(1)[0]
+                    z -= 1
+                string_pool_table_start_offset = z + 12 - ((z - filesystem_offset) % 12)
+                model.seek(string_pool_table_start_offset)
+                string_pool_table = model.read(string_pool_table_end_offset - string_pool_table_start_offset).split(b'\x00')
+                for i in range(len(string_pool_table)):
+                    if b'.tpl' in string_pool_table[i]:
+                        tpl_name_list.append(str(string_pool_table[i])[2:-1])
+                        tpl_index_list.append(i)
+                for tpl_offset in tpl_index_list:
+                    model.seek(filesystem_offset + (12*tpl_offset) + 4)
+                    byte = model.read(4)
+                    tpl_start_offset_list.append((byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3])  # 4 bytes integer
+                    byte = model.read(4)
+                    tpl_size_list.append((byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3])  # 4 bytes integer
+                for i in range(len(tpl_start_offset_list)):
+                    model.seek(tpl_start_offset_list[i])
+                    with open(f"{folder}/tex0/{tpl_name_list[i]}", 'wb') as tpl_file:
+                        tpl_file.write(model.read(tpl_size_list[i]))
+            # once it's done dealing with TPL files, it can now care about TEX0 files
             tex0 = False
             while y - 17 > z:
                 model.seek(z)
@@ -139,11 +161,42 @@ def dump(file, index):
                     size_list.append(tex_size)
                     mips_list.append(tex_mips)
                     color_list.append(colourenc[tex_color])
+                    offset_list.append(z)
                 z += 16
         elif dumpmip:
             os.system(f'wimgt decode "{file}" -o --strip')
         else:
             os.system(f'wimgt decode --no-mm "{file}" -o --strip')
+    if len(tpl_name_list) > 1:
+        for n in range(len(tpl_name_list)):
+            if filepath != file:
+                filepath = f"{folder}/tex0/{tpl_name_list[n]}"
+                fil = os.path.splitext(tpl_name_list[n])[0]
+            with open(filepath, 'rb') as tpl_file:
+                img_header = []
+                tpl_file.seek(4)
+                byte = tpl_file.read(4)
+                img_count = (byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3]  # 4 bytes integer
+                byte = tpl_file.read(4)
+                table_offset = (byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3]  # 4 bytes integer
+                for i in range(img_count):
+                    tpl_file.seek(table_offset + (i * 8))
+                    byte = tpl_file.read(4)
+                    img_header.append((byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3])  # 4 bytes integer
+                for i in range(len(img_header)):
+                    tpl_file.seek(img_header[i] + 7)
+                    tex_color = tpl_file.read(1)[0]
+                    byte = tpl_file.read(4)
+                    offset_list.append(tpl_start_offset_list[n] + (byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3])
+                    size_list.append(tpl_size_list[n])
+                    if i == 0:
+                        png_list.append(f"{folder}/{fil}.png")
+                    else:
+                        png_list.append(f"{folder}/{fil}.mm{i}.png")
+                    mips_list.append(f"TPL{i}")
+                    color_list.append(colourenc[tex_color])
+            os.system(f'wimgt decode "{filepath}" -d "{folder}/{fil}.png" -o --strip')
+            counter += img_count
     if remtex0:
         shutil.rmtree(folder + '/tex0')
         print(language[hashtag + 7].replace('#', folder + '/tex0'))
@@ -159,7 +212,7 @@ def dump(file, index):
             for i in range(len(png_list)):
                 if not os.path.exists(png_list[i]):
                     print(language[hashtag + 9].replace('#', png_list[i]))
-                zzzdump.write('\n' + ' '.join([str(size_list[i]), str(mips_list[i]), color_list[i], png_list[i].split('/')[-1]]) + '\n')
+                zzzdump.write('\n' + ' '.join([str(size_list[i]), str(mips_list[i]), color_list[i], str(offset_list[i]), png_list[i].split('/')[-1]]) + '\n')
                 with open(png_list[i], 'rb') as png:
                     zzzdump.write(sha256(png.read()).hexdigest())  # sha256 hash of the png
     button_list[index].destroy()
