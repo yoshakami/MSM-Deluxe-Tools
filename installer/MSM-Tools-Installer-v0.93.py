@@ -27,7 +27,7 @@ if not os.path.exists("run this if installer doesn't open.bat"):
     with open("run this if installer doesn't open.bat", "w") as batch:
         batch.write('"' + sys.argv[0].split('\\')[-1] + '"\npause')
 languages = (
-    'English', 'Français')  # needs people to translate in other languages
+    'English', 'Français', 'Deutsch')  # needs people to translate in other languages
 lang = [0]  # change it to your lang if you want : english is 0, french is 1, deutsch is 2 and so on (if someone adds it)
 # only lists can be changed in functions, not variables.
 english = [
@@ -108,7 +108,45 @@ french = [
     "installation dans le dossier",
     "Finir l'installation"]
 
-german = []
+german = [
+    'pip.exe wurde nicht gefunden. Diese Datei ist in Python >= 3.7 enthalten (oder man kann die Module "pyperclip", "win10toast" und "Pillow" manuell installieren)',
+    "Common.zip befindet sich nicht im selben Verzeichnis wie dieses Skript,\nwie zum Teufel wollen Sie die Tools ohne Skripts verwenden!?\nDrücke zum Beenden die Eingabetaste...",
+    "exe.zip befindet sich nicht im selben Verzeichnis wie dieses Skript,\nIch nehme an, dass du sie dann nicht verwenden möchtest.\nDrücke die Eingabetaste, um fortzufahren...",
+    "Hey Digga! Es existiert keine jpg.zip, kopier es in das gleiche Verzeichnis wie dieses Skript\nDas Installationsprogramm funktioniert nicht ohne diese Bilder, für die ich viel Zeit gebraucht habe.\nDrücke zum Beenden die Eingabetaste.. .",
+    "Willkommen an der Konsole!",
+    "Hier siehst du, was hinter dem Installer passiert",
+    "Die Schaltflächen sind nur hier, um Aktionen zu trennen, damit sie beendet werden",
+    f"Wenn 'Ich stimme zu' geklickt wird, wird die Größe von 18 Bilder an deine Bildschirmgröße ({w}x{h}) angepasst",
+    "Während der Installation werden Zips entpackt und der Inhalt in den Installationspfad Ihres Verzeichnisses verschoben",
+    "Es löscht auch nutzlose Daten (außer dem Installationsprogramm, da es sich nicht selbst löschen kann)",
+    "Der Installer fügt das Installationsverzeichnis zu PATH hinzu, damit Skripte von überall gestartet werden können!",
+    "Willkommen zum Mario Sports Mix Modding Tool Installer!",
+    "ein paar Skripte, die von Yosh in Python entwickelt wurde",
+    "Wenn Sie für diese Software bezahlt haben, wurden Sie betrogen",
+    "Wähle deine Sprache",
+    "Aktualisierung",
+    "Vertragsbedingungen",
+    "Genau",
+    "(die App friert 1 Minute ein, da sie die Größe aller JPGs auf Ihre Bildschirmabmessungen ändert)",
+    "Bitte wählen Sie Ihr Installationsverzeichnis",
+    "Installationsverzeichnis bereinigen",
+    "Verwenden Sie keine .ico-Dateien (für andere Betriebssysteme, die sie nicht unterstützen)",
+    "Hinweis: 'Lokal' ist nur für die Verwendung mit einem öffentlichen Computer (nicht Ihrem persönlichen) vorgesehen.\nSie müssen in diesen Ordner gehen, um eine App zu starten, da sie nicht zum Pfad hinzugefügt wird.\n",
+    'v-- Wählen Sie aus, wie Sie die Apps über die Suchleiste von explorer.exe starten möchten --v',
+    'EXE verwenden (kann Windows Defender wütend machen)',
+    'Batch benutzen (ein schwarzes Fenster öffnet sich jedes Mal für eine halbe Sekunde, wenn du eine App startest)',
+    "anderes Betriebssystem als Windows (Sie können keine Dateien komprimieren oder dekomprimieren)",
+    "Lokal (bewegliches Verzeichnis)",
+    "Anderes Betriebssystem als Windows",
+    "Ungültiges Laufwerk",
+    "Klicken Sie auf diese Schaltfläche, um die Installation abzuschließen :)",
+    "Sobald es fertig ist, können Sie das Installationsprogramm löschen und die Tools genießen :D",
+    "Sie können auch die in diesem Verzeichnis erschienene Schriftart installieren",
+    "da die Hilfe-App speziell dafür entwickelt wurde",
+    "klicken Sie auf Ja, um cmd admin perm zu aktivieren",
+    "installieren auf",
+    "Beende die Installation"]
+
 spanish = []
 italian = []
 dutch = []
@@ -122,7 +160,7 @@ language = (english, french, german, spanish, italian, dutch, portuguese, russia
 
 
 def input_lang():
-    return input('Languages Available:\n0: English\n1: French (Français)\n\nheyy, type your language number : ')
+    return input('Languages Available:\n0: English\n1: French (Français)\n2: German (Deutsch)\n\nheyy, type your language number : ')
     # \n2: German (Deutsch)\n3: Spanish (Español)\n4: Italian (Italiano)\n5: Dutch (Nederlands)\n6: Portuguese (Português)\n7: Russian (Pусский)\n8: Polish (Polskie)\n9: Japanese (日本語)\n10: Chinese (中国人)\n11: Korean (한국어)
 
 try:
@@ -340,6 +378,8 @@ def step4_drive(letter, clean_inst):
     path = os.environ["PATH"]
     if "\\Yosh" in path or f'{letter}:\\Yosh' not in path:
         admin = False
+        if f'{letter}:\\Yosh' not in path:
+            admin = True
         list_path = path.split(';')
         list_path = list(dict.fromkeys(list_path))  # removes duplicates
         if os.environ["APPDATA"] + '\\Yosh' in list_path:
@@ -357,7 +397,7 @@ def step4_drive(letter, clean_inst):
             path = path[:-1]  # removes the last semicolon
         if admin:
             with open('MSM-tools-installer.bat', 'w') as bat_file:
-                bat_file.write(bat_code() + f'setx path "{path};{letter}:\\Yosh;" /M')
+                bat_file.write(bat_code() + f'setx path "{path};{letter}:\\Yosh" /M')
 
     font = 'Windows\\Fonts'
     m = 'MAR'
@@ -370,6 +410,7 @@ def step4_drive(letter, clean_inst):
                 bat_file.write(bat_code() + f'xcopy "{m}IO Font v3 Solid.otf" C:\\{font} /i /y /q /s\nreg add "HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts" /v "{m}IO Font v3 Solid (OpenType)" /t REG_SZ /d "{m}IO Font v3 Solid.otf" /f')
     if os.path.exists('MSM-tools-installer.bat'):
         os.system('MSM-tools-installer.bat')
+#        os.system('pause')
     shutil.rmtree('Yosh')
     for el in delete:
         if os.path.exists(el):
@@ -440,7 +481,7 @@ def step4_appdata(clean_inst):
         while path[-1] == ';':
             path = path[:-1]  # removes the last semicolon
         with open('MSM-tools-installer.bat', 'w') as bat_file:
-            bat_file.write(bat_code() + f'setx path "{path};{os.environ["APPDATA"]}\\Yosh;" /M')
+            bat_file.write(bat_code() + f'setx path "{path};{os.environ["APPDATA"]}\\Yosh" /M')
 
     font = 'Windows\\Fonts'
     m = 'MAR'
