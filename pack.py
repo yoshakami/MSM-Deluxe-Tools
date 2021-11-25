@@ -1,5 +1,5 @@
 import shutil
-from tkinter import Tk, Label, Button, END, Entry, Checkbutton
+from tkinter import Tk, Label, Button, END, Entry, Checkbutton, StringVar, OptionMenu
 from tkinter.filedialog import askdirectory
 from functools import partial
 from hashlib import sha256
@@ -35,8 +35,18 @@ a.iconbitmap('C:\\Yosh\\msm_stuff\\pack.ico')
 print(f"{language[dump + 2]}\n{language[start + 2]}\n{language[start + 3]}\n{language[start + 4]}\n")
 
 
+def tpl_wszst(file, color, name):
+    fil = os.path.splitext(file)[0]
+    nam = os.path.splitext(name)[0]
+    if not os.path.exists(f'{fil}/encoded/{fil}.d'):
+        os.system(f'wszst x "{file}" -d "{fil}/encoded/{fil}.d"')
+    png_name = os.path.splitext(nam)[0]
+    os.system(f'wimgt encode "{fil}/{name}" -x TPL.{color} -d "{fil}/encoded/{fil}.d/{png_name}.tpl" -o')
+    return
+
+
 # this function will seek to the start offset of the edited texture inside the file given then will encode and write it.
-def tpl(file: str, mip: int, color: str, offset: int, name: str):  # assuming file is the name of a tpl file
+def tpl_multi(file: str, mip: int, color: str, offset: int, name: str):  # assuming file is the name of a tpl file
     nam = os.path.splitext(name)[0]
     fil = os.path.splitext(file)[0]
     encoded = fil + '/encoded'
@@ -61,7 +71,9 @@ def pack(file, index):
     index_edited = []
     size_list = []
     offset_list = []
-    counter = clock = num = 0
+    counter = clock = num = wszst = 0
+    if os.path.splitext(file)[-1] != ".tpl" or METHOD.get() == method[2]:
+        wszst = True
     # compare the current hashes with these written in zzzdump.txt and establish a list of edited pictures
     # encode these png to tex0
     encoded = fil + '/encoded'
@@ -76,7 +88,10 @@ def pack(file, index):
                     if line != sha256(png.read()).hexdigest():
                         if mip[:3] == "TPL":
                             counter += 1
-                            tpl(file, int(mip[3:]), color, int(offset), name)
+                            if wszst:
+                                tpl_wszst(file, color, name)
+                            else:
+                                tpl_multi(file, int(mip[3:]), color, int(offset), name)
                             continue
                         nam = os.path.splitext(name)[0]
                         counter += 1
@@ -94,6 +109,9 @@ def pack(file, index):
                 offset = line.split(' ', 4)[3]
                 name = line.split(' ', 4)[4]
     # now just replace them inside the file
+    if os.path.exists(f'{fil}/encoded/{fil}.d'):
+        os.system(f'wszst c "{fil}/encoded/{fil}.d" -d "{file}" -o')
+
     with open(file, 'r+b') as u8:  # works with arc and brres, so it's just a basic u8 archive format I would say
         for i in range(len(offset_list)):
             u8.seek(offset_list[i])
@@ -118,7 +136,7 @@ def scan_directory():
     del button_list[:]
     i = 0
     for tkstuff in a.winfo_children():
-        if tkstuff not in [text_label, cwd_label, entry_dir, refreshbu, open_explorerbu, T, title, keep_tex0]:
+        if tkstuff not in [text_label, cwd_label, entry_dir, refreshbu, open_explorerbu, T, title, keep_tex0, Method]:
             tkstuff.destroy()
 
     for files in os.listdir('./'):
@@ -196,6 +214,14 @@ T.grid(row=2, column=1, columnspan=2)
 
 title = Label(a, text=language[start + 1], font=(None, 15), bg='#ffaaaa', height=3)
 title.grid(row=3, columnspan=9)
+
+method = (' '*70 + language[start + 7] + ' '*(80-len(language[start + 7])), ' '*70+language[start + 8]+' '*(80-len(language[start + 8])), ' '*70+language[start + 9]+' '*(80-len(language[start + 9])))
+METHOD = StringVar()
+METHOD.set(language[start + 6])
+Method = OptionMenu(a, METHOD, *method)
+Method["menu"].config(bg="#000000", fg='#ffffff')
+Method.config(width=80)
+Method.grid(row=4, columnspan=3)
 
 keep_tex0 = Checkbutton(a, text=language[start + 5], command=keep, bg="#ffaaaa", width=25)
 keep_tex0.grid(row=2, column=0)

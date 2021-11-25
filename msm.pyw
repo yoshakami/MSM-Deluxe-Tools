@@ -15,7 +15,7 @@ with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
 
 start = int(language[1].split(":")[1])
 a = Tk()
-a.title(language[start + 2] + " v0.92")
+a.title(language[start + 2] + " v0.93")
 a.minsize(680, 495)
 a.maxsize(680, 495)
 a.config(bg="#aecfee")
@@ -258,37 +258,40 @@ def msmhelp():
 
 
 def cmn():
-    os.system('taskkill /im "python.exe"')
-    os.system('taskkill /im "pythonw.exe"')
-    os.system('taskkill /im "arc.exe"')
-    os.system('taskkill /im "brsar.exe"')
-    os.system('taskkill /im "bstick.exe"')
-    os.system('taskkill /im "c.exe"')
-    os.system('taskkill /im "dec.exe"')
-    os.system('taskkill /im "dump.exe"')
-    os.system('taskkill /im "hexf.exe"')
-    os.system('taskkill /im "int.exe"')
-    os.system('taskkill /im "iso.exe"')
-    os.system('taskkill /im "isox.exe"')
-    os.system('taskkill /im "lh.exe"')
-    os.system('taskkill /im "map.exe"')
-    os.system('taskkill /im "msm.exe"')
-    os.system('taskkill /im "msmhelp.exe"')
-    os.system('taskkill /im "p.exe"')
-    os.system('taskkill /im "pack.exe"')
-    os.system('taskkill /im "png.exe"')
-    os.system('taskkill /im "rEtUrN-tExT.exe"')
-    os.system('taskkill /im "sizeC.exe"')
-    os.system('taskkill /im "slot.exe"')
-    os.system('taskkill /im "t.exe"')
-    os.system('taskkill /im "tex.exe"')
-    os.system('taskkill /im "tex3.exe"')
-    os.system('taskkill /im "thp.exe"')
-    os.system('taskkill /im "trib.exe"')
-    os.system('taskkill /im "vaporwave.exe"')
-    os.system('taskkill /im "web.exe"')
-    os.system('taskkill /im "x.exe"')
-    os.system('taskkill /im "yt.exe"')
+    if not os.path.exists("C:\\Yosh\\kill-msm.bat"):
+        with open("C:\\Yosh\\kill-msm.bat", "w") as bat:
+            bat.write("""taskkill /im "python.exe"
+taskkill /im "pythonw.exe"
+taskkill /im "arc.exe"
+taskkill /im "brsar.exe"
+taskkill /im "bstick.exe"
+taskkill /im "c.exe"
+taskkill /im "dec.exe"
+taskkill /im "dump.exe"
+taskkill /im "hexf.exe"
+taskkill /im "int.exe"
+taskkill /im "iso.exe"
+taskkill /im "isox.exe"
+taskkill /im "lh.exe"
+taskkill /im "map.exe"
+taskkill /im "msm.exe"
+taskkill /im "msmhelp.exe"
+taskkill /im "p.exe"
+taskkill /im "pack.exe"
+taskkill /im "png.exe"
+taskkill /im "rEtUrN-tExT.exe"
+taskkill /im "sizeC.exe"
+taskkill /im "slot.exe"
+taskkill /im "t.exe"
+taskkill /im "tex.exe"
+taskkill /im "tex3.exe"
+taskkill /im "thp.exe"
+taskkill /im "trib.exe"
+taskkill /im "vaporwave.exe"
+taskkill /im "web.exe"
+taskkill /im "x.exe"
+taskkill /im "yt.exe" """)
+    os.system("C:\\Yosh\\kill-msm.bat")
 
 
 ltitle = Label(a, text=language[start + 3], font=(None, 15), bg="#aecfee", height=3)
