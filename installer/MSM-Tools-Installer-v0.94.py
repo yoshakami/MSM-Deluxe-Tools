@@ -10,7 +10,7 @@ import os
 
 apps = ['arc.py', 'brsar.pyw', 'bstick.pyw', 'c.py', 'dec.py', 'dump.py', 'hexf.py', 'int.py', 'iso.py', 'isox.py',
         'lh.py', 'map.pyw', 'msm.pyw', 'msmhelp.pyw', 'p.py', 'pack.py', 'png.py', 'rEtUrN-tExT.py', 'sizeC.pyw',
-        'slot.py', 't.py', 'tex.py', 'tex3.pyw', 'thp.pyw', 'trib.py', 'vaporwave.py', 'web.pyw', 'x.py', 'yt.pyw']
+        'slot.py', 't.py', 'tex.py', 'tex3.pyw', 'thp.py', 'trib.py', 'vaporwave.py', 'web.pyw', 'x.py', 'yt.pyw']
 
 root = sys.argv[0]
 root = os.path.splitext(root)[0]
