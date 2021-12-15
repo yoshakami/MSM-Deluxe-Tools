@@ -114,11 +114,11 @@ def pack(file, index):
 
     with open(file, 'r+b') as u8:  # works with arc and brres, so it's just a basic u8 archive format I would say
         for i in range(len(offset_list)):
-            u8.seek(offset_list[i])
+            u8.seek(offset_list[i] + 4)
             byte = u8.read(4)
             data_size = (byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3] - 64  # 4 bytes integer WITH THAT MINUS SIXTY FOUR
             if data_size + 64 != size_list[i]:  # will not replace data if it's not the vanilla data size
-                print(language[51].replace('#', name) + '\n')
+                print(language[51].replace('#', edited[i]) + f'\n {data_size + 64} != {size_list[i]}')
                 continue
             with open(f'./{encoded}/{edited[i]}', 'rb') as texture:
                 texture.seek(64)
