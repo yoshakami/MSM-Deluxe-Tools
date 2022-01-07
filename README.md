@@ -25,9 +25,9 @@ they are all independent scripts, they just need to access the config file named
 
 if you want to know what's happening when you launch an app by the explorer navbar, it simply run an exe that will run a vbs which will state wether or not the app needs a console, make that console associated with the app on the taskbar, and will make it an alone process by launching a .lnk shortcut file of the python script, so there's a custom icon on the taskbar
 
-arc.py ----------- arc extract and compress, creates U8 archive with/without compression
+arc.py ----------- \t arc extract and compress, creates U8 archive with/without compression
 
-brsar.pyw ------- Every Game Brsar Patcher
+brsar.pyw -------\t Every Game Brsar Patcher
 
 bstick.pyw ------ Change bstick colour
 
