@@ -47,15 +47,17 @@ msm.pyw -------- Mario Sports Mix Modding App Menu
 
 msmhelp.pyw ---- Help pictures I made
 
-msmshortcuts.pyw- Shortcuts (file name and full title)
-
 p.py ---------------- Png texture replace (CLI no png extension)
+
+pack.py -------- Pack all edited png's dumped with dump.py into a brres, or an arc file (also works with TPL files !)
 
 png.py -------------- Png texture replace (CLI with png extension)
 
 rEtUrN-tExT.py ----- CaPiTaLiSe
 
 sizeC.pyw ----------- Prints C:\pagefile.sys, C:\hiberfil.sys, and C:\swapfile.sys filesize
+
+slot.py  ----------- Command Line Tool that'll prompt you to change a character slot by renaming all files in cwd (it will close automatically after start if no character mot or mdl files are found in the cwd)
 
 t.py ----------------- Encoded texture replace (CLI)
 
