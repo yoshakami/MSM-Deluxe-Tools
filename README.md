@@ -25,52 +25,52 @@ they are all independent scripts, they just need to access the config file named
 
 if you want to know what's happening when you launch an app by the explorer navbar, it simply run an exe that will run a vbs which will state wether or not the app needs a console, make that console associated with the app on the taskbar, and will make it an alone process by launching a .lnk shortcut file of the python script, so there's a custom icon on the taskbar
 
-arc.py ----------- \t arc extract and compress, creates U8 archive with/without compression
+arc.py	--------- arc extract and compress, creates U8 archive with/without compression
 
-brsar.pyw -------\t Every Game Brsar Patcher
+brsar.pyw	------- Every Game Brsar Patcher
 
-bstick.pyw ------ Change bstick colour
+bstick.pyw	----- Change bstick colour
 
-c.py ------------- Compress files in cwd
+c.py 	----------- Compress files in cwd
 
-dump.py -------- Dump all textures to png
+dump.py	--------- Dump all textures to png
 
-hexf.py --------- Convert decimal to hex-float
+hexf.py 	------- Convert decimal to hex-float
 
-isox.py --------- MSM iso/wbfs extract and compress
+isox.py 	------- MSM iso/wbfs extract and compress
 
-lh.py ----------- MSM files extract and compress
+lh.py	----------- MSM files extract and compress
 
-map.pyw -------- MSM Symbol Map Viewer
+map.pyw	--------- MSM Symbol Map Viewer
 
-msm.pyw -------- Mario Sports Mix Modding App Menu
+msm.pyw	--------- Mario Sports Mix Modding App Menu
 
-msmhelp.pyw ---- Help pictures I made
+msmhelp.pyw ----- Help pictures I made
 
-p.py ---------------- Png texture replace (CLI no png extension)
+p.py 	---------------- Png texture replace (CLI no png extension)
 
-pack.py -------- Pack all edited png's dumped with dump.py into a brres, or an arc file (also works with TPL files !)
+pack.py	 -------- Pack all edited png's dumped with dump.py into a brres, or an arc file (also works with TPL files !)
 
-png.py -------------- Png texture replace (CLI with png extension)
+png.py	 -------------- Png texture replace (CLI with png extension)
 
-rEtUrN-tExT.py ----- CaPiTaLiSe
+rEtUrN-tExT.py	 ----- CaPiTaLiSe
 
-sizeC.pyw ----------- Prints C:\pagefile.sys, C:\hiberfil.sys, and C:\swapfile.sys filesize
+sizeC.pyw	 ----------- Prints C:\pagefile.sys, C:\hiberfil.sys, and C:\swapfile.sys filesize
 
-slot.py  ----------- Command Line Tool that'll prompt you to change a character slot by renaming all files in cwd (it will close automatically after start if no character mot or mdl files are found in the cwd)
+slot.py 	 ----------- Command Line Tool that'll prompt you to change a character slot by renaming all files in cwd (it will close automatically after start if no character mot or mdl files are found in the cwd)
 
-t.py ----------------- Encoded texture replace (CLI)
+t.py	 ----------------- Encoded texture replace (CLI)
 
-tex.py --------------- Encode png to tex0
+tex.py 	--------------- Encode png to tex0
 
-tex3.py -------------- Fix all textures to version 3
+tex3.py 	-------------- Fix all textures to version 3
 
-trib.py --------------- Change root bone attributes
+trib.py 	--------------- Change root bone attributes
 
-vaporwave.py ------- V a p o r w a v e
+vaporwave.py	 ------- V a p o r w a v e
 
-web.pyw ------------ Website
+web.pyw	 ------------ Website
 
-x.py ----------------- Extract files in cwd
+x.py	 ----------------- Extract files in cwd
 
-yt.pyw --------------- YT Videos Thumbnails Download
+yt.pyw 	--------------- YT Videos Thumbnails Download
