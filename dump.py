@@ -2,9 +2,9 @@ from tkinter import Tk, Label, Button, END, Entry, Checkbutton
 from tkinter.filedialog import askdirectory
 from functools import partial
 from hashlib import sha256
+import subprocess
 import shutil
 import os
-
 
 if ':\\Windows' in os.getcwd():
     os.chdir(os.environ['userprofile'] + '\\Desktop')
@@ -72,6 +72,7 @@ def dump(file, index):
             tpl_size_list = [y]
             filepath = file
         elif header in [b'U\xaa8-', b'bres']:
+            tex0 = False  # it's not only a single tex0 file
             if header in [b'U\xaa8-']:  # brres files doesn't have tpl in them
                 # uh, what I'm doing here is getting all the names, offset, and sizes of every TPL file in the archive
                 # and what's funny, is that I have no clue of where the name string pool starts,
@@ -85,16 +86,19 @@ def dump(file, index):
                 filesystem_offset = (byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3]  # 4 bytes integer
                 byte = model.read(4)
                 string_pool_table_end_offset = (byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3] + filesystem_offset
-                z = filesystem_offset
-                while model.read(1)[0] < 2:
-                    model.seek(z)
-                    z += 12
-                z -= 13
+                z = string_pool_table_end_offset - 1
+                model.seek(z)
                 while 0x1F < k < 0x7F or k == 0:
                     model.seek(z)
                     k = model.read(1)[0]
                     z -= 1
-                string_pool_table_start_offset = z + 12 - ((z - filesystem_offset) % 12)
+                k = 0
+                z += 1
+                while not (0x1F < k < 0x7F):
+                    z += 1
+                    model.seek(z)
+                    k = model.read(1)[0]
+                string_pool_table_start_offset = z  # + 12 - ((z - filesystem_offset) % 12)
                 model.seek(string_pool_table_start_offset)
                 string_pool_table = model.read(string_pool_table_end_offset - string_pool_table_start_offset).split(b'\x00')
                 for i in range(len(string_pool_table)):
@@ -102,7 +106,7 @@ def dump(file, index):
                         tpl_name_list.append(str(string_pool_table[i])[2:-1])
                         tpl_index_list.append(i)
                 for tpl_offset in tpl_index_list:
-                    model.seek(filesystem_offset + (12*tpl_offset) + 4)
+                    model.seek(filesystem_offset + (12 * tpl_offset) + 4)
                     byte = model.read(4)
                     tpl_start_offset_list.append((byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3])  # 4 bytes integer
                     byte = model.read(4)
@@ -112,7 +116,7 @@ def dump(file, index):
                     with open(f"{folder}/tex0/{tpl_name_list[i]}", 'wb') as tpl_file:
                         tpl_file.write(model.read(tpl_size_list[i]))
             # once it's done dealing with TPL files, it can now care about TEX0 files
-            tex0 = False
+            z = 0
             while y - 17 > z:
                 model.seek(z)
                 data = model.read(4)
@@ -154,16 +158,16 @@ def dump(file, index):
                     with open(f'{folder}/tex0/{tex_name}.tex0', 'wb') as tex:
                         tex.write(texture)  # + padding
                     if dumpmip:
-                        os.system(f'wimgt decode "{folder}/tex0/{tex_name}.tex0" -d "{folder}/{tex_name}.png" -o --strip')
+                        subprocess.run(['wimgt', 'decode', f"{folder}/tex0/{tex_name}.tex0", '-d', f"{folder}/{tex_name}.png", '-o', '--strip'], stdout=None)
                     else:
-                        os.system(f'wimgt decode "{folder}/tex0/{tex_name}.tex0" --no-mm -d "{folder}/{tex_name}.png" -o --strip')
+                        subprocess.run(['wimgt', 'decode', f"{folder}/tex0/{tex_name}.tex0", '--no-mm', '-d', f"{folder}/{tex_name}.png", '-o', '--strip'], stdout=None)
                     png_list.append(f"{folder}/{tex_name}.png")
                     size_list.append(tex_size)
                     mips_list.append(tex_mips)
                     color_list.append(colourenc[tex_color])
                     offset_list.append(z)
                 z += 16
-        elif dumpmip:
+        elif dumpmip:  # dumps a single tex0 (converts it to png with its mipmaps)
             os.system(f'wimgt decode "{file}" -o --strip')
         else:
             os.system(f'wimgt decode --no-mm "{file}" -o --strip')
@@ -195,17 +199,11 @@ def dump(file, index):
                         png_list.append(f"{folder}/{fil}.mm{i}.png")
                     mips_list.append(f"TPL{i}")
                     color_list.append(colourenc[tex_color])
-            os.system(f'wimgt decode "{filepath}" -d "{folder}/{fil}.png" -o --strip')
+            subprocess.run(['wimgt', 'decode', f"{filepath}", '-d', f"{folder}/{fil}.png", '-o', '--strip'], stdout=None)
             counter += img_count
     if remtex0:
         shutil.rmtree(folder + '/tex0')
         print(language[hashtag + 7].replace('#', folder + '/tex0'))
-        # for element in os.listdir(folder + '/tex0'):
-        #    if os.path.splitext(element)[-1] == '.tex0':
-        #        # os.system(f'del ".\\{folder[2:]}\\{element}"')
-        #        if os.path.exists(f'{folder}/tex0/{element}'):
-        #            os.remove(f'{folder}/tex0/{element}')
-        #        print(language[msm + 48].replace('#', element))
     if not tex0:  # if the file isn't a single tex0 but rather an arc, brres, or tpl file
         with open(folder + '/zzzdump.txt', 'w') as zzzdump:
             zzzdump.write('\n'.join([language[start + 7], language[start + 8], language[start + 9]]))

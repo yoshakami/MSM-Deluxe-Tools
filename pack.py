@@ -41,7 +41,12 @@ def tpl_wszst(file, color, name):
     if not os.path.exists(f'{fil}/encoded/{fil}.d'):
         os.system(f'wszst x "{file}" -d "{fil}/encoded/{fil}.d"')
     png_name = os.path.splitext(nam)[0]
-    os.system(f'wimgt encode "{fil}/{name}" -x TPL.{color} -d "{fil}/encoded/{fil}.d/{png_name}.tpl" -o')
+    if os.path.exists(f"{fil}/encoded/{fil}.d/arc/timg/"):
+        os.system(f'wimgt encode "{fil}/{name}" -x TPL.{color} -d "{fil}/encoded/{fil}.d/arc/timg/{png_name}.tpl" -o')
+    elif os.path.exists(f"{fil}/encoded/{fil}.d/timg/"):
+        os.system(f'wimgt encode "{fil}/{name}" -x TPL.{color} -d "{fil}/encoded/{fil}.d/timg/{png_name}.tpl" -o')
+    else:  # strap
+        os.system(f'wimgt encode "{fil}/{name}" -x TPL.{color} -d "{fil}/encoded/{fil}.d/{png_name}.tpl" -o')
     return
 
 
@@ -58,8 +63,8 @@ def tpl_multi(file: str, mip: int, color: str, offset: int, name: str):  # assum
             data_size = (byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3] - 64  # 4 bytes integer minus SIXTY FOUR
             tex0.seek(64)  # jump over the tex0 header
             tex_data = tex0.read(data_size)
-            new_tpl.seek(offset)  # yea, offset is the texture start offset inside a tpl (which can be inside an arc file)
-            new_tpl.write(tex_data)
+        new_tpl.seek(offset)  # yea, offset is the texture start offset inside a tpl (which can be inside an arc file)
+        new_tpl.write(tex_data)
 
 
 def pack(file, index):
@@ -118,7 +123,7 @@ def pack(file, index):
             byte = u8.read(4)
             data_size = (byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3] - 64  # 4 bytes integer WITH THAT MINUS SIXTY FOUR
             if data_size + 64 != size_list[i]:  # will not replace data if it's not the vanilla data size
-                print(language[51].replace('#', edited[i]) + f'\n {data_size + 64} != {size_list[i]}')
+                print(language[hashtag + 10].replace('#', edited[i]) + f'\n {data_size + 64} != {size_list[i]}')
                 continue
             with open(f'./{encoded}/{edited[i]}', 'rb') as texture:
                 texture.seek(64)

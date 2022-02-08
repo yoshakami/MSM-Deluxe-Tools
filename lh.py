@@ -10,6 +10,7 @@ with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
     language = txt.read()
     language = [''] + language.splitlines()
 
+arc = int(language[1].split(":")[7])
 start = int(language[1].split(":")[15])
 msm = int(language[1].split(":")[1])
 a = Tk()
@@ -66,6 +67,8 @@ def scan_directory():
 
     def compress_all():  # compress all files in current directory
         for uncomp_file in os.listdir('./'):
+            if not os.path.isfile(uncomp_file):
+                continue
             with open(uncomp_file, 'rb') as uncomp_check:
                 if uncomp_check.read(4) not in thrice:
                     continue
@@ -99,9 +102,6 @@ def scan_directory():
             shortname = os.path.splitext(cfile)[0]  # if there is a . in the file name
         else:
             shortname = cfile  # else compressed file name will be the file name + its right extension
-        for k in range(3):
-            if f"{shortname}{extensions[k]}" != cfile:  # don't delete the file the script will compress!
-                os.system(f'del "{shortname}{extensions[k]}"')  # delete the mdl, cmp, or bin file with the same name as the
         if ismodel:  # future compressed file if it exists  ( == overwrite )
             os.system(f'C:\\Yosh\\n.exe "{cfile}" -lh -o "{shortname}.mdl" -A32')  # create a compressed file with mdl extension
         elif iscmp:
@@ -123,11 +123,27 @@ def scan_directory():
     def extract_file(file, number):
         os.system(f'C:\\Yosh\\n.exe "{file}" -x')
         extract_list[number].destroy()
+        patched = Label(a, text=language[arc + 1], bg='#dfffaa', width=30)
+        patched.grid(row=burow_extract[number], column=bucolumn[number])
 
     def compress_file(brres, num):
         compress(brres)
         compress_list[num].destroy()
+        patched = Label(a, text=language[arc + 1], bg='#dfffaa', width=30)
+        patched.grid(row=burow_extract[num], column=bucolumn[num])
 
+    patched = Label(a, text=language[arc + 1], bg='#dfffaa', width=30)
+    patched.grid(row=4, column=0)
+    patched = Label(a, text=language[arc + 1], bg='#dfffaa', width=30)
+    patched.grid(row=4, column=1)
+    patched = Label(a, text=language[arc + 1], bg='#dfffaa', width=30)
+    patched.grid(row=4, column=2)
+    patched = Label(a, text=language[arc + 1], bg='#dfffaa', width=30)
+    patched.grid(row=5, column=0)
+    patched = Label(a, text=language[arc + 1], bg='#dfffaa', width=30)
+    patched.grid(row=5, column=1)
+    patched = Label(a, text=language[arc + 1], bg='#dfffaa', width=30)
+    patched.grid(row=5, column=2)
     file_extract_label = Label(a, text=language[start + 1], font=300, bg='#dfffaa', height=2, width=45)
     file_extract_label.grid(row=2, columnspan=20)
     extract_allbu = Button(a, text=language[start + 2], activebackground='#ff7373', bg='#ffb8b8', command=extract_all, width=30)
@@ -170,7 +186,7 @@ def scan_directory():
                     temp = Button(a, text=file_to_extract, command=run_extract_file, activebackground='#a9ff99', width=30)
                     temp.grid(row=burow_extract[n], column=bucolumn[n])
                     extract_list.append(temp)
-                    print(file_to_extract, n)
+                    # print(file_to_extract, n)
                     n += 1
 
         except PermissionError as error:
@@ -193,7 +209,8 @@ def scan_directory():
     manual_compress = partial(compress, manual_entry.get())
     manual_button.config(command=manual_compress)
     manual_button.grid(row=20, column=2)
-
+    patched = Label(a, text=language[arc + 1], bg='#dfffaa', width=61)
+    patched.grid(row=21, column=1, columnspan=2)
     compress_all_filesbu = Button(a, text=language[start + 10], command=compress_all, activebackground='#ff8c8c', bg='#ffc7c7', width=61)
     compress_all_filesbu.grid(row=21, column=1, columnspan=2)
 

@@ -97,7 +97,7 @@ for j in range(20, 32):
 
 print(f"{language[start + 2]}\n")
 button_col = [0, 1, 2] * 9 + [3] * 9 + [4] * 9 + [5] * 9 + [6] * 9 + [0, 1, 2, 3, 4, 5, 6] * 12
-print(button_col)
+# print(button_col)
 button_list = []
 a = Tk()
 a.title(language[start])

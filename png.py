@@ -67,13 +67,6 @@ with open(file, 'r+b') as arc:  # though arc could have been named brres as it's
     bres_list.append(0)
     bres_list.reverse()   # make 0 the last element of the last if it's empty and the first brres offset if not empty
     cmd_list = []
-    if compress:
-        for indice in range(3):
-            if f"{short}{extensions[indice]}" == file:  # don't delete the file this script is editing
-                short += extensions[indice]
-                break
-            else:  # os.remove crashes the script if the file doesn't exists while del doesn't
-                os.system(f'del "{short}{extensions[indice]}"')  # overwrite files if compressing
     while add_png != '1':  # while user enters a wrong name
         picture = input(f'{language[start + 29]} : ')  # remember quote is a forbidden character in windows
         picture = picture.strip('"')     # if you drag and drop it adds quotes and create a name that doesn't exists

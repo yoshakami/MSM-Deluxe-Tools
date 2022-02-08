@@ -15,7 +15,7 @@ with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
 
 start = int(language[1].split(":")[1])
 a = Tk()
-a.title(language[start + 2] + " v0.95")
+a.title(language[start + 2] + " v0.96")
 a.minsize(680, 495)
 a.maxsize(680, 495)
 a.config(bg="#aecfee")

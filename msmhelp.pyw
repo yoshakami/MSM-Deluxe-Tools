@@ -36,7 +36,7 @@ dim.place(x=w / 10, y=h / 10)
 static = [title, txt, bye, dim]
 # a.wm_attributes('-transparentcolor', a['bg'])
 
-print(f"screen dimensions : {w}x{h}")
+# print(f"screen dimensions : {w}x{h}")
 # print(font.families())
 
 
@@ -185,7 +185,7 @@ minicolor = ['#ff0000', '#ff7f7f', '#ff5f00', '#ff9f00', '#ffcf00',  # id 0 to 4
 #             29'#ffcf00', '#ff00cf', '#cfff00', '#cf00ff', '#00cfff', '#00ffcf',  # 29all combos with ff, cf, and 00
 #             35'#5500a5', '#b70f00' # 35plum then maroon
 
-print(f'there are {len(minicolor)} colours available')
+# print(f'there are {len(minicolor)} colours available')
 # green_cyan = minicolor[0] '#03ff81',
 # lighter_blue = minicolor[1] '#0061ff',
 # light_blue = minicolor[4] '#006eff',

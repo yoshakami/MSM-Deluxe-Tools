@@ -29,9 +29,6 @@ for cfile in os.listdir('./'):
         shortname = os.path.splitext(cfile)[0]  # if there is a . in the file name
     else:
         shortname = cfile  # else compressed file name will be the file name + its right extension
-    for i in range(3):
-        if f"{shortname}{extensions[i]}" != cfile:  # don't delete the file the script will compress!
-            os.system(f'del "{shortname}{extensions[i]}"')  # delete the mdl, cmp, or bin file with the same name as the
     if ismodel:                                             # future compressed file if it exists  ( == overwrite )
         os.system(f'n "{cfile}" -lh -o "{shortname}.mdl" -A32')  # create a compressed file with mdl extension
     elif iscmp:
