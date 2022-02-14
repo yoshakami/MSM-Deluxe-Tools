@@ -25,6 +25,18 @@ they are all independent scripts, they just need to access the config file named
 
 if you want to know what's happening when you launch an app by the explorer navbar, it simply run an exe that will run a vbs which will state wether or not the app needs a console, make that console associated with the app on the taskbar, and will make it an alone process by launching a .lnk shortcut file of the python script, so there's a custom icon on the taskbar
 
+## if the installer doesn't open
+check what the console says
+if it instantly closes, run "run this if installer doesn't open.bat" and check what the console says
+the last option is to get in contact with me (yosh) either by discord, or your preferred way.
+
+## why is there C programming here ?
+in order for the scripts to be launched from everywhere, I needed to use files with an extension in %pathext% BUT explorer.exe has a modified pathext environment variable that we can't edit, and it only contains .exe, .com, and .bat
+therefore, I developped programs in C that would launch the apps. It's been automated in a python scripts, but the two .c files in the source code are not automated and manually edited to launch msm_cli.py if any arg has been added after the exe name.
+(yep, I programmed my own version of strcat, you shouldn't rely too much libraries if you're doing C programming, as strcat was splitting args randomly after a dot or some other characters)
+if you plan to use .bat instead of exe, you will need to type "msm_cli.py" instead of msm in order to use the command line tools.
+
+## scripts description
 arc.py -----------  arc extract and compress, creates U8 archive with/without compression
 
 brsar.pyw ------- Every Game Brsar Patcher
