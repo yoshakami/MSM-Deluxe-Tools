@@ -205,14 +205,15 @@ def dump(file, index):
         shutil.rmtree(folder + '/tex0')
         print(language[hashtag + 7].replace('#', folder + '/tex0'))
     if not tex0:  # if the file isn't a single tex0 but rather an arc, brres, or tpl file
-        with open(folder + '/zzzdump.txt', 'w') as zzzdump:
-            zzzdump.write('\n'.join([language[start + 7], language[start + 8], language[start + 9]]))
-            for i in range(len(png_list)):
-                if not os.path.exists(png_list[i]):
-                    print(language[hashtag + 9].replace('#', png_list[i]))
-                zzzdump.write('\n' + ' '.join([str(size_list[i]), str(mips_list[i]), color_list[i], str(offset_list[i]), png_list[i].split('/')[-1]]) + '\n')
-                with open(png_list[i], 'rb') as png:
-                    zzzdump.write(sha256(png.read()).hexdigest())  # sha256 hash of the png
+        if counter > 0:
+            with open(folder + '/zzzdump.txt', 'w') as zzzdump:
+                zzzdump.write('\n'.join([language[start + 7], language[start + 8], language[start + 9]]))
+                for i in range(len(png_list)):
+                    if not os.path.exists(png_list[i]):
+                        print(language[hashtag + 9].replace('#', png_list[i]))
+                    zzzdump.write('\n' + ' '.join([str(size_list[i]), str(mips_list[i]), color_list[i], str(offset_list[i]), png_list[i].split('/')[-1]]) + '\n')
+                    with open(png_list[i], 'rb') as png:
+                        zzzdump.write(sha256(png.read()).hexdigest())  # sha256 hash of the png
     button_list[index].destroy()
     dumped = Label(a, text=language[hashtag + 3].replace("#", str(counter)), bg='#aaffbf', width=30)
     dumped.grid(row=button_row[index], column=button_col[index])

@@ -1,10 +1,16 @@
 import os
+import sys
 import webbrowser
 # from random import randint
 from subprocess import Popen
 from winsound import PlaySound
 from tkinter.filedialog import askdirectory
 from tkinter import Button, Label, Entry, OptionMenu, Tk, Canvas, PhotoImage, DISABLED, StringVar, _setit
+
+if len(sys.argv) > 1:
+    args = sys.argv
+    args[0] = 'C:\\Yosh\\msm_cli.py'
+    Popen(args)
 
 if ':\\Windows' in os.getcwd():
     os.chdir(os.environ['userprofile'] + '\\Desktop')
@@ -48,18 +54,18 @@ Languages.config(width=15)
 
 random = (
     'question_mark_coin.wav', 'gnomed.wav',
-    f'os.environ["ProgramFiles"]\\Internet Explorer\\iexplore.exe',
+    f'{os.environ["ProgramFiles"]}\\Internet Explorer\\iexplore.exe',
     "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
     'https://cdn.discordapp.com/attachments/604971224040472577/831235648886407188/rick.gif',
-    'https://www.youtube.com/watch?v=hJxFfeyyIXE',
+    'https://www.youtube.com/watch?v=hJxFfeyyIXE',  # but luigi, don't be a dino fool, it takes all colos to make a rainbow
     'https://cdn.discordapp.com/attachments/604971224040472577/831238407971274853/rick.png',
     'https://gamepadviewer.com/', 'https://www.youtube.com/watch?v=vCbwXQuHAIE',  # Waluigi sounds
     'https://www.youtube.com/watch?v=GPMq_PxMTUI&list=PLGr95qH5dmjDiy8NZ8xNA7HE57JyMSU7y&index=18',
     'https://www.youtube.com/watch?v=tHjwySePzH0&list=PLk28dkfJOGjBWGTK6MP6m3qNRIc88VES9&index=37',
     'https://www.youtube.com/watch?v=kE8xdRjxuIs', 'https://www.youtube.com/watch?v=4X4DAg9K-co',  # Wario sounds
-    'https://www.youtube.com/watch?v=t7qdHQRJjeE', 'https://www.youtube.com/watch?v=ZS8FLG3kLQc',  # Pizza Pasta
-    'https://www.youtube.com/watch?v=Mr8h_T4UPEA', 'https://www.youtube.com/watch?v=utRC8rZSiBI',  # Wii Sports
-    'https://www.youtube.com/watch?v=U2SpYoH2GDY', 'https://www.youtube.com/watch?v=K0kvlULMBQ8',  # Pizza Pasta and SMBWii meme
+    'https://www.youtube.com/watch?v=t7qdHQRJjeE', 'https://www.youtube.com/watch?v=ZS8FLG3kLQc',  # Pizza Pasta, [YTP] Imagine Nuts - Belieeeeee
+    'https://www.youtube.com/watch?v=Mr8h_T4UPEA', 'https://www.youtube.com/watch?v=utRC8rZSiBI',  # Wii Sports Tennis + Bowling
+    'https://www.youtube.com/watch?v=K0kvlULMBQ8',  # SMBWii meme and 'https://www.youtube.com/watch?v=U2SpYoH2GDY', Pizza Pasta
     'https://www.youtube.com/watch?v=Fc1P-AEaEp8&list=PL_90hJucBAcPmFxcbTea81OKGkQevH2F9&index=5',  # meme playlist
     'https://www.youtube.com/watch?v=Til6kcoY0Yk', 'https://www.youtube.com/watch?v=Ps-XsGP5QO4',  # nyanya and vector U
     'https://www.youtube.com/watch?v=fyoH_EH4QHI', 'https://www.youtube.com/watch?v=CinHish38Lc',  # noteblock and guesswhatmusic
@@ -68,12 +74,13 @@ random = (
     'https://www.youtube.com/watch?v=nNMfGLMvc14', 'https://www.youtube.com/watch?v=-GNMe6kF0j0',  # CG5 and Goblin From Mars
     'https://www.youtube.com/watch?v=YqrxIimmiqs', 'https://www.youtube.com/watch?v=WInN2ljOnSU',  # TheFatRat and Alan Walker
     'https://www.youtube.com/watch?v=wbYM2Ax3gS8', 'https://www.youtube.com/watch?v=EAvYUm57vI8',  # pepensow and sheddy Splatoon
-    'https://www.youtube.com/watch?v=C_fA9JQJj1M', 'https://www.youtube.com/watch?v=4NLD6NDcs_k',  # Gametrack Remixes and Mayro alt
+    'https://www.youtube.com/watch?v=C_fA9JQJj1M',   # Gametrack Remixes and 'https://www.youtube.com/watch?v=4NLD6NDcs_k', Mayro alt
     'https://www.youtube.com/watch?v=7D9MwBW5VaQ', 'https://www.youtube.com/watch?v=39enH5NI2zY',  # Amazing Gaming Music and Yume
     'https://www.youtube.com/watch?v=x8eu2YzTKh4', 'https://www.youtube.com/watch?v=hxjkUzFzshE',  # Acid-Notation and Dominic Ninmark
     'https://www.youtube.com/watch?v=NpC9BRVx-Oc', 'https://www.youtube.com/watch?v=AU1TvJ124w0',  # Qumu and guesswhatmusic
     'https://www.youtube.com/watch?v=W0h6c7Lbfdc', 'https://www.youtube.com/watch?v=D984mRYiBkw',  # Raymusique and EliteMeats Music
-    'https://www.youtube.com/watch?v=ywXf_sENMYY', 'https://www.youtube.com/watch?v=t3Hz36cPIJA')  # NOQQYSC
+    'https://www.youtube.com/watch?v=ywXf_sENMYY', 'https://www.youtube.com/watch?v=t3Hz36cPIJA',  # NOQQYSC
+    'https://www.youtube.com/watch?v=aLrlFHpjj9I', 'https://www.youtube.com/watch?v=YwOQIJM20Is')  # every mario party minigame music remixed from 1 to 8, MARIO PARTY [Remix] - Saving Courage
 
 
 def question_mark():
@@ -87,7 +94,7 @@ def question_mark():
         config.seek(default_size)
         data = config.read()
         if len(data) != len(random):  # if user didn't triggered all events, trigger the next from the list
-            config.seek(len(data))
+            config.seek(default_size + len(data))
             if not data:  # if the string is empty
                 play(0)
                 config.write(b'\x00')
