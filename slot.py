@@ -18,8 +18,7 @@ charsound = [[], [], [], [], [], [], [], [], [], [], [], [],
              ["VOICE_STRM_C12_126_T2_ST_C14.brstm",
               "VOICE_STRM_C12_130_T2_ST_C14.brstm",
               "VOICE_STRM_C12_20_T1_ST_C14.brstm",
-              "VOICE_STRM_C12_127_T2_ST_C14.brstm",
-              ],
+              "VOICE_STRM_C12_127_T2_ST_C14.brstm"],
              ["m_sabo_pu1.brstm",  # pycharm auto formatting, I guess it's how the PEP8 wants scripts to look like
               "m_sabo_s_atk1.brstm",
               "m_sabo_ag2.brstm",
@@ -44,48 +43,7 @@ charsound = [[], [], [], [], [], [], [], [], [], [], [], [],
 for i in range(12):
     charsound[i] = [f"VOICE_STRM_C{str(i).zfill(2)}_00.brstm", f"VOICE_STRM_C{str(i).zfill(2)}_01.brstm",
                     f"VOICE_STRM_C{str(i).zfill(2)}_02.brstm", f"VOICE_STRM_C{str(i).zfill(2)}_03.brstm"]
-before_match = """
-VOICE_C00_YES.brstm
-MARIO_D_DCSUCCESS_01-02.brstm
-VOICE_C01_YES.brstm
-VOICE_C01_ACTION_L1.brstm
-VOICE_C02_YES.brstm
-VOICE_C02_ACTION_L3.brstm
-ds_org_Select_Chara-01.z.44.brstm
-VOICE_C03_ACTION_L2.brstm
-VOICE_C03_YES.brstm
-VOICE_C03_WIN.brstm
-VOICE_C05_YES.brstm
-VOICE_C05_ACTION_M2.brstm
-VOICE_C06_YES.brstm
-VOICE_C06_ACTION_L1.brstm
-VOICE_C07_YES.brstm
-VOICE_C07_ACTION_M3.brstm
-VOICE_C08_YES.brstm
-VOICE_C08_ACTION_L1.brstm
-VOICE_C09_YES.brstm
-VOICE_C09_ACTION_L1.brstm
-VOICE_C10_YES.brstm
-VOICE_C10_ACTION_L2.brstm
-VOICE_C11_YES.brstm
-VOICE_C11_ACTION_L2.brstm
-VOICE_C12_93_T2_YES.brstm
-VOICE_C12_67_T3_L3.brstm
-m_sabo_s_atk1.brstm
-m_sabo_s_atk2.brstm
-VOICE_C14_252_YES.brstm
-VOICE_C14_237_T2_L2.brstm
-VOICE_C15_94_YES.brstm
-VOICE_C15_54_L3.brstm
-VOICE_C16_YES.0.brstm
-VOICE_C16_ACTION_L2.0.brstm
-VOICE_C17_234_YES.0.brstm
-VOICE_C17_04_WIN.0.brstm"""
-presentation_sound = before_match.splitlines()[1:]
 
-for i in range(18):
-    charsound[i].append(presentation_sound[2*i])
-    charsound[i].append(presentation_sound[2*i+1])
 
 def unbreakable_int_input(a, b):
     value = '99'
@@ -180,7 +138,7 @@ if base_slot != []:
             # if number < 12 and files[:13] == 'VOICE_STRM_C' and files[13:15] not in ['12', '14', '15']:
             #   new_brstm = f'VOICE_STRM_C{str(number).zfill(2)}{file[15:]}'
             new_brstm = file  # default value because it's defined in a if, but it should never be file except if source == dest
-            for j in range(6):
+            for j in range(4):
                 if charsound[source][j] == file:
                     new_brstm = charsound[dest][j]
 
