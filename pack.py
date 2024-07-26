@@ -42,11 +42,11 @@ def tpl_wszst(file, color, name):
         os.system(f'wszst x "{file}" -d "{fil}/encoded/{fil}.d"')
     png_name = os.path.splitext(nam)[0]
     if os.path.exists(f"{fil}/encoded/{fil}.d/arc/timg/"):
-        os.system(f'wimgt encode "{fil}/{name}" -x TPL.{color} -d "{fil}/encoded/{fil}.d/arc/timg/{png_name}.tpl" -o')
+        os.system(f'plt0 i "{fil}/{name}" TPL {color} "{fil}/encoded/{fil}.d/arc/timg/{png_name}.tpl"')
     elif os.path.exists(f"{fil}/encoded/{fil}.d/timg/"):
-        os.system(f'wimgt encode "{fil}/{name}" -x TPL.{color} -d "{fil}/encoded/{fil}.d/timg/{png_name}.tpl" -o')
+        os.system(f'plt0 i "{fil}/{name}" TPL {color} "{fil}/encoded/{fil}.d/timg/{png_name}.tpl"')
     else:  # strap
-        os.system(f'wimgt encode "{fil}/{name}" -x TPL.{color} -d "{fil}/encoded/{fil}.d/{png_name}.tpl" -o')
+        os.system(f'plt0 i "{fil}/{name}" TPL {color} "{fil}/encoded/{fil}.d/{png_name}.tpl"')
     return
 
 
@@ -55,7 +55,7 @@ def tpl_multi(file: str, mip: int, color: str, offset: int, name: str):  # assum
     nam = os.path.splitext(name)[0]
     fil = os.path.splitext(file)[0]
     encoded = fil + '/encoded'
-    os.system(f'wimgt encode "./{fil}/{name}" -x {color} --n-mm 0 -d "./{encoded}/{nam}-{mip}.tex0" -o')
+    os.system(f'plt0 i "./{fil}/{name}" {color} --n-mm 0 "./{encoded}/{nam}-{mip}.tex0"')
     with open(file, 'r+b') as new_tpl:
         with open(f"./{encoded}/{nam}-{mip}.tex0", "rb") as tex0:
             tex0.seek(4)
@@ -104,7 +104,7 @@ def pack(file, index):
                         size_list.append(int(size))
                         offset_list.append(int(offset))
                         edited.append(f'{nam}.tex0')
-                        os.system(f'wimgt encode "./{fil}/{name}" -x {color} --n-mm {mip} -d "./{encoded}/{nam}.tex0" -o')
+                        os.system(f'plt0 i "./{fil}/{name}" {color} --n-mm {mip} "./{encoded}/{nam}.tex0"')
                 num += 1
             else:
                 clock = True

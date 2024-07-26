@@ -1,4 +1,4 @@
-/* msm.pyw :0:   hashtag :42:   short :54:   arc.py :94:   bstick.pyw :105:   dump.py :134:   isox.py :144:   lh.py :150:   map.pyw :161:   pack.py :169:   tex.py :175:   thp.pyw :182:   trib.py :214:    web.pyw :223:   old cli :239:   msmhelp.pyw :282: ---- */
+/* msm.pyw :0:   hashtag :42:   short :54:   arc.py :95:   bstick.pyw :106:   dump.py :135:   isox.py :145:   lh.py :151:   map.pyw :162:   pack.py :170:   tex.py :180:   thp.pyw :187:   trib.py :219:    web.pyw :228:   old cli :244:   msmhelp.pyw :287: ---- */
 Mario Sports Mix Modding App
 Mario Sports Mix Modding App Menu
 Pack Textures
@@ -49,7 +49,7 @@ on # files
 deleting #
 $$ a.png is 512x512 while ...$$     # is #x# while # texture is #x#
 what's happening with >#< ?? this file no longer exists
-the file >#< doesn't fit in the texture data. you can't edit texture sizes (but if you insist you can change colour encoding and number of mipmaps in zzzdump.txt to make the same data size with different dimensions)
+the file >#< doesn't fit in the texture data. you can't edit texture sizes
 Your screen dimensions §are #x% pixels
 Welcome ! this app is used to convert hexadecimal float values to decimal float
 hex-float : 
@@ -87,6 +87,7 @@ list of files that will be renamed:
 15 = White Mage
 16 = Slime
 17 = Black Mage
+18 = Shy Guy
 Enter the desired destination slot number. All files above will be renamed corresponding to this character
 Outfit Variant
 Choose your Outfit Number :
@@ -139,7 +140,7 @@ Keep tex0
 Dump mipmaps
 Dumping can take up to 2 minutes
 Auto-Gerated file by MSM Dump Texture App. Don't delete it else you can't use the Pack Texture app.
-It contains all tex0 data size, number of mipmaps, colour encoding, dumped png names, and sha256 hashes (used to know which png has been edited)
+It contains all tex0 data size, number of mipmaps, colour encoding, offset in file, dumped png names, and sha256 hashes (used to know which png has been edited)
 Also, you may already know that you can't resize any png. else they won't fit inside the brres/arc data.
 MSM Tools : iso/wbfs extract and compress
 done !
@@ -172,6 +173,10 @@ This app is also looking for "zzzdump.txt" which contains png hashes,
 It will search in current directory and the directories in this current one
 use the "Dump Textures" app to get this file, then this app will pack edited png files onto the brres you want
 keep encoded folder
+Choose your Packing Method (for TPL files)
+Auto
+Yosh's Hex replacing
+wimgt arc rebuild
 Mario Sports Mix Modding Tool : Encode png to tex0
 Encode png to tex0
 Hoi ! this app displays max 192 png in your current working directory.
@@ -310,7 +315,7 @@ Click on the pictures to view on fullscreen
 25 24 The game's files are compressed with a special algorithm. §§¤25 17 In order to decompress them to arc or brres, you will need to use this application. It can also compress them back !
 20 25 When decompressing them, it creates a file _DECOMP.bin §§¤20 28 A file extension is determined by the data inside it, not by its name. ¤20 29 §§When compressing again, the program tries to name the file with an adequate extension. In case its not the file name you want, simply rename the file. (don't forget to enable the option to see file extensions in Windows File Explorer)
 20 2 This application is used to extract textures from an arc or a brres file, as well as making them compatible with the "Pack Textures" app, which can be used to replace them in the file afterwards. §§§¤20 18 With this goal, simply edit the png files right after dumping them from the file.
-20 8 This Software can also convert a tex0 to png. §§¤20 21 A mipmap is a smaller version of a texture, used by the game when you're far away from the texture. §§¤20 27 All textures must have the dame dimensions in power of 2 ( 2, 4, 8, 16, 32, 64, 128, 256, 512, or 1024 ) else your Wii or any console (or dolphin) won't display it correctly.
+20 8 This Software can also convert a tex0 to png. §§¤20 21 A mipmap is a smaller version of a texture, used by the game when you're far away from the texture. §§¤20 27 All textures must have their dimensions in power of 2 ( 2, 4, 8, 16, 32, 64, 128, 256, 512, or 1024 ) else your Wii or any console (or dolphin) won't display it correctly.
 *20 0 §Pack Textures\n    ¤20 1 THP Compressor\n    ¤20 2 Every Game Brsar Patcher\n    ¤20 3 MSM Files extract and compress\n    ¤20 4 Dump Textures\n    ¤20 6 MSM iso patcher\n    ¤20 7 Arc Extract and Compress\n    ¤20 8 iso/wbfs/ciso extract and compress\n    ¤20 9 Change bstick colour\n    ¤20 10 Encode png to tex0\n    ¤20 11 MSM Symbol Map Viewer\n    ¤20 12 Change root bone attributes\n    ¤20 13 Change Character Slot in cwd\n    ¤20 14 Compress files in cwd\n    ¤20 15 Extract files in cwd\n    ¤20 16 YouTube Thumbnail Download
 *20 0 pack.py\n    ¤20 1 thp.pyw\n    ¤20 2 brsar.pyw\n    ¤20 3 lh.py\n    ¤20 4 dump.py\n    ¤20 6 iso.py\n    ¤20 7 arc.py\n    ¤20 8 isox.py\n    ¤20 9 bstick.pyw\n    ¤20 10 tex.py\n    ¤20 11 map.pyw\n    ¤20 12 trib.py\n    ¤20 13 slot.py\n    ¤20 14 c.py\n    ¤20 15 x.py\n    ¤20 16 yt.pyw\n    ¤20 17 tex3.pyw
 20 0 soon

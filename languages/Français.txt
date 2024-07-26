@@ -1,4 +1,4 @@
-/* msm.pyw :0:   hashtag :42:   short :54:   arc.py :94:   bstick.pyw :105:   dump.py :134:   isox.py :144:   lh.py :150:   map.pyw :161:   pack.py :169:   tex.py :175:   thp.pyw :182:   trib.py :214:    web.pyw :223:   old cli :239:   msmhelp.pyw :282: ---- */
+/* msm.pyw :0:   hashtag :42:   short :54:   arc.py :95:   bstick.pyw :106:   dump.py :135:   isox.py :145:   lh.py :151:   map.pyw :162:   pack.py :170:   tex.py :180:   thp.pyw :187:   trib.py :219:    web.pyw :228:   old cli :244:   msmhelp.pyw :287: ---- */
 Mario Sports Mix Modding App
 Mario Sports Mix Modding App Menu
 Pack Textures
@@ -49,7 +49,7 @@ dans # fichiers
 suppression de #
 §§ a.png is 512x512 while ...§§     # a pour dimensions #x# tandis que la texture dans # a pour taille #x#
 qu'est-ce qui se passe avec >#< ?? ce fichier n'existe plus
-le fichier >#< ne rentre pas dans les données de la texture originale, ne changez pas la taille des images (ou faites en sorte que la taille des données soit la même en changeant la format coleur et le nombre de mipmaps dans zzzdump.txt pour faire la même taille d'image aves des dimensions différentes)
+le fichier >#< ne rentre pas dans les données de la texture originale, ne changez pas la taille des images
 Tes dimensions d'écran §sont #x% pixels
 Bienvenue ! cette application est un convertisseur de nombre hex-flottant (de 4 octets) en nombre décimal 
 nombre hex-flottant : 
@@ -87,6 +87,7 @@ liste des fichiers qui vont être renommés :
 15 = Mage Blanc
 16 = Gluant
 17 = Mage Noir
+18 = Maskass
 Entrez le numéro du slot souhaité. Les fichiers concernés vont être renommés pour correspondre au personnage choisi
 Tenue n°
 Choisissez le numéro de la tenue :
@@ -139,7 +140,7 @@ Conserver les tex0
 Extraire les mipmaps
 L'extraction peut durer 2 minutes
 fichier généré automatiquement par l'application MSM pour extraire les textures. Ne le supprimez pas sinon vous ne pourrez pas utiliser l'appli "Pack Textures".
-Il contient toutes les tailles des tex0, leur nombre de mipmaps, le format couleur, leur nom, et enfin leur hash en Sha256 (pour savoir quel fichier a été édité)
+Il contient toutes les tailles des tex0, leur nombre de mipmaps, le format couleur, l'adresse dans l'archive, leur nom, et enfin leur hash en Sha256 (pour savoir quel fichier a été édité)
 Aussi, vous devriez savoir que vous ne pouvez modifier la taille d'aucune png, sinon elle ne va pas rentrer dans les données de la texture du brres ou arc.
 Outil MSM : extraire et créer des iso, wbfs ou ciso
 Fini !
@@ -172,6 +173,10 @@ Cette application est à la recherche de "zzzdump.txt" qui contient tous les has
 elle va chercher dans le répertoire actuel et ceux sous celui actuel (le fichier et le dossier doivent avoir le même nom sans l'extension)
 Utilise l'appli pour Extraire les Textures pour avoir ce fichier, puis cette application va insérer les png éditées dans le brres ou l'arc que vous voulez
 Conserver le dossier encoded
+Choisissez une méthode pour remplacer les TPL
+Auto
+Remplacement Hex de Yosh
+reconstruire l'arc avec wimgt
 Outil Mario Sports Mix Modding : Convertir png en tex0
 Convertir png en tex0
 Hey ! Cette app a une capacité maximale d'affichage de 192 png dans le dossier actuel.

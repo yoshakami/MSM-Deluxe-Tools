@@ -44,7 +44,7 @@ language_list = [
     'Polskie', '日本語', '中国人', '한국어']
 languages = []
 for lang in language_list:
-    if os.path.exists(f'C:\\Yosh\\lang\\{lang}.txt'):
+    if os.path.exists(f'C:\\Yosh\\languages\\{lang}.txt'):
         languages.append(lang)
 LANGUAGES = StringVar()
 LANGUAGES.set(language[start + 21])  # Change Language
