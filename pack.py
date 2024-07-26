@@ -90,21 +90,24 @@ def pack(file, index):
             if clock:  # one line on two, there's a sha256, then size + mipmaps + color + name
                 clock = False
                 with open(f"./{fil}/{name}", 'rb') as png:
-                    if line != sha256(png.read()).hexdigest():
-                        if mip[:3] == "TPL":
-                            counter += 1
-                            if wszst:
-                                tpl_wszst(file, color, name)
-                            else:
-                                tpl_multi(file, int(mip[3:]), color, int(offset), name)
-                            continue
-                        nam = os.path.splitext(name)[0]
+                    hex = sha256(png.read()).hexdigest()
+                if line != hex:
+                    if mip[:3] == "TPL":
                         counter += 1
-                        index_edited.append(num)
-                        size_list.append(int(size))
-                        offset_list.append(int(offset))
-                        edited.append(f'{nam}.tex0')
-                        os.system(f'plt0 i "./{fil}/{name}" {color} --n-mm {mip} "./{encoded}/{nam}.tex0"')
+                        if wszst:
+                            tpl_wszst(file, color, name)
+                        else:
+                            tpl_multi(file, int(mip[3:]), color, int(offset), name)
+                        continue
+                    nam = os.path.splitext(name)[0]
+                    counter += 1
+                    index_edited.append(num)
+                    size_list.append(int(size))
+                    offset_list.append(int(offset))
+                    edited.append(f'{nam}.tex0')
+                    command = f'plt0 tex0 i "./{fil}/{name}" {color} --n-mm {mip} "./{encoded}/{nam}.tex0"'
+                    print(command)
+                    os.system(command)
                 num += 1
             else:
                 clock = True

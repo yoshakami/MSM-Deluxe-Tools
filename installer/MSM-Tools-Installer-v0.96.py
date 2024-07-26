@@ -411,7 +411,7 @@ def step4_drive(letter, clean_inst):
     if os.path.exists('MSM-tools-installer.bat'):
         os.system('MSM-tools-installer.bat')
 #        os.system('pause')
-    shutil.rmtree('Yosh')
+    # shutil.rmtree('Yosh') # yeah, I'd rather not, since the user may have a Yosh folder
     for el in delete:
         if os.path.exists(el):
             os.system(f'del "{el}"')
@@ -496,7 +496,7 @@ def step4_appdata(clean_inst):
                     bat_code() + f'xcopy "{m}IO Font v3 Solid.otf" C:\\{font} /i /y /q /s\nreg add "HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts" /v "{m}IO Font v3 Solid (OpenType)" /t REG_SZ /d "{m}IO Font v3 Solid.otf" /f')
     if os.path.exists('MSM-tools-installer.bat'):
         os.system('MSM-tools-installer.bat')
-    shutil.rmtree('Yosh')
+    # shutil.rmtree('Yosh') # yeah, I'd rather not, since the user may have a yosh folder
     if no_exe:
         bat(os.environ["APPDATA"])
     vbs(os.environ["APPDATA"])
