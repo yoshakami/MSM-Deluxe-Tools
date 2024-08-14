@@ -46,28 +46,29 @@ english = [
     "a free set of Scripts developed by Yosh in Python",
     "if you've paid for this software you have been scammed",
     "Choose Your Language",
-    "Refresh",
+    "Refresh", # 15
     "Terms of Agreement",
-    "I agree",
+    "I agree", # 17
     "(the app will freeze 1 minute as it's resizing all jpgs to your screen dimensions)",
     "Please Choose your installation directory",
     "Clean the installation directory",
     "Don't use .ico files (for other OS not supporting them)",
     "Note: 'Local' is only intended to be used with a public computer (not your personal)\nyou will have to go to this folder to launch an app as it won't be added to path.\n",
     'v-- Select how you would like to launch the apps from explorer.exe search bar --v',
-    'use .exe',
+    'use .exe', # 24
     'use .bat (a harmless black window open for half a second each time you launch an app)',
     "other OS than Windows (you won't be able to compress files but try looking at n.exe with Wine)",
     "Local (movable directory)",
     "Other OS than Windows",
-    "Invalid Drive",
-    "Click on this button to finish installation :)",
+    "Invalid Drive", # 29
+    "Click on this button to finish installation :)", # 30
     "once it's done you can delete the installer and enjoy the tools :D",
     "You can also install the font that appeared in this directory,",
-    "as the help app is specially designed for it",
-    " Click yes for CMD admin perm",
-    "installing to",
-    "Finish installation"]
+    "as the help app is specially designed for it", # 33
+    "msmhelp font is not installed (msmhelp help app won't work as intended)\nyou can install it manually, it's the otf file in the current directory ({os.getcwd()})",
+    "installing to", # 35
+    "Finish installation (add to PATH",
+    "and install font"]
 
 french = [
     'pip.exe introuvable. ce fichier est inclus avec python >= 3.7 (ou tu peux installer manuellement les modules "pyperclip", "win10toast" et "Pillow")',
@@ -670,11 +671,14 @@ def step3_drive(letter, clean_inst):
     font = 'Windows\\Fonts\\MAR'
     if f'{os.environ["APPDATA"]}\\Yosh' in path or f'{letter}:\\Yosh' not in path or admin_perm or not os.path.exists(f'C:\\{font}IO Font v3 Solid.otf'):
         admin = language[lang[0]][34]
-    title3 = Label(a, text=f"{language[lang[0]][30]}{admin}.\n{language[lang[0]][31]}\n", bg="#aecfee", font=100)
-    title3.grid(row=0)
+    title3 = Label(a, text=f"{language[lang[0]][30]}\n{admin}.\n{language[lang[0]][31]}\n", bg="#aecfee", font=100)
+    title3.grid(row=1, rowspan=3)
     step4 = partial(step4_drive, letter, clean_inst)
     button3 = Button(a, text=language[lang[0]][36], command=step4, activebackground="#a9ff91", width=30)
-    button3.grid(row=3)
+    button3.grid(row=3, col=0)
+    step4_no_admin = partial(step4_drive, letter, clean_inst)
+    button3 = Button(a, text=language[lang[0]][36], command=step4, activebackground="#a9ff91", width=30)
+    button3.grid(row=3, col=0)
 
 
 def step3_appdata(clean_inst):
@@ -825,9 +829,9 @@ def refresh_func():
             break
     for n in range(3):
         run[n] = language[lang[0]][24 + n]
-    chosen_language = f'./Yosh/lang/{LANGUAGES.get()}.txt'
+    chosen_language = f'./Yosh/languages/{LANGUAGES.get()}.txt'
     if not os.path.exists(chosen_language):
-        chosen_language = './Yosh/lang/English.txt'
+        chosen_language = './Yosh/languages/English.txt'
     with open(chosen_language, 'rb') as txt1:
         new_lang = txt1.read()
     with open('./Yosh/#language.txt', 'wb') as txt2:
