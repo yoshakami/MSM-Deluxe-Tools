@@ -341,7 +341,9 @@ def fix_colour():
 def launch_photo():
     os.system('C:\\Yosh\\msm_stuff\\bstick.png')
 
-
+# dev note: this only applies before launching the installer (or committing to the repo)
+# DO NOT CHANGE THIS FUNCTION
+# DO NOT UNINTENT, REMOVE, OR ADD COMMENTS TO THE LINES BELOW
 def bstick():
     Popen(("wscript.exe", "C:\\Yosh\\bstick.vbs"))
     # Popen((sys.executable, "C:\\Yosh\\bstick.pyw"))

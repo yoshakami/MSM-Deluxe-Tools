@@ -35,40 +35,43 @@ english = [
     "Common.zip isn't in the same directory as this script,\nhow the heck do you want to use the tools without any script!?\npress enter to exit...",
     "exe.zip isn't in the same directory as this script,\nI guess you don't want to use them then.\npress enter to continue...",
     "hey dude ! you're missing jpg.zip, put it in the same directory as this script\nthe installer will not work without those images that I've spend an enormous amount of time to do.\npress enter to exit...",
-    "Welcome to the console!",
-    "Here you can see what's happening behind the installer",
+    "Welcome to the console!", # 4
+    "Here you can see what's happening behind the installer", # 5
     "the buttons are just here to separate actions to let them finish",
     f"When you'll click on 'I agree', it will resize 18 jpg's to your screen dimensions ({w}x{h})",
     "During the installation, it will extract .zips and move their contents to your installation directory ",
-    "It'll also delete useless data (except the installer as it can't delete itself lol)",
-    "The installer will add the installation directory to PATH, so scripts will be able to be launched from everywhere !",
-    "Welcome to Mario Sports Mix Modding App Installer !",
-    "a free set of Scripts developed by Yosh in Python",
-    "if you've paid for this software you have been scammed",
-    "Choose Your Language",
-    "Refresh", # 15
-    "Terms of Agreement",
-    "I agree", # 17
-    "(the app will freeze 1 minute as it's resizing all jpgs to your screen dimensions)",
-    "Please Choose your installation directory",
-    "Clean the installation directory",
-    "Don't use .ico files (for other OS not supporting them)",
+    "If you desire, with admin permission, the installer could (optionnally) add the installation directory to PATH," # 9
+    "so scripts will be able to be launched from everywhere !", # 10
+    "you can also install a font for the help app to work as intended", # 11
+    "Welcome to Mario Sports Mix Modding App Installer !", # 12
+    "a free set of Scripts developed by Yosh in Python", # 13
+    "if you've paid for this software you have been scammed", # 14
+    "Choose Your Language", # 15
+    "Refresh", # 16
+    "Terms of Agreement", # 17
+    "I agree", # 18
+    "(the app will freeze 1 minute as it's resizing all jpgs to your screen dimensions)", # 19
+    "Please Choose your installation directory", # 20
+    "Clean the installation directory", # 21
+    "Don't use .ico files (for other OS not supporting them)", # 22
     "Note: 'Local' is only intended to be used with a public computer (not your personal)\nyou will have to go to this folder to launch an app as it won't be added to path.\n",
-    'v-- Select how you would like to launch the apps from explorer.exe search bar --v',
-    'use .exe', # 24
-    'use .bat (a harmless black window open for half a second each time you launch an app)',
-    "other OS than Windows (you won't be able to compress files but try looking at n.exe with Wine)",
-    "Local (movable directory)",
-    "Other OS than Windows",
-    "Invalid Drive", # 29
-    "Click on this button to finish installation :)", # 30
-    "once it's done you can delete the installer and enjoy the tools :D",
-    "You can also install the font that appeared in this directory,",
-    "as the help app is specially designed for it", # 33
+    'v-- Select how you would like to launch the apps from explorer.exe search bar --v', # 24
+    'use .exe', # 25
+    'use .bat (a harmless black window open for half a second each time you launch an app)', # 26
+    "other OS than Windows (you won't be able to compress files but try looking at n.exe with Wine)", # 27
+    "Local (movable directory)", # 28
+    "Other OS than Windows", # 29
+    "Invalid Drive", # 30
+    "Click on this button to finish installation :)", # 31
+    "once it's done you can delete the installer and enjoy the tools :D", # 32
+    "You can also install the font that appeared in this directory,", # 33
+    "as the help app is specially designed for it", # 34
     "msmhelp font is not installed (msmhelp help app won't work as intended)\nyou can install it manually, it's the otf file in the current directory ({os.getcwd()})",
-    "installing to", # 35
-    "Finish installation (add to PATH",
-    "and install font"]
+    "installing to", # 36
+    "Finish installation", # 37
+    "add to PATH", # 38
+    "install font", # 39
+    "[requires admin perm]"] # 40
 
 french = [
     'pip.exe introuvable. ce fichier est inclus avec python >= 3.7 (ou tu peux installer manuellement les modules "pyperclip", "win10toast" et "Pillow")',
@@ -259,10 +262,9 @@ jpg = ['msma.jpg', 'msmb.jpg', 'r.png', 'r2.png', 'r3.png', 'r4.png', 'r5.png', 
        'ra.png', 'rb.png', 'rc.png', 'rd.png', 're.png', 'rf.png', 'rm.png']
 png = ['how-to-run-msm.png', 'MSM Shortcuts.png', 'm.png', 'm2.png', 'm3.png', 'm4.png', 'm5.png', 'm6.png', 'm7.png',
        'm8.png', 'm9.png', 'ma.png', 'mb.png', 'mc.png', 'md.png', 'me.png', 'mf.png', 'mm.png']
-# delete = []
-delete = ['jpg.zip', 'Common.zip', 'exe.zip', 'MSM-tools-installer.bat', "run this if installer doesn't open.bat"]
+# files = ['jpg.zip', 'Common.zip', 'exe.zip', 'MSM-tools-installer.bat', "run this if installer doesn't open.bat"]
 
-run = [language[lang[0]][24], language[lang[0]][25], language[lang[0]][26]]
+run = [language[lang[0]][25], language[lang[0]][26], language[lang[0]][27]]
 with ZipFile('jpg.zip', 'r') as zipObj:
     zipObj.extractall()  # extracts jpg.zip (its content is in the jpg list)
 
@@ -349,7 +351,7 @@ def bat(instal_path):  # this func is only called if the user choose to use bat 
             bat_file.write(f'"{instal_path}launcher.pyw" {app}')
 
 
-def step4_drive(letter, clean_inst):
+def step4_drive(letter, clean_inst, edit_path=False, install_font=False):
     for element in os.listdir('./Yosh/'):
         if os.path.splitext(element)[-1] not in ['.pyw', '.py', '.vbs', '.bat']:
             continue
@@ -376,46 +378,42 @@ def step4_drive(letter, clean_inst):
         shutil.copytree('Yosh', f"{letter}:\\Yosh")
     else:
         os.system(f'xcopy Yosh "{letter}:\\Yosh" /i /y /q /s')
-    path = os.environ["PATH"]
-    if "\\Yosh" in path or f'{letter}:\\Yosh' not in path:
-        admin = False
-        if f'{letter}:\\Yosh' not in path:
-            admin = True
-        list_path = path.split(';')
-        list_path = list(dict.fromkeys(list_path))  # removes duplicates
-        if os.environ["APPDATA"] + '\\Yosh' in list_path:
-            list_path.remove(os.environ["APPDATA"] + '\\Yosh')
-            admin = True
-        for character in string.ascii_uppercase:  # clean every possible installation path from path variable
-            if character + ':\\Yosh' in list_path:
-                if character != letter:  # don't ask for admin perm
-                    admin = True
-                list_path.remove(character + ':\\Yosh')
-        path = ''
-        for element in list_path:
-            path += element + ';'
-        while path[-1] == ';':
-            path = path[:-1]  # removes the last semicolon
-        if admin:
-            with open('MSM-tools-installer.bat', 'w') as bat_file:
-                bat_file.write(bat_code() + f'setx path "{path};{letter}:\\Yosh" /M')
-
-    font = 'Windows\\Fonts'
-    m = 'MAR'
-    if not os.path.exists(f'C:\\{font}\\{m}IO Font v3 Solid.otf'):
-        if os.path.exists('MSM-tools-installer.bat'):
-            with open('MSM-tools-installer.bat', 'a') as bat_file:
-                bat_file.write(f'\nxcopy "{m}IO Font v3 Solid.otf" C:\\{font} /i /y /q /s\nreg add "HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts" /v "{m}IO Font v3 Solid (OpenType)" /t REG_SZ /d "{m}IO Font v3 Solid.otf" /f')
-        else:
-            with open('MSM-tools-installer.bat', 'w') as bat_file:
-                bat_file.write(bat_code() + f'xcopy "{m}IO Font v3 Solid.otf" C:\\{font} /i /y /q /s\nreg add "HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts" /v "{m}IO Font v3 Solid (OpenType)" /t REG_SZ /d "{m}IO Font v3 Solid.otf" /f')
+    if edit_path:
+        path = os.environ["PATH"]
+        if "\\Yosh" in path or f'{letter}:\\Yosh' not in path:
+            admin = False
+            if f'{letter}:\\Yosh' not in path:
+                admin = True
+            list_path = path.split(';')
+            list_path = list(dict.fromkeys(list_path))  # removes duplicates
+            if os.environ["APPDATA"] + '\\Yosh' in list_path:
+                list_path.remove(os.environ["APPDATA"] + '\\Yosh')
+                admin = True
+            for character in string.ascii_uppercase:  # clean every possible installation path from path variable
+                if character + ':\\Yosh' in list_path:
+                    if character != letter:  # don't ask for admin perm
+                        admin = True
+                    list_path.remove(character + ':\\Yosh')
+            path = ''
+            for element in list_path:
+                path += element + ';'
+            while path[-1] == ';':
+                path = path[:-1]  # removes the last semicolon
+            if admin:
+                with open('MSM-tools-installer.bat', 'w') as bat_file:
+                    bat_file.write(bat_code() + f'setx path "{path};{letter}:\\Yosh" /M')
+    if install_font:
+        font = 'Windows\\Fonts'
+        m = 'MAR'
+        if not os.path.exists(f'C:\\{font}\\{m}IO Font v3 Solid.otf'):
+            if os.path.exists('MSM-tools-installer.bat'):
+                with open('MSM-tools-installer.bat', 'a') as bat_file:
+                    bat_file.write(f'\nxcopy "{m}IO Font v3 Solid.otf" C:\\{font} /i /y /q /s\nreg add "HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts" /v "{m}IO Font v3 Solid (OpenType)" /t REG_SZ /d "{m}IO Font v3 Solid.otf" /f')
+            else:
+                with open('MSM-tools-installer.bat', 'w') as bat_file:
+                    bat_file.write(bat_code() + f'xcopy "{m}IO Font v3 Solid.otf" C:\\{font} /i /y /q /s\nreg add "HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts" /v "{m}IO Font v3 Solid (OpenType)" /t REG_SZ /d "{m}IO Font v3 Solid.otf" /f')
     if os.path.exists('MSM-tools-installer.bat'):
         os.system('MSM-tools-installer.bat')
-#        os.system('pause')
-    # shutil.rmtree('Yosh') # yeah, I'd rather not, since the user may have a Yosh folder
-    for el in delete:
-        if os.path.exists(el):
-            os.system(f'del "{el}"')
     if no_exe:
         bat(f'{letter}:')
     vbs(f'{letter}:')
@@ -423,7 +421,7 @@ def step4_drive(letter, clean_inst):
     a.quit()
 
 
-def step4_appdata(clean_inst):
+def step4_appdata(clean_inst, edit_path=False, install_font=False):
     path = b'C:\\\\Yosh\\\\'
     for filee in os.listdir('./Yosh/'):
         if os.path.splitext(filee)[-1] in ['.pyw', '.py']:
@@ -467,34 +465,35 @@ def step4_appdata(clean_inst):
     else:
         os.system(f'xcopy Yosh "{os.environ["APPDATA"]}\\Yosh" /i /y /q /s')
 
-    path = os.environ["PATH"]
-    if ":\\Yosh" in path or f'{os.environ["APPDATA"]}\\Yosh' not in path:
-        list_path = path.split(';')
-        list_path = list(dict.fromkeys(list_path))  # removes duplicates
-        if os.environ["APPDATA"] + '\\Yosh' in list_path:
-            list_path.remove(os.environ["APPDATA"] + '\\Yosh')
-        for character in string.ascii_uppercase:
-            if character + ':\\Yosh' in list_path:
-                list_path.remove(character + ':\\Yosh')
-        path = ''
-        for element in list_path:
-            path += element + ';'
-        while path[-1] == ';':
-            path = path[:-1]  # removes the last semicolon
-        with open('MSM-tools-installer.bat', 'w') as bat_file:
-            bat_file.write(bat_code() + f'setx path "{path};{os.environ["APPDATA"]}\\Yosh" /M')
-
-    font = 'Windows\\Fonts'
-    m = 'MAR'
-    if not os.path.exists(f'C:\\{font}\\{m}IO Font v3 Solid.otf'):
-        if os.path.exists('MSM-tools-installer.bat'):
-            with open('MSM-tools-installer.bat', 'a') as bat_file:
-                bat_file.write(
-                    f'\nxcopy "{m}IO Font v3 Solid.otf" C:\\{font} /i /y /q /s\nreg add "HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts" /v "{m}IO Font v3 Solid (OpenType)" /t REG_SZ /d "{m}IO Font v3 Solid.otf" /f')
-        else:
+    if edit_path:
+        path = os.environ["PATH"]
+        if ":\\Yosh" in path or f'{os.environ["APPDATA"]}\\Yosh' not in path:
+            list_path = path.split(';')
+            list_path = list(dict.fromkeys(list_path))  # removes duplicates
+            if os.environ["APPDATA"] + '\\Yosh' in list_path:
+                list_path.remove(os.environ["APPDATA"] + '\\Yosh')
+            for character in string.ascii_uppercase:
+                if character + ':\\Yosh' in list_path:
+                    list_path.remove(character + ':\\Yosh')
+            path = ''
+            for element in list_path:
+                path += element + ';'
+            while path[-1] == ';':
+                path = path[:-1]  # removes the last semicolon
             with open('MSM-tools-installer.bat', 'w') as bat_file:
-                bat_file.write(
-                    bat_code() + f'xcopy "{m}IO Font v3 Solid.otf" C:\\{font} /i /y /q /s\nreg add "HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts" /v "{m}IO Font v3 Solid (OpenType)" /t REG_SZ /d "{m}IO Font v3 Solid.otf" /f')
+                bat_file.write(bat_code() + f'setx path "{path};{os.environ["APPDATA"]}\\Yosh" /M')
+    if install_font:
+        font = 'Windows\\Fonts'
+        m = 'MAR'
+        if not os.path.exists(f'C:\\{font}\\{m}IO Font v3 Solid.otf'):
+            if os.path.exists('MSM-tools-installer.bat'):
+                with open('MSM-tools-installer.bat', 'a') as bat_file:
+                    bat_file.write(
+                        f'\nxcopy "{m}IO Font v3 Solid.otf" C:\\{font} /i /y /q /s\nreg add "HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts" /v "{m}IO Font v3 Solid (OpenType)" /t REG_SZ /d "{m}IO Font v3 Solid.otf" /f')
+            else:
+                with open('MSM-tools-installer.bat', 'w') as bat_file:
+                    bat_file.write(
+                        bat_code() + f'xcopy "{m}IO Font v3 Solid.otf" C:\\{font} /i /y /q /s\nreg add "HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts" /v "{m}IO Font v3 Solid (OpenType)" /t REG_SZ /d "{m}IO Font v3 Solid.otf" /f')
     if os.path.exists('MSM-tools-installer.bat'):
         os.system('MSM-tools-installer.bat')
     # shutil.rmtree('Yosh') # yeah, I'd rather not, since the user may have a yosh folder
@@ -519,13 +518,6 @@ def step4_local():
                 new_data += line + '\n'
         bstick.seek(0)
         bstick.write(new_data)
-    try:
-        for el in delete:
-            if os.path.exists(el):
-                os.remove(el)
-    except:
-        'do nothing'
-        pass
     path = 'C:\\\\Yosh\\\\'
     with open('./Yosh/msm.pyw', 'r+') as msmp:
         msm_data = msmp.read()
@@ -572,22 +564,14 @@ def step4_other(remove_ico):
         data = data.splitlines()
         new_data = ''
         for line in data:
-            if line == '    Popen(("wscript.exe", "Z:\\Yosh\\bstick.vbs"))':
-                new_data += '    # Popen(("wscript.exe", "Z:\\Yosh\\bstick.vbs"))\n'
+            if line == '    Popen(("wscript.exe", "C:\\Yosh\\bstick.vbs"))':
+                new_data += '    # Popen(("wscript.exe", "C:\\Yosh\\bstick.vbs"))\n'
             elif line == '    # Popen((sys.executable, "C:\\Yosh\\bstick.pyw"))':
                 new_data += '    Popen((sys.executable, "C:\\Yosh\\bstick.pyw"))\n'
             else:
                 new_data += line + '\n'
         bstick.seek(0)
         bstick.write(new_data)
-    try:
-        for el in delete:
-            if os.path.exists(el):
-                os.remove(el)
-    except:
-        'do nothing'
-        pass
-    path = 'C://Yosh//'
     with open('./Yosh/msm.pyw', 'r+') as msmp:
         msm_data = msmp.read()
         msm_data = msm_data.splitlines()
@@ -627,6 +611,7 @@ def step4_other(remove_ico):
                 with open(f'./Yosh/{file2}', 'w') as py:
                     py.write(new_data)
 
+    path = 'C://Yosh//'
     for filee in os.listdir('./Yosh/'):  # replaces opening paths
         if os.path.splitext(filee)[-1] in ['.pyw', '.py']:
             # print(filee)
@@ -656,7 +641,7 @@ def step3_drive(letter, clean_inst):
     a.config(bg="#aecfee")
     if not os.path.exists(f"{letter}:\\Yosh"):
         os.mkdir(f"{letter}:\\Yosh")
-    print(f"{language[lang[0]][35]} {letter}:\\Yosh")
+    print(f"{language[lang[0]][36]} {letter}:\\Yosh")
     for everything in a.winfo_children():
         everything.destroy()
     os.system('Yosh\\msm_stuff\\how-to-run-msm.png')
@@ -670,22 +655,30 @@ def step3_drive(letter, clean_inst):
             admin_perm = True
     font = 'Windows\\Fonts\\MAR'
     if f'{os.environ["APPDATA"]}\\Yosh' in path or f'{letter}:\\Yosh' not in path or admin_perm or not os.path.exists(f'C:\\{font}IO Font v3 Solid.otf'):
-        admin = language[lang[0]][34]
-    title3 = Label(a, text=f"{language[lang[0]][30]}\n{admin}.\n{language[lang[0]][31]}\n", bg="#aecfee", font=100)
+        admin = language[lang[0]][35]
+    title3 = Label(a, text=f"{language[lang[0]][31]}\n{admin}.\n{language[lang[0]][32]}\n", bg="#aecfee", font=100)
     title3.grid(row=1, rowspan=3)
-    step4 = partial(step4_drive, letter, clean_inst)
-    button3 = Button(a, text=language[lang[0]][36], command=step4, activebackground="#a9ff91", width=30)
-    button3.grid(row=3, col=0)
+    step4 = partial(step4_drive, letter, clean_inst, edit_path=True, install_font=True)
+    button_text = language[lang[0]][40] + " " + language[lang[0]][37] + " (" + language[lang[0]][38]
+    if admin != "":
+        button_text += " + " + language[lang[0]][39]
+        step4_font = partial(step4_drive, letter, clean_inst, edit_path=False, install_font=True)
+        button3_font = Button(a, text=language[lang[0]][40] + " " + language[lang[0]][37] + f" ({language[lang[0]][39]})", command=step4_font, bg="#ff9b69", activebackground="#a9ff91", width=30)
+        button3_font.grid(row=3, col=3)
+    button_text += ")"
+    button3 = Button(a, text=button_text, command=step4, bg="#ff9b69", activebackground="#a9ff91", width=30)
+    button3.grid(row=3, col=1, columnspan=2)
+    
     step4_no_admin = partial(step4_drive, letter, clean_inst)
-    button3 = Button(a, text=language[lang[0]][36], command=step4, activebackground="#a9ff91", width=30)
-    button3.grid(row=3, col=0)
+    button3_no_admin = Button(a, text=language[lang[0]][37], command=step4_no_admin, activebackground="#a9ff91", width=30)
+    button3_no_admin.grid(row=3, col=4)
 
 
 def step3_appdata(clean_inst):
     # print(clean_inst, clean_inst(), type(clean_inst()), clean_inst == '1')
     a.config(bg="#aecfee")
     appdata = f'{os.environ["APPDATA"]}\\Yosh'
-    print(f"{language[lang[0]][35]} {appdata}")
+    print(f"{language[lang[0]][36]} {appdata}")
     if not os.path.exists(appdata):
         os.mkdir(appdata)
 
@@ -700,12 +693,23 @@ def step3_appdata(clean_inst):
     admin = ""
     font = 'Windows\\Fonts\\MAR'
     if ":\\Yosh" in path or appdata not in path or not os.path.exists(f'C:\\{font}IO Font v3 Solid.otf'):
-        admin = language[lang[0]][34]
-    title3 = Label(a, text=f"{language[lang[0]][30]}{admin}.\n{language[lang[0]][31]}\n", bg="#aecfee", font=100)
-    title3.grid(row=0)
-    step4 = partial(step4_appdata, clean_inst)
-    button3 = Button(a, text=language[lang[0]][36], command=step4, activebackground="#a9ff91", width=30)
-    button3.grid(row=3)
+        admin = language[lang[0]][35]
+    title3 = Label(a, text=f"{language[lang[0]][31]}\n{admin}.\n{language[lang[0]][32]}\n", bg="#aecfee", font=100)
+    title3.grid(row=1, rowspan=3)
+    step4 = partial(step4_appdata, clean_inst, edit_path=True, install_font=True)
+    button_text = language[lang[0]][40] + " " + language[lang[0]][37] + " (" + language[lang[0]][38]
+    if admin != "":
+        button_text += " + " + language[lang[0]][39]
+        step4_font = partial(step4_appdata, clean_inst, edit_path=False, install_font=True)
+        button3_font = Button(a, text=language[lang[0]][40] + " " + language[lang[0]][37] + f" ({language[lang[0]][39]})", command=step4_font, bg="#ff9b69", activebackground="#a9ff91", width=30)
+        button3_font.grid(row=3, col=3)
+    button_text += ")"
+    button3 = Button(a, text=button_text, command=step4, bg="#ff9b69", activebackground="#a9ff91", width=30)
+    button3.grid(row=3, col=1, columnspan=2)
+    
+    step4_no_admin = partial(step4_appdata, clean_inst)
+    button3_no_admin = Button(a, text=language[lang[0]][37], command=step4_no_admin, activebackground="#a9ff91", width=30)
+    button3_no_admin.grid(row=3, col=4)
 
 
 def step3_local():
@@ -720,9 +724,9 @@ def step3_local():
         pass
     for o in a.winfo_children():
         o.destroy()
-    title3 = Label(a, text=f"{language[lang[0]][30]}\n{language[lang[0]][31]}\n\n{language[lang[0]][32]}\n{language[lang[0]][33]}", bg="#aecfee", font=100)
+    title3 = Label(a, text=f"{language[lang[0]][31]}\n{language[lang[0]][32]}\n\n{language[lang[0]][33]}\n{language[lang[0]][34]}", bg="#aecfee", font=100)
     title3.grid(row=0)
-    button3 = Button(a, text=language[lang[0]][36], command=step4_local, activebackground="#a9ff91", width=30)
+    button3 = Button(a, text=language[lang[0]][37], command=step4_local, activebackground="#a9ff91", width=30)
     button3.grid(row=3)
 
 
@@ -739,10 +743,10 @@ def step3_other(remove_ico):
         pass
     for o in a.winfo_children():
         o.destroy()
-    title3 = Label(a, text=f"{language[lang[0]][30]}\n{language[lang[0]][31]}\n\n{language[lang[0]][32]}\n{language[lang[0]][33]}", bg="#aecfee", font=100)
+    title3 = Label(a, text=f"{language[lang[0]][31]}\n{language[lang[0]][32]}\n\n{language[lang[0]][33]}\n{language[lang[0]][34]}", bg="#aecfee", font=100)
     title3.grid(row=0)
     step4 = partial(step4_other, remove_ico)
-    button3 = Button(a, text=language[lang[0]][36], command=step4, activebackground="#a9ff91", width=30)
+    button3 = Button(a, text=language[lang[0]][37], command=step4, activebackground="#a9ff91", width=30)
     button3.grid(row=3)
 
 
@@ -754,17 +758,17 @@ def step2():
     font = 'MAR'
     if not os.path.exists(font + 'IO Font v3 Solid.otf'):
         os.rename(font, font + 'IO Font v3 Solid.otf')
-    title2 = Label(a, text=language[lang[0]][19], font=300, bg="#ff9b69", height=3)
+    title2 = Label(a, text=language[lang[0]][20], font=300, bg="#ff9b69", height=3)
     title2.grid(row=0, columnspan=10)
     clean = StringVar()
-    clean_cb = Checkbutton(a, text=language[lang[0]][20], bg="#ff9b69", variable=clean)  # , width=20) #command=check
+    clean_cb = Checkbutton(a, text=language[lang[0]][21], bg="#ff9b69", variable=clean)  # , width=20) #command=check
     clean_cb.grid(row=1, column=0)
     ico = StringVar()
-    no_ico = Checkbutton(a, text=language[lang[0]][21], bg="#ff9b69", variable=ico)  # , width=20) #command=check
+    no_ico = Checkbutton(a, text=language[lang[0]][22], bg="#ff9b69", variable=ico)  # , width=20) #command=check
     no_ico.grid(row=1, column=1, columnspan=2)
-    note2 = Label(a, text=language[lang[0]][22], bg="#ff9b69")
+    note2 = Label(a, text=language[lang[0]][23], bg="#ff9b69")
     note2.grid(row=2, columnspan=3)
-    title2 = Label(a, text=language[lang[0]][23], font=(None, 13), bg="#ff9b69")  # , font=0.5
+    title2 = Label(a, text=language[lang[0]][24], font=(None, 13), bg="#ff9b69")  # , font=0.5
     title2.grid(row=4, columnspan=10)
     Run = OptionMenu(a, RUN, *run)
     Run["menu"].config(bg="#000000", fg='#ffffff')
@@ -787,11 +791,11 @@ def step2():
     path_appdata2 = Button(a, text="%AppData%\\Yosh", command=appdata, bg="#91ffc8", activebackground="#91ffc8",
                            width=30)
     path_appdata2.grid(row=7, column=0)
-    path_local2 = Button(a, text=f"{language[lang[0]][27]}\\Yosh", command=step3_local, bg="#ff9999",
+    path_local2 = Button(a, text=f"{language[lang[0]][28]}\\Yosh", command=step3_local, bg="#ff9999",
                          activebackground="#ff7f7f", width=30)
     path_local2.grid(row=7, column=1)
     other = partial(step3_other, ico.get)
-    path_other2 = Button(a, text=language[lang[0]][28], command=other, width=30)
+    path_other2 = Button(a, text=language[lang[0]][29], command=other, width=30)
     path_other2.grid(row=7, column=2)
 
     def verify(drive_letter, index):
@@ -812,7 +816,7 @@ def step2():
     for i in range(26):
         letter = string.ascii_uppercase[i]
         verif = partial(verify, letter, i)
-        inva = Label(a, text=language[lang[0]][29], bg="#ff9b69", width=30)
+        inva = Label(a, text=language[lang[0]][30], bg="#ff9b69", width=30)
         inva.grid(row=row[i], column=col[i % 3])
         bg = "#a9ff91"
         if os.path.exists(f'{letter}:\\'):
@@ -828,7 +832,7 @@ def refresh_func():
             lang[0] = i
             break
     for n in range(3):
-        run[n] = language[lang[0]][24 + n]
+        run[n] = language[lang[0]][25 + n]
     chosen_language = f'./Yosh/languages/{LANGUAGES.get()}.txt'
     if not os.path.exists(chosen_language):
         chosen_language = './Yosh/languages/English.txt'
@@ -841,13 +845,13 @@ def refresh_func():
         func_called[0] = lang[0]
         for some_tkstuff in a.winfo_children():
             some_tkstuff.destroy()
-        title = Label(a, text=language[lang[0]][11], font=300, bg="#aecfee", height=3, width=60)
+        title = Label(a, text=language[lang[0]][12], font=300, bg="#aecfee", height=3, width=60)
         title.grid(row=0)
-        desc = Label(a, text=language[lang[0]][12], font=300, bg="#aecfee", height=3)
+        desc = Label(a, text=language[lang[0]][13], font=300, bg="#aecfee", height=3)
         desc.grid(row=1)
-        info = Label(a, text=language[lang[0]][13], font=300, bg="#aecfee", height=3)
+        info = Label(a, text=language[lang[0]][14], font=300, bg="#aecfee", height=3)
         info.grid(row=2)
-        info2 = Label(a, text=language[lang[0]][14], font=(None, 13), bg="#aecfee")
+        info2 = Label(a, text=language[lang[0]][15], font=(None, 13), bg="#aecfee")
         info2.grid(row=5)
 
         Languages = OptionMenu(a, LANGUAGES, *languages)
@@ -856,18 +860,18 @@ def refresh_func():
         Languages.grid(row=6, column=0, columnspan=2)
         emptya = Label(a, text="  ", font=(None, 1), bg="#aecfee")
         emptya.grid(row=7, column=0)
-        refresh = Button(a, text=language[lang[0]][15], command=refresh_func, activebackground="#a9ff91", width=10)
+        refresh = Button(a, text=language[lang[0]][16], command=refresh_func, activebackground="#a9ff91", width=10)
         refresh.grid(row=8, column=0, columnspan=3)
         emptyb = Label(a, text="  ", font=(None, 5), bg="#aecfee")
         emptyb.grid(row=9, column=0)
 
-        joke = Label(a, text=language[lang[0]][16], font=300, bg="#aecfee", height=3)
+        joke = Label(a, text=language[lang[0]][17], font=300, bg="#aecfee", height=3)
         joke.grid(row=10)
-        launch_step2 = Button(a, text=language[lang[0]][17], command=step2, activebackground="#a9ff91", width=30)
+        launch_step2 = Button(a, text=language[lang[0]][18], command=step2, activebackground="#a9ff91", width=30)
         launch_step2.grid(row=11)
-        backend = Label(a, text=language[lang[0]][18], bg="#aecfee")
+        backend = Label(a, text=language[lang[0]][19], bg="#aecfee")
         backend.grid(row=12)
-        for j in range(4, 11):
+        for j in range(4, 12):
             print(language[lang[0]][j] + '\n' * (j % 2))
 
 def clearConsole():

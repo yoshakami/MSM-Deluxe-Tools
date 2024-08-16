@@ -179,7 +179,9 @@ def refresh():
     RUN.set(language[start + 25])  # Instant Run Apps (no UI)
 
 
-
+# dev note: the following string
+# "Popen(('wscript.exe', "
+# is being analyzed on this file, and changed depending on installation type
 def enter():  # "Run Instant App (Enter)" Button
     app = RUN.get()
     lang = LANGUAGES.get()
