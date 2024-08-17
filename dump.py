@@ -9,7 +9,9 @@ import os
 if ':\\Windows' in os.getcwd():
     os.chdir(os.environ['userprofile'] + '\\Desktop')
 
-with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
+install_dir = os.path.dirname(os.path.abspath(__file__))
+
+with open(os.path.join(install_dir, '#language.txt'), 'r', encoding="utf-8") as txt:
     language = txt.read()
     language = [''] + language.splitlines()
 
@@ -31,14 +33,15 @@ a = Tk()
 a.title(language[start])
 a.minsize(660, 440)
 a.config(bg='#aaffbf')
-a.iconbitmap('C:\\Yosh\\msm_stuff\\dump.ico')
+ico = os.path.join('msm_stuff', 'dump.ico')
+a.iconbitmap(os.path.join(install_dir, ico))
 print(f"{language[start + 2]}\n{language[start + 3]}\n")
 
 
 def dump(file, index):
     y = os.path.getsize(file)
     counter = z = k = filepath = 0
-    with open('C:\\Yosh\\a', 'rb') as config3:
+    with open(os.path.join(install_dir, 'a', 'rb')) as config3:
         config3.seek(13)
         keeptex = config3.read(1)
         dumpmips = config3.read(1)
@@ -140,7 +143,7 @@ def dump(file, index):
                     model.seek(z)
                     texture = model.read(tex_size)
                     for character in ['\\', '/', ':', '*', '?', '"', '<', '>', '|']:
-                        tex_name = tex_name.replace(character, ';')  # forbidden characters by windows
+                        tex_name = tex_name.replace(character, ';')  # forbidden characters by windows - this won't impact linux since pack.py will use the same tex name
                     if os.path.exists(f'{folder}/tex0/{tex_name}.tex0') and f"{folder}/{tex_name}.png" in png_list:
                         num = 0
                         tex_name += '-0'
@@ -287,7 +290,7 @@ open_explorerbu.grid(row=1, column=0)
 
 
 def keep():  # each time the checkbutton keep_tex0 is triggered
-    with open('C:\\Yosh\\a', 'r+b') as checcbutton:
+    with open(os.path.join(install_dir, 'a'), 'r+b') as checcbutton:
         checcbutton.seek(13)
         configg = checcbutton.read(1)
         checcbutton.seek(13)
@@ -298,7 +301,7 @@ def keep():  # each time the checkbutton keep_tex0 is triggered
 
 
 def mipmaps():  # each time the checkbutton dump_mipmaps is triggered
-    with open('C:\\Yosh\\a', 'r+b') as mipmap:
+    with open(os.path.join(install_dir, 'a'), 'r+b') as mipmap:
         mipmap.seek(14)
         config2 = mipmap.read(1)
         mipmap.seek(14)
@@ -314,7 +317,7 @@ dump_mipmaps = Checkbutton(a, text=language[start + 5], command=mipmaps, bg="#aa
 dump_mipmaps.grid(row=2, column=2)
 T = Label(a, text=language[start + 6], bg='#aaffbf', width=30)
 T.grid(row=2, column=1)
-with open('C:\\Yosh\\a', 'rb') as config:
+with open(os.path.join(install_dir, 'a'), 'rb') as config:
     config.seek(13)
     checkbu = config.read(1)
     mips = config.read(1)

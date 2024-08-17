@@ -1,7 +1,10 @@
+import os
 import webbrowser
 from tkinter import Tk, Label, Button, Canvas, PhotoImage
 
-with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
+install_dir = os.path.dirname(os.path.abspath(__file__))
+
+with open(os.path.join(install_dir, '#language.txt'), 'r', encoding="utf-8") as txt:
     language = txt.read()
     language = [''] + language.splitlines()
 
@@ -12,7 +15,9 @@ a.title(language[msm + 2])
 a.minsize(680, 440)
 a.maxsize(680, 440)
 a.config(bg="#bfffaa")
-a.iconbitmap('C:\\Yosh\\msm_stuff\\web.ico')
+ico = os.path.join('msm_stuff', 'web.ico')
+a.iconbitmap(os.path.join(install_dir, ico))
+config_file = os.path.join(install_dir, 'a')
 
 
 def howto():
@@ -28,7 +33,7 @@ def brsar():
 
 
 def list_fr():
-    webbrowser.open("https://cdn.discordapp.com/attachments/604439675003732020/730851119793831956/ID-List-Fr.png")
+    webbrowser.open("https://mario-sports-mix-modding-community-com.webnode.fr/list/")
 
 
 def tht_fr():
@@ -36,7 +41,7 @@ def tht_fr():
 
 
 def list_en():
-    webbrowser.open("https://cdn.discordapp.com/attachments/604439675003732020/731926554724270210/ID-List.PNG")
+    webbrowser.open("https://mario-sports-mix-modding-community-com.webnode.fr/list/")
 
 
 def info():
@@ -120,15 +125,16 @@ lyt.grid(row=15, column=1)
 exitbu = Button(a, text=language[msm + 39], activebackground="#a9ff91", command=a.quit, width=25)
 exitbu.grid(row=16, column=1)
 msm1 = Canvas(a, width=220, height=148, bd=-2, bg="#aecfee")
-msm_msm = PhotoImage(file="C:\\Yosh\\msm_stuff\\msm.png")
+msm_stuff = os.path.join(install_dir, 'msm_stuff')
+msm_msm = PhotoImage(file=os.path.join(install_dir, "msm.png"))
 msm1.create_image(110, 74, image=msm_msm)
 msm1.grid(row=13, column=0, rowspan=6)
 msm2 = Canvas(a, width=216, height=148, bd=-2, bg="#aecfee")
-msm_png = PhotoImage(file="C:\\Yosh\\msm_stuff\\msm2.png")
+msm_png = PhotoImage(file=os.path.join(install_dir, "msm2.png"))
 msm2.create_image(100, 100, image=msm_png)
 msm2.grid(row=13, column=2, rowspan=6)
 
-with open("C:\\Yosh\\a", "rb") as config:
+with open(config_file, "rb") as config:
     config.seek(11)
     color = config.read(1)
 

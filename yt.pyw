@@ -6,20 +6,29 @@ import urllib
 import json
 import os
 
-with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
+install_dir = os.path.dirname(os.path.abspath(__file__))
+
+with open(os.path.join(install_dir, '#language.txt'), 'r', encoding="utf-8") as txt:
     language = txt.read()
     language = [''] + language.splitlines()
 
+ico = os.path.join('msm_stuff', 'yt.ico')
+ico = os.path.join(install_dir, ico)
+
 start = int(language[1].split(":")[5])
 # import pprint
-if not os.path.exists(f"{os.environ['userprofile']}\\Pictures\\YouTube\\"):
-    os.mkdir(f"{os.environ['userprofile']}\\Pictures\\YouTube\\")
+download_dir = ""
+if os.environ['userprofile'].startswith('C:'):
+    download_dir = os.path.join(os.environ['userprofile'], "Pictures")
+    download_dir = os.path.join(download_dir, "Youtube")
+    if not os.path.exists(download_dir):
+        os.mkdir(download_dir)
 
 data = pyperclip.paste()
 if 'v=' not in data:
     clipboard = language[start + 9] + '\n' + language[start + 10]
     toaster = ToastNotifier()
-    toaster.show_toast(data, clipboard, icon_path="C:\\Yosh\\msm_stuff\\gal.ico", duration=5)
+    toaster.show_toast(data, clipboard, icon_path=ico, duration=5)
     exit(0)
 
 VideoID = data.split('v=')[-1]
@@ -66,14 +75,14 @@ def download(title, res):
             download(title, 'mq')
         if res == 'mq':
             toaster = ToastNotifier()
-            toaster.show_toast(language[start + 12], title.split('\\')[-1], icon_path="C:\\Yosh\\msm_stuff\\gal.ico", callback_on_click=view, duration=5)
-    return language[start + 11], title.split('\\')[-1]
+            toaster.show_toast(language[start + 12], os.path.basename(title), icon_path=ico, callback_on_click=view, duration=5)
+    return language[start + 11], os.path.basename(title)
 
 
 def view():
-    os.system(f'explorer "{os.environ["userprofile"]}\\Pictures\\YouTube\\"')
+    os.system(f'explorer "{download_dir}"')
 
 
-output = download(f"{os.environ['userprofile']}\\Pictures\\YouTube\\{title_}", 'maxres')
+output = download(os.path.join(download_dir, title_), 'maxres')
 toaster = ToastNotifier()
-toaster.show_toast(output[0], output[1], icon_path="C:\\Yosh\\msm_stuff\\gal.ico", callback_on_click=view, duration=5)
+toaster.show_toast(output[0], output[1], icon_path=ico, callback_on_click=view, duration=5)

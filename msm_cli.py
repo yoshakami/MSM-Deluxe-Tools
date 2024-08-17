@@ -128,8 +128,9 @@ def dump(param):
     folder = os.path.splitext(file)[0]
     if not os.path.exists(folder):
         os.mkdir(folder)
-    if not os.path.exists(folder + '/tex0'):
-        os.mkdir(folder + '/tex0')
+    tex0_folder = os.path.join(folder, 'tex0')
+    if not os.path.exists(tex0_folder):
+        os.mkdir(tex0_folder)
     png_list = []
     size_list = []
     mips_list = []
@@ -280,7 +281,7 @@ def dump(param):
         print(f"deleting {folder}/tex0...")
     if not tex0:  # if the file isn't a single tex0 but rather an arc, brres, or tpl file
         if counter > 0:
-            with open(folder + '/zzzdump.txt', 'w') as zzzdump:
+            with open(os.path.join(folder, 'zzzdump.txt'), 'w') as zzzdump:
                 zzzdump.write("""Auto-Gerated file by MSM Dump Texture App. Don't delete it else you can't use the Pack Texture app.
 It contains all tex0 data size, number of mipmaps, colour encoding, offset in file, dumped png names, and sha256 hashes (used to know which png has been edited)
 Also, you may already know that you can't resize any png. else they won't fit inside the brres/arc data.""")
@@ -497,8 +498,9 @@ def pack(param):
             param[j] += ' ' + param[i]
         file = param[j]
     fil = os.path.splitext(file)[0]
-    # print(fil + '\\zzzdump.txt')
-    if not os.path.exists(fil + '\\zzzdump.txt'):
+    
+    zzzdump = os.path.join(fil, 'zzzdump.txt')
+    if not os.path.exists(zzzdump):
         return 'you need to use "dump" on this file before using this command'
     edited = []
     index_edited = []
@@ -514,10 +516,10 @@ def pack(param):
         wszst = True
     # compare the current hashes with these written in zzzdump.txt and establish a list of edited pictures
     # encode these png to tex0
-    encoded = fil + '/encoded'
+    encoded = os.path.join(fil + 'encoded')
     if not os.path.exists(encoded):
         os.mkdir(encoded)
-    with open(fil + '\\zzzdump.txt', 'r') as zzzdump:
+    with open(zzzdump, 'r') as zzzdump:
         text = zzzdump.read().splitlines()[3:]  # the first three lines are explaining the purpose of this file
         for line in text:
             if clock:  # one line on two, there's a sha256, then size + mipmaps + color + name
@@ -689,7 +691,7 @@ def png(param):
         pic = Image.open(file)
         pic.save(os.path.splitext(file)[0] + ".png")
         pic.close()
-        return 'converted to ' + os.path.splitext(file.split('\\')[-1])[0]+ ".png"
+        return f'converted to {os.path.basename(file)}.png'
     except UnidentifiedImageError:
         return f"can't convert {file}"
 
@@ -734,7 +736,7 @@ def parse(arg1):
                 png([0, 0, file])  # d[2] = b'\n' if the tga file is compressed
             elif d[:4] == b'\x89PNG':
                 tex([0, 0, file])
-            elif d[:4] == b'bres' and os.path.exists(os.path.splitext(file)[0] + '/zzzdump.txt'):
+            elif d[:4] == b'bres' and os.path.exists(os.path.join(os.path.splitext(file)[0], 'zzzdump.txt')):
                 pack([0, 0, file])
             elif d[:4] == b'bres':
                 dump([0, 0, file])

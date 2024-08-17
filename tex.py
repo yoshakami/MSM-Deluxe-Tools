@@ -6,7 +6,9 @@ from functools import partial
 if ':\\Windows' in os.getcwd():
     os.chdir(os.environ['userprofile'] + '\\Desktop')
 
-with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
+install_dir = os.path.dirname(os.path.abspath(__file__))
+
+with open(os.path.join(install_dir, '#language.txt'), 'r', encoding="utf-8") as txt:
     language = txt.read()
     language = [''] + language.splitlines()
 
@@ -31,7 +33,8 @@ a = Tk()
 a.title(language[start])
 a.minsize(660, 440)
 a.config(bg='#bfaaff')
-a.iconbitmap('C:\\Yosh\\msm_stuff\\tex.ico')
+ico = os.path.join('msm_stuff', 'tex.ico')
+a.iconbitmap(os.path.join(install_dir, ico))
 
 
 def encode(file, index):

@@ -1,8 +1,15 @@
 import os
 
-with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
+if ':\\Windows' in os.getcwd():
+    os.chdir(os.environ['userprofile'] + '\\Desktop')
+    
+install_dir = os.path.dirname(os.path.abspath(__file__))
+
+with open(os.path.join(install_dir, '#language.txt'), 'r', encoding="utf-8") as txt:
     language = txt.read()
     language = [''] + language.splitlines()
+
+n = os.path.join(install_dir, 'n.exe')
 
 start = int(language[1].split(":")[27])
 hashtag = int(language[1].split(":")[3])
@@ -161,4 +168,4 @@ if compress:
             if check_mdl.read(6) == b'body_h':
                 filetype = 1  # .mdl
                 break
-    os.system(f'C:\\Yosh\\n.exe "{file}" -lh -o "{short}{extensions[filetype]}" -A32')
+    os.system(f'{n} "{file}" -lh -o "{short}{extensions[filetype]}" -A32')

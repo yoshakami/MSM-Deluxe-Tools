@@ -1,7 +1,12 @@
 import os
 from win10toast import ToastNotifier
 
-with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
+if ':\\Windows' in os.getcwd():
+    os.chdir(os.environ['userprofile'] + '\\Desktop')
+    
+install_dir = os.path.dirname(os.path.abspath(__file__))
+    
+with open(os.path.join(install_dir, '#language.txt'), 'r', encoding="utf-8") as txt:
     language = txt.read()
     language = [''] + language.splitlines()
 
@@ -25,6 +30,7 @@ for element in os.listdir('./'):
 
         except PermissionError:
             continue
-
+msm_stuff = os.path.join('msm_stuff', 'tex3.ico')
+ico = os.path.join(install_dir, msm_stuff)
 toaster = ToastNotifier()
-toaster.show_toast(language[hashtag + 5].replace("#", str(count_tex)), language[hashtag + 6].replace("#", str(count_files)), icon_path="C:/Yosh/tex3.ico", duration=5)
+toaster.show_toast(language[hashtag + 5].replace("#", str(count_tex)), language[hashtag + 6].replace("#", str(count_files)), icon_path=ico, duration=5)

@@ -7,7 +7,9 @@ from functools import partial
 if ':\\Windows' in os.getcwd():
     os.chdir(os.environ['userprofile'] + '\\Desktop')
 
-with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
+install_dir = os.path.dirname(os.path.abspath(__file__))
+
+with open(os.path.join(install_dir, '#language.txt'), 'r', encoding="utf-8") as txt:
     language = txt.read()
     language = [''] + language.splitlines()
 
@@ -34,19 +36,20 @@ a = Tk()
 a.title(language[start])
 a.minsize(880, 440)
 a.config(bg='#aaffaa')
-a.iconbitmap('C:\\Yosh\\msm_stuff\\isox.ico')
+ico = os.path.join('msm_stuff', 'isox.ico')
+a.iconbitmap(os.path.join(install_dir, ico))
 
 
 def extract(file, index):
-    with open('C:\\Yosh\\a', 'rb') as config1:
+    with open(os.path.join(install_dir, 'a'), 'rb') as config1:
         config1.seek(15)
         rm_update = config1.read(1)
     file2 = os.path.splitext(file)[0]
     os.system(f'wit extract "{file}" "{file2}" -o')
     if rm_update == b'1':
-        shutil.rmtree(f'{file2}\\UPDATE')
-        shutil.move(f'{file2}\\DATA', f'{file2}')
-        shutil.rmtree(f'{file2}\\DATA')
+        shutil.rmtree(os.path.join(file2, 'UPDATE'))
+        shutil.move(os.path.join(file2, 'DATA'), file2)
+        shutil.rmtree(os.path.join(file2, 'DATA'))
 
     extract_list[index].destroy()
     patched = Label(a, text=language[start + 1], bg='#aaffaa', width=30)
@@ -130,7 +133,7 @@ def open_explorer():  # change directory with C:\Windows\explorer.exe GUI
 
 
 def checkbu_rm_update():  # trigerred each time the checkbutton is pressed
-    with open('C:\\Yosh\\a', 'r+b') as conf:
+    with open(os.path.join(install_dir, 'a'), 'r+b') as conf:
         conf.seek(15)
         mode = conf.read(1)
         conf.seek(15)
@@ -178,7 +181,7 @@ lextract2.grid(row=2, column=1, rowspan=2, columnspan=2)
 lcreate = Label(a, text=language[arc + 7], font=(None, 15), bg='#aaffaa')
 lcreate.grid(row=16, column=0)
 
-with open('C:\\Yosh\\a', 'rb') as config:
+with open(os.path.join(install_dir, 'a'), 'rb') as config:
     config.seek(15)
     remove_update = config.read(1)
 if remove_update == b'1':

@@ -2,11 +2,11 @@ import os
 from tkinter import Tk, Label, Button, END, Entry, OptionMenu, StringVar
 from tkinter.filedialog import askdirectory, askopenfilename
 from functools import partial
-
-if ':\\Windows' in os.getcwd():
+install_dir = os.path.dirname(os.path.abspath(__file__))
+if ':\\Windows' in os.getcwd():  # prevents the tool to run on system32 if launched from start menu
     os.chdir(os.environ['userprofile'] + '\\Desktop')
 
-with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
+with open(os.path.join(install_dir, '#language.txt'), 'r', encoding="utf-8") as txt:
     language = txt.read()
     language = [''] + language.splitlines()
 
@@ -32,7 +32,8 @@ a = Tk()
 a.title(language[start])
 a.minsize(880, 440)
 a.config(bg='#aacfff')
-a.iconbitmap('C:\\Yosh\\msm_stuff\\arc.ico')
+ico = os.path.join('msm_stuff', 'arc.ico')
+a.iconbitmap(os.path.join(install_dir, ico))
 
 
 def extract_all():
@@ -44,14 +45,12 @@ def extract_all():
 
 
 def explorer_extract():
-    binary_file = askopenfilename(initialdir=os.getcwd())  # explorer.exe file selection GUI
-    binary_file = binary_file.replace('/', '\\')
+    binary_file = askopenfilename(initialdir=os.getcwd(), title='select a file to extract')  # explorer.exe file selection GUI
     os.system(f'wszst x "{binary_file}" -o')
 
 
 def explorer_create():  # triggered by the "Open File Explorer" button
-    directory = askdirectory(initialdir=os.getcwd())  # explorer.exe folder selection GUI
-    directory = directory.replace('/', '\\')
+    directory = askdirectory(initialdir=os.getcwd(), title='select a folder to pack')  # explorer.exe folder selection GUI
     comp = COMPRESSION.get()  # get the compression the user has set in the option menu
     arch = ARCHIVE.get()  # get the archive file type the user has set in the option menu
     destfile = os.path.splitext(directory)[0]

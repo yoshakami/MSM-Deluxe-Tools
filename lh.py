@@ -6,9 +6,13 @@ from tkinter.filedialog import askopenfilename, askdirectory
 if ':\\Windows' in os.getcwd():
     os.chdir(os.environ['userprofile'] + '\\Desktop')
 
-with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
+install_dir = os.path.dirname(os.path.abspath(__file__))
+
+with open(os.path.join(install_dir, '#language.txt'), 'r', encoding="utf-8") as txt:
     language = txt.read()
     language = [''] + language.splitlines()
+    
+n = os.path.join(install_dir, 'n.exe')
 
 arc = int(language[1].split(":")[7])
 start = int(language[1].split(":")[15])
@@ -17,7 +21,8 @@ a = Tk()
 a.title(language[start])
 a.minsize(660, 440)
 a.config(bg='#dfffaa')
-a.iconbitmap('C:\\Yosh\\msm_stuff\\lh.ico')
+ico = os.path.join('msm_stuff', 'lh.ico')
+a.iconbitmap(os.path.join(install_dir, ico))
 
 thrice = [b'U\xaa8-', b'bres', b'\x00 \xaf0', b'\x00\x00\x00\x00']  # arc, brres, tpl and rso files
 twice = thrice[:2]
@@ -39,7 +44,6 @@ burow_compress = [burow_extract[i] + 16 for i in range(len(burow_extract))]
 extract_list = []
 compress_list = []
 
-
 def scan_directory():
     del compress_list[:]
     del extract_list[:]
@@ -53,7 +57,7 @@ def scan_directory():
                 with open(lh_file, 'rb') as file:
                     lh_header = file.read(1)
                 if lh_header in [b'@', b'\x10', b'\x11', b'\x81', b'\x82', b'$', b'(', b'0', b'P']:  # lh @, old lz \x10, lz77 \x11, diff8 \x81, diff16 \x82, huff4 $, huff8 (, runlength 0, lrc P
-                    os.system(f'C:\\Yosh\\n.exe "{lh_file}" -x')
+                    os.system(f'{n} "{lh_file}" -x')
         extract_allbu.destroy()
 
     def extract_type(ext, tkbu):  # ext is either .bin, .mdl, .cmp, or .mot
@@ -62,7 +66,7 @@ def scan_directory():
                 with open(ext_file, 'rb') as check_ext_file:
                     mdl_header = check_ext_file.read(1)
                 if mdl_header == b'@' and os.path.splitext(ext_file)[1] == ext:
-                    os.system(f'C:\\Yosh\\n.exe "{ext_file}" -x')
+                    os.system(f'{n} "{ext_file}" -x')
         tkbu.destroy()
 
     def compress_all():  # compress all files in current directory
@@ -103,25 +107,23 @@ def scan_directory():
         else:
             shortname = cfile  # else compressed file name will be the file name + its right extension
         if ismodel:  # future compressed file if it exists  ( == overwrite )
-            os.system(f'C:\\Yosh\\n.exe "{cfile}" -lh -o "{shortname}.mdl" -A32')  # create a compressed file with mdl extension
+            os.system(f'{n} "{cfile}" -lh -o "{shortname}.mdl" -A32')  # create a compressed file with mdl extension
         elif iscmp:
-            os.system(f'C:\\Yosh\\n.exe "{cfile}" -lh -o "{shortname}.cmp" -A32')
+            os.system(f'{n} "{cfile}" -lh -o "{shortname}.cmp" -A32')
         else:
-            os.system(f'C:\\Yosh\\n.exe "{cfile}" -lh -o "{shortname}.bin" -A32')
+            os.system(f'{n} "{cfile}" -lh -o "{shortname}.bin" -A32')
         manual_entry.delete(0, 'end')
 
     def explorer_compress():
-        expfile = askopenfilename(initialdir=cwd)
-        compressing_file = expfile.replace('/', '\\')
+        compressing_file = askopenfilename(initialdir=cwd)
         compress(compressing_file)
 
     def explorer_extract():
         b = askopenfilename(initialdir=cwd)
-        b = b.replace('/', '\\')
-        os.system(f'C:\\Yosh\\n.exe "{b}" -x')
+        os.system(f'{n} "{b}" -x')
 
     def extract_file(file, number):
-        os.system(f'C:\\Yosh\\n.exe "{file}" -x')
+        os.system(f'{n} "{file}" -x')
         extract_list[number].destroy()
         patched = Label(a, text=language[arc + 1], bg='#dfffaa', width=30)
         patched.grid(row=burow_extract[number], column=bucolumn[number])

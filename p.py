@@ -1,6 +1,11 @@
 import os
 
-with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
+if ':\\Windows' in os.getcwd():
+    os.chdir(os.environ['userprofile'] + '\\Desktop')
+    
+install_dir = os.path.dirname(os.path.abspath(__file__))
+
+with open(os.path.join(install_dir, '#language.txt'), 'r', encoding="utf-8") as txt:
     language = txt.read()
     language = [''] + language.splitlines()
 
@@ -13,6 +18,7 @@ colourenc = ['I4', 'I8', 'IA4', 'IA8', 'RGB565', 'RGB5A3', 'RGBA8', 0, 'CI4', 'C
 extensions = ['.bin', '.mdl', '.cmp']
 bresarc = [b'U\xaa8-', b'bres']
 
+n = os.path.join(install_dir, 'n.exe')
 
 def message():
     print(f"\n\n{language[start]},\n{language[start + 1]}\n{language[start + 2]}\n{language[start + 3]}\n\n{language[start + 4]}\n")
@@ -160,4 +166,4 @@ if compress:
             if check_mdl.read(6) == b'body_h':
                 filetype = 1  # .mdl
                 break
-    os.system(f'C:\\Yosh\\n.exe "{file}" -lh -o "{short}{extensions[filetype]}" -A32')
+    os.system(f'{n} "{file}" -lh -o "{short}{extensions[filetype]}" -A32')

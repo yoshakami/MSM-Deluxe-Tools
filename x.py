@@ -1,5 +1,14 @@
 import os
 
+if ':\\Windows' in os.getcwd():
+    os.chdir(os.environ['userprofile'] + '\\Desktop')
+    
+install_dir = os.path.dirname(os.path.abspath(__file__))
+
+with open(os.path.join(install_dir, '#language.txt'), 'r', encoding="utf-8") as txt:
+    language = txt.read()
+    language = [''] + language.splitlines()
+    
 for lh_file in os.listdir('./'):
     if os.path.isfile(lh_file):
         if os.path.getsize(lh_file) > 4:

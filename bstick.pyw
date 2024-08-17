@@ -4,7 +4,7 @@ import os
 import webbrowser
 from functools import partial
 from subprocess import Popen
-from tkinter import Tk, Canvas, PhotoImage, Label, Button, Entry, Checkbutton
+from tkinter import Tk, Canvas, PhotoImage, Label, Button, Entry, Checkbutton, _tkinter
 from tkinter.colorchooser import askcolor
 from tkinter.filedialog import askdirectory
 from PIL import Image
@@ -12,17 +12,25 @@ from PIL import Image
 if ':\\Windows' in os.getcwd():
     os.chdir(os.environ['userprofile'] + '\\Desktop')
 
-with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
+install_dir = os.path.dirname(os.path.abspath(__file__))
+
+with open(os.path.join(install_dir, '#language.txt'), 'r', encoding="utf-8") as txt:
     language = txt.read()
     language = [''] + language.splitlines()
 
+config_file = os.path.join(install_dir, 'a')
+bstick_bmp = os.path.join('msm_stuff', 'bstick.bmp')
+bstick_bmp = os.path.join(install_dir, bstick_bmp)
+bstick_png = os.path.join('msm_stuff', 'bstick.png')
+bstick_png = os.path.join(install_dir, bstick_png)
 start = int(language[1].split(":")[9])
 msm = int(language[1].split(":")[1])
 a = Tk()
 a.title(language[start])
 a.minsize(880, 724)
 a.config(bg='#aaaaff')
-a.iconbitmap('C:\\Yosh\\msm_stuff\\bstick.ico')
+ico = os.path.join('msm_stuff', 'bstick.ico')
+a.iconbitmap(os.path.join(install_dir, ico))
 
 button_row = []
 for j in range(12, 26):
@@ -32,7 +40,7 @@ button_list = []
 
 
 def fill_bytes_rgvb():
-    with open('C:\\Yosh\\a', 'r+b') as ca:
+    with open(config_file, 'r+b') as ca:
         hex_colour = str(ca.read(7))[2:9]
 
         r = hex_colour[1:3]
@@ -97,7 +105,7 @@ def change_file(name, index):  # changes the color in the brres or mdl0 given in
     with open(name, "r+b") as h:
         y = os.path.getsize(name)
         cursor = 0
-        with open('C:\\Yosh\\a', 'r+b') as conf:
+        with open(config_file, 'r+b') as conf:
             conf.seek(7)
             r = conf.read(1)
             g = conf.read(3)
@@ -156,7 +164,7 @@ def scan_directory():
 
 
 def change_bmp():
-    with open('C:\\Yosh\\a', 'r+b') as conf:
+    with open(config_file, 'r+b') as conf:
         hex_colour = str(conf.read(7))[2:9]
 
     rt = hex_colour[1:3]
@@ -190,7 +198,7 @@ def change_bmp():
     bb = bytes(chr(temp), 'latin-1')
 
     colourbu.configure(text=hex_colour)
-    with open('C:\\Yosh\\msm_stuff\\bstick.bmp', 'r+b') as bmp:
+    with open(bstick_bmp, 'r+b') as bmp:
         ab = 397
         ae = b'\x00'
         bmp.seek(695)
@@ -213,11 +221,10 @@ def change_bmp():
                 bmp.write(bb)
                 bmp.write(gb)
                 bmp.write(rb)
-    bstick_image = Image.open('C:\\Yosh\\msm_stuff\\bstick.bmp')
-    bstick_image.save('C:\\Yosh\\msm_stuff\\bstick.png')
+    bstick_image = Image.open(bstick_bmp)
+    bstick_image.save(bstick_png)
     bstick_image.close()
     preview.destroy()
-
 
 def change_directory():  # enter button to change directory (take the entry content)
     cwd = entry_dir.get()
@@ -246,7 +253,7 @@ def take_entry_hex():
     if '#' in hex_colour:
         hex_colour = hex_colour.split('#')[-1]
     if len(hex_colour) == 6:
-        with open('C:\\Yosh\\a', 'r+b') as ca:
+        with open(config_file, 'r+b') as ca:
             ca.seek(1)
             n = bytes(hex_colour, 'latin-1')
             ca.write(n)
@@ -256,79 +263,79 @@ def take_entry_hex():
 
 
 def red():
-    with open('C:\\Yosh\\a', 'r+b') as ca:
+    with open(config_file, 'r+b') as ca:
         ca.write(b'#ff0000\xff\x00\x00\x00')
     change_bmp()
 
 
 def orange():
-    with open('C:\\Yosh\\a', 'r+b') as ca:
+    with open(config_file, 'r+b') as ca:
         ca.write(b'#ff3f00\xff\x03\xf0\x00')
     change_bmp()
 
 
 def yellow():
-    with open('C:\\Yosh\\a', 'r+b') as ca:
+    with open(config_file, 'r+b') as ca:
         ca.write(b'#ffff00\xff\x0f\xf0\x00')
     change_bmp()
 
 
 def chartreuse():
-    with open('C:\\Yosh\\a', 'r+b') as ca:
+    with open(config_file, 'r+b') as ca:
         ca.write(b'#3f7f00\x3f\x07\xf0\x00')
     change_bmp()
 
 
 def light_green():
-    with open('C:\\Yosh\\a', 'r+b') as ca:
+    with open(config_file, 'r+b') as ca:
         ca.write(b'#1f7f00\x1f\x07\xf0\x00')
     change_bmp()
 
 
 def green():
-    with open('C:\\Yosh\\a', 'r+b') as ca:
+    with open(config_file, 'r+b') as ca:
         ca.write(b'#00ff00\x00\x0f\xf0\x00')
     change_bmp()
 
 
 def green_cyan():
-    with open('C:\\Yosh\\a', 'r+b') as ca:
+    with open(config_file, 'r+b') as ca:
         ca.write(b'#007f1f\x00\x07\xf0\x1f')
     change_bmp()
 
 
 def blue_cyan():
-    with open('C:\\Yosh\\a', 'r+b') as ca:
+    with open(config_file, 'r+b') as ca:
         ca.write(b'#001f7f\x00\x01\xf0\x7f')
     change_bmp()
 
 
 def blue():
-    with open('C:\\Yosh\\a', 'r+b') as ca:
+    with open(config_file, 'r+b') as ca:
         ca.write(b'#0000ff\x00\x00\x00\xff')
     change_bmp()
 
 
 def purple():
-    with open('C:\\Yosh\\a', 'r+b') as ca:
+    with open(config_file, 'r+b') as ca:
         ca.write(b'#2f00ff\x2f\x00\x00\xff')
     change_bmp()
 
 
 def fushia():
-    with open('C:\\Yosh\\a', 'r+b') as ca:
+    with open(config_file, 'r+b') as ca:
         ca.write(b'#ff00ff\xff\x00\x00\xff')
     change_bmp()
 
 
 def red_fushia():
-    with open('C:\\Yosh\\a', 'r+b') as ca:
+    with open(config_file, 'r+b') as ca:
         ca.write(b'#ff001f\xff\x00\x00\x1f')
     change_bmp()
 
 
 def fix_colour():
-    with open('C:\\Yosh\\a', 'r+b') as ca:
+    with open(config_file, 'r+b') as ca:
         ca.seek(12)
         cd = ca.read(1)
         ca.seek(12)
@@ -339,28 +346,29 @@ def fix_colour():
 
 
 def launch_photo():
-    os.system('C:\\Yosh\\msm_stuff\\bstick.png')
+    os.system(bstick_png)
 
+# the following function triggers when the user clicks on the button hidden behing the prewiew stick image.
+# it has for purpose to restart the app because it is impossible to dynamically change the image on a Canvas in tkinter 
 # dev note: this only applies before launching the installer (or committing to the repo)
 # DO NOT CHANGE THIS FUNCTION
-# DO NOT UNINTENT, REMOVE, OR ADD COMMENTS TO THE LINES BELOW
+# DO NOT UNINTENT, REMOVE, OR ADD COMMENTS TO THE LINES OF THIS FUNCTION
 def bstick():
-    Popen(("wscript.exe", "C:\\Yosh\\bstick.vbs"))
-    # Popen((sys.executable, "C:\\Yosh\\bstick.pyw"))
-    # Popen('C:\\Yosh\\bstick.exe')
+    Popen(("wscript.exe", f"{install_dir}/bstick.vbs"))
+    # Popen((sys.executable, f"{install_dir}/bstick.pyw"))
+    # Popen(f'{install_dir}/bstick.exe')
     a.quit()
 
 
 def win_colour_picker():
     hex_colour = askcolor('#007fff')  # returns ( (some stuff), '#RRGGBB')
     hex_colour = bytes(hex_colour[1], 'latin-1')
-    with open('C:\\Yosh\\a', 'r+b') as conf:
+    with open(config_file, 'r+b') as conf:
         conf.seek(0)
         conf.write(hex_colour)
     fill_bytes_rgvb()
     change_bmp()
-
-
+    
 text_label = Label(a, text=language[msm + 18], bg='#aaaaff', width=30)
 text_label.grid(row=0, column=0)
 open_explorerbu = Button(a, text=language[msm + 19], command=open_explorer, activebackground='#96c7ff', width=15)
@@ -427,11 +435,19 @@ lpreview6 = Label(a, text=language[start + 26], bg='#aaaaff')
 lpreview6.grid(row=11, column=3)
 lpreview7 = Label(a, text=language[start + 27], bg='#aaaaff')
 lpreview7.grid(row=12, column=3)
+
 preview = Canvas(a, width=93, height=669)
-prev_image = PhotoImage(file="C:\\Yosh\\msm_stuff\\bstick.png")
-preview.create_image(46, 333, image=prev_image)
+try:
+    prev_image = PhotoImage(file=bstick_png)
+except _tkinter.TclError:
+        bstick_image = Image.open(bstick_bmp)
+        bstick_image.save(bstick_png)
+        bstick_image.close()
+        prev_image = PhotoImage(file=bstick_png)
+image_container = preview.create_image(46, 333, image=prev_image)
 preview.grid(row=2, column=3, rowspan=100, columnspan=100)
-with open('C:\\Yosh\\a', 'rb') as config:
+    
+with open(config_file, 'rb') as config:
     hex_color = config.read(7)
     config.seek(12)
     fix = config.read(1)

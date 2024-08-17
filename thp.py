@@ -80,7 +80,9 @@ import os
 if ':\\Windows' in os.getcwd():
     os.chdir(os.environ['userprofile'] + '\\Desktop')
 
-with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
+install_dir = os.path.dirname(os.path.abspath(__file__))
+
+with open(os.path.join(install_dir, '#language.txt'), 'r', encoding="utf-8") as txt:
     language = txt.read()
     language = [''] + language.splitlines()
 
@@ -103,7 +105,8 @@ a = Tk()
 a.title(language[start])
 a.minsize(660, 440)
 a.config(bg='#eda187')
-a.iconbitmap('C:\\Yosh\\msm_stuff\\thp.ico')
+ico = os.path.join('msm_stuff', 'thp.ico')
+a.iconbitmap(os.path.join(install_dir, ico))
 japanese = font.Font(size=11)  # (family='MS UI Gothic', size=14) no longer japanses as "japanese emotes are childish"
 m = font.Font(family='MARIO Font v3 Solid', size=20)  # , weight='bold')
 
@@ -524,7 +527,7 @@ def parse(file, index):
     if function == language[start + 24]:
         return
 
-    with open('C:\\Yosh\\a', 'rb') as config2:
+    with open(os.path.join(install_dir, 'a'), 'rb') as config2:
         config2.seek(17)
         overwrite = config2.read(1)
 
@@ -622,7 +625,7 @@ def avthp_github():
 
 
 def toogle():  # each time the checkbutton overwrite is triggered
-    with open('C:\\Yosh\\a', 'r+b') as config:
+    with open(os.path.join(install_dir, 'a'), 'r+b') as config:
         config.seek(17)
         config2 = config.read(1)
         config.seek(17)
@@ -674,7 +677,7 @@ forstuff += entries
 
 info_label = []
 
-with open('C:\\Yosh\\a', 'rb') as config1:
+with open(os.path.join(install_dir, 'a'), 'rb') as config1:
     config1.seek(17)
     checkbu = config1.read(1)
 if checkbu == b'1':

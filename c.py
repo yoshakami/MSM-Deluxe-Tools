@@ -1,5 +1,8 @@
 import os
 
+if ':\\Windows' in os.getcwd():  # prevents the tool to run on system32 if launched from start menu
+    os.chdir(os.environ['userprofile'] + '\\Desktop')
+
 extensions = ['.mdl', '.bin', '.cmp']  # extensions of compressed files recognized
 for cfile in os.listdir('./'):
     ismodel = iscmp = False

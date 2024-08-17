@@ -6,7 +6,9 @@ from functools import partial
 if ':\\Windows' in os.getcwd():
     os.chdir(os.environ['userprofile'] + '\\Desktop')
 
-with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
+install_dir = os.path.dirname(os.path.abspath(__file__))
+
+with open(os.path.join(install_dir, '#language.txt'), 'r', encoding="utf-8") as txt:
     language = txt.read()
     language = [''] + language.splitlines()
 
@@ -28,13 +30,14 @@ a = Tk()
 a.title(language[start + 13])
 a.minsize(660, 440)
 a.config(bg='#ffffaa')
-a.iconbitmap('C:\\Yosh\\msm_stuff\\brsar.ico')
+ico = os.path.join('msm_stuff', 'brsar.ico')
+a.iconbitmap(os.path.join(install_dir, ico))
 
 
 def patch_brsar(file, index):
     cursor = patched_num = 0
     with open(file, "r+b") as brsar:
-        while cursor < 0x400000:
+        while cursor < 0x6d9500:
             cursor += 1
             brsar.seek(cursor)
             brstm = brsar.read(6)

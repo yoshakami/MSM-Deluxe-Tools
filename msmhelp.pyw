@@ -4,8 +4,11 @@ from textwrap import wrap
 from math import e, log
 from PIL import Image
 import random
+import os
 
-with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
+install_dir = os.path.dirname(os.path.abspath(__file__))
+
+with open(os.path.join(install_dir, '#language.txt'), 'r', encoding="utf-8") as txt:
     language = txt.read()
     language = [''] + language.splitlines()
 
@@ -16,14 +19,16 @@ a = Tk()
 a.title(language[start])
 a.attributes('-fullscreen', True)
 a.config(bg="#ff9696")
-a.iconbitmap('C:\\Yosh\\msm_stuff\\msmhelp.ico')
+ico = os.path.join('msm_stuff', 'msmhelp.ico')
+a.iconbitmap(os.path.join(install_dir, ico))
+msm_stuff = os.path.join(install_dir, 'msm_stuff')
 w = a.winfo_screenwidth()
 h = a.winfo_screenheight()
-
-s = font.Font(family='MARIO Font v3 Solid', size=15)
-m = font.Font(family='MARIO Font v3 Solid', size=int(25 / 1536 * w))  # , weight='bold')
-big = font.Font(family='MARIO Font v3 Solid', size=40)
-man = font.Font(family='MARIO Font v3 Solid', size=50)
+font_name = 'IO Font v3 Solid'
+s = font.Font(family=f'MAR{font_name}', size=15)
+m = font.Font(family=f'MAR{font_name}', size=int(25 / 1536 * w))  # , weight='bold')
+big = font.Font(family=f'MAR{font_name}', size=40)
+man = font.Font(family=f'MAR{font_name}', size=50)
 
 txt = Label(a, text=language[start + 2], font=300, bg="#ff9696")
 txt.place(x=33 * w / 84, y=h / 20)
@@ -85,10 +90,10 @@ def display(picture, garbage_sent_by_bind):  # displays the big png
         # rendering the title text
         title_text = language[start + picture-13]
         if title_text[1].isnumeric():
-            c.create_text((2 * w / 7, h / 8), text=title_text[3:], font=('MARIO Font v3 Solid', int(int(title_text[:2]) / 1920 * w)),
+            c.create_text((2 * w / 7, h / 8), text=title_text[3:], font=(f'MAR{font_name}', int(int(title_text[:2]) / 1920 * w)),
                           fill=title[picture-16], anchor='w')
         else:
-            c.create_text((0, h / 8), text=title_text[2:], font=('MARIO Font v3 Solid', int(int(title_text[:1]) / 1920 * w)),
+            c.create_text((0, h / 8), text=title_text[2:], font=(f'MAR{font_name}', int(int(title_text[:1]) / 1920 * w)),
                           fill=title[picture-16], anchor='w')
 
         # rendering the left/right text with special markdown: type \n with 4 spaces to start a new line below,
@@ -108,7 +113,7 @@ def display(picture, garbage_sent_by_bind):  # displays the big png
                     break
                 g += 1
             beginning = g
-            c.create_text((w / 14, h / 4), text='\n' * n_count + left_text[k][beginning:], font=('MARIO Font v3 Solid', int(int(left_text[k][:d-1]) / 1536 * w)), fill=minicolor[int(left_text[k][d:g])], anchor='nw')  # left text
+            c.create_text((w / 14, h / 4), text='\n' * n_count + left_text[k][beginning:], font=(f'MAR{font_name}', int(int(left_text[k][:d-1]) / 1536 * w)), fill=minicolor[int(left_text[k][d:g])], anchor='nw')  # left text
             n_count += left_text[k].count('\n')
 
         right_text = text_list[1].split('¤')
@@ -125,7 +130,7 @@ def display(picture, garbage_sent_by_bind):  # displays the big png
                     break
                 g += 1
             beginning = g
-            c.create_text((w / 2, 2 * h / 7), text='\n' * n_count + right_text[x][beginning:], font=('MARIO Font v3 Solid', int(int(right_text[x][:d-1]) / 1536 * w)), fill=minicolor[int(right_text[x][d:g])], anchor='nw')  # right text
+            c.create_text((w / 2, 2 * h / 7), text='\n' * n_count + right_text[x][beginning:], font=(f'MAR{font_name}', int(int(right_text[x][:d-1]) / 1536 * w)), fill=minicolor[int(right_text[x][d:g])], anchor='nw')  # right text
             n_count += right_text[x].count('\n')
 
 
@@ -134,7 +139,7 @@ name = ["h", "h2", "h3", "h4", "h5", "h6", "h7", "h8", "h9", "ha", "hb", "hc", "
 miniatures = name[:16]  # from h to hm
 large = name[16:]  # from m to end
 
-with open("C:\\Yosh\\msm_stuff\\h.png", 'rb') as minipic:
+with open(os.path.join(msm_stuff, "h.png"), 'rb') as minipic:
     minipic.seek(16)
     byte = minipic.read(4)
     # pic_width = (byte[0] * 16777216) + (byte[1] * 65536) + (byte[2] * 256) + byte[3]  # 4 bytes integer
@@ -144,12 +149,12 @@ with open("C:\\Yosh\\msm_stuff\\h.png", 'rb') as minipic:
 
 if (pic_width != w // 5) and (pic_height != h // 5):
     for n in range(len(miniatures)):
-        picc = Image.open('C:\\Yosh\\msm_stuff\\' + miniatures[n] + '.png')
+        picc = Image.open(os.path.join(msm_stuff, miniatures[n] + '.png'))
         new_pic = picc.resize((w // 5, h // 5))
         picc.close()
-        new_pic.save('C:\\Yosh\\msm_stuff\\' + miniatures[n] + '.png')
+        new_pic.save(os.path.join(msm_stuff, + miniatures[n] + '.png'))
 
-with open("C:\\Yosh\\msm_stuff\\m.png", 'rb') as minipic:
+with open(os.path.join(msm_stuff, "m.png"), 'rb') as minipic:
     minipic.seek(16)
     byte = minipic.read(4)
     pic_width = (byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3]  # 4 bytes integer
@@ -158,14 +163,14 @@ with open("C:\\Yosh\\msm_stuff\\m.png", 'rb') as minipic:
 
 if (pic_width != w) and (pic_height != h):
     for p in range(len(large)):
-        picc = Image.open('C:\\Yosh\\msm_stuff\\' + large[p] + '.png')
+        picc = Image.open(os.path.join(msm_stuff, large[p] + '.png'))
         new_pic = picc.resize((w, h))
         picc.close()
-        new_pic.save('C:\\Yosh\\msm_stuff\\' + large[p] + '.png')
+        new_pic.save(os.path.join(msm_stuff, large[p] + '.png'))
 
 image_list = []
 for j in range(0, 32):
-    pic = PhotoImage(file=f"C:\\Yosh\\msm_stuff\\{name[j]}.png")
+    pic = PhotoImage(file=os.path.join(msm_stuff, f'{name[j]}.png'))
     image_list.append(pic)
 ListeNulle = [3, 7, 11]
 eks = [0, w / 4, 2 * w / 4, 3 * w / 4]

@@ -3,10 +3,12 @@ import os
 if ':\\Windows' in os.getcwd():
     os.chdir(os.environ['userprofile'] + '\\Desktop')
 
-with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
+install_dir = os.path.dirname(os.path.abspath(__file__))
+
+with open(os.path.join(install_dir, '#language.txt'), 'r', encoding="utf-8") as txt:
     language = txt.read()
     language = [''] + language.splitlines()
-
+    
 start = int(language[1].split(":")[5])
 base_slot = []
 extensions = ['.mdl', '.mot', '.brstm']  # extensions of files recognized
