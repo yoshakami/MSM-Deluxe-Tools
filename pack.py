@@ -8,7 +8,9 @@ import os
 if ':\\Windows' in os.getcwd():
     os.chdir(os.environ['userprofile'] + '\\Desktop')
 
-with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
+install_dir = os.path.dirname(os.path.abspath(__file__))
+
+with open(os.path.join(install_dir, '#language.txt'), 'r', encoding="utf-8") as txt:
     language = txt.read()
     language = [''] + language.splitlines()
 
@@ -31,7 +33,8 @@ a = Tk()
 a.title(language[start])
 a.minsize(660, 440)
 a.config(bg='#ffaaaa')
-a.iconbitmap('C:\\Yosh\\msm_stuff\\pack.ico')
+ico = os.path.join('msm_stuff', 'pack.ico')
+a.iconbitmap(os.path.join(install_dir, ico))
 print(f"{language[dump + 2]}\n{language[start + 2]}\n{language[start + 3]}\n{language[start + 4]}\n")
 
 
@@ -42,11 +45,11 @@ def tpl_wszst(file, color, name):
         os.system(f'wszst x "{file}" -d "{fil}/encoded/{fil}.d"')
     png_name = os.path.splitext(nam)[0]
     if os.path.exists(f"{fil}/encoded/{fil}.d/arc/timg/"):
-        os.system(f'plt0 i "{fil}/{name}" TPL {color} "{fil}/encoded/{fil}.d/arc/timg/{png_name}.tpl"')
+        os.system(f'wimgt encode "{fil}/{name}" -x TPL.{color} -d "{fil}/encoded/{fil}.d/arc/timg/{png_name}.tpl" -o')
     elif os.path.exists(f"{fil}/encoded/{fil}.d/timg/"):
-        os.system(f'plt0 i "{fil}/{name}" TPL {color} "{fil}/encoded/{fil}.d/timg/{png_name}.tpl"')
+        os.system(f'wimgt encode "{fil}/{name}" -x TPL.{color} -d "{fil}/encoded/{fil}.d/timg/{png_name}.tpl" -o')
     else:  # strap
-        os.system(f'plt0 i "{fil}/{name}" TPL {color} "{fil}/encoded/{fil}.d/{png_name}.tpl"')
+        os.system(f'wimgt encode "{fil}/{name}" -x TPL.{color} -d "{fil}/encoded/{fil}.d/{png_name}.tpl" -o')
     return
 
 
@@ -55,7 +58,7 @@ def tpl_multi(file: str, mip: int, color: str, offset: int, name: str):  # assum
     nam = os.path.splitext(name)[0]
     fil = os.path.splitext(file)[0]
     encoded = fil + '/encoded'
-    os.system(f'plt0 i "./{fil}/{name}" {color} --n-mm 0 "./{encoded}/{nam}-{mip}.tex0"')
+    os.system(f'wimgt encode "./{fil}/{name}" -x {color} --n-mm 0 -d "./{encoded}/{nam}-{mip}.tex0" -o')
     with open(file, 'r+b') as new_tpl:
         with open(f"./{encoded}/{nam}-{mip}.tex0", "rb") as tex0:
             tex0.seek(4)
@@ -69,7 +72,7 @@ def tpl_multi(file: str, mip: int, color: str, offset: int, name: str):  # assum
 
 def pack(file, index):
     fil = os.path.splitext(file)[0]
-    with open('C:\\Yosh\\a', 'r+b') as checcbutton:
+    with open(os.path.join(install_dir, 'a'), 'r+b') as checcbutton:
         checcbutton.seek(16)
         keep_encoded = checcbutton.read(1)
     edited = []
@@ -84,30 +87,27 @@ def pack(file, index):
     encoded = fil + '/encoded'
     if not os.path.exists(encoded):
         os.mkdir(encoded)
-    with open(fil + '\\zzzdump.txt', 'r') as zzzdump:
+    with open(fil + '/zzzdump.txt', 'r') as zzzdump:
         text = zzzdump.read().splitlines()[3:]  # the first three lines are explaining the purpose of this file
         for line in text:
             if clock:  # one line on two, there's a sha256, then size + mipmaps + color + name
                 clock = False
                 with open(f"./{fil}/{name}", 'rb') as png:
-                    hex = sha256(png.read()).hexdigest()
-                if line != hex:
-                    if mip[:3] == "TPL":
+                    if line != sha256(png.read()).hexdigest():
+                        if mip[:3] == "TPL":
+                            counter += 1
+                            if wszst:
+                                tpl_wszst(file, color, name)
+                            else:
+                                tpl_multi(file, int(mip[3:]), color, int(offset), name)
+                            continue
+                        nam = os.path.splitext(name)[0]
                         counter += 1
-                        if wszst:
-                            tpl_wszst(file, color, name)
-                        else:
-                            tpl_multi(file, int(mip[3:]), color, int(offset), name)
-                        continue
-                    nam = os.path.splitext(name)[0]
-                    counter += 1
-                    index_edited.append(num)
-                    size_list.append(int(size))
-                    offset_list.append(int(offset))
-                    edited.append(f'{nam}.tex0')
-                    command = f'plt0 tex0 i "./{fil}/{name}" {color} --n-mm {mip} "./{encoded}/{nam}.tex0"'
-                    print(command)
-                    os.system(command)
+                        index_edited.append(num)
+                        size_list.append(int(size))
+                        offset_list.append(int(offset))
+                        edited.append(f'{nam}.tex0')
+                        os.system(f'wimgt encode "./{fil}/{name}" -x {color} --n-mm {mip} -d "./{encoded}/{nam}.tex0" -o')
                 num += 1
             else:
                 clock = True
@@ -156,7 +156,7 @@ def scan_directory():
                 continue
             with open(files, 'rb') as check_file:
                 header = check_file.read(4)
-            if header in [b'bres', b'U\xaa8-', b'\x00 \xaf0'] and os.path.exists(os.path.splitext(files)[0] + '\\zzzdump.txt'):
+            if header in [b'bres', b'U\xaa8-', b'\x00 \xaf0'] and os.path.exists(os.path.join(os.path.splitext(files)[0] + '/zzzdump.txt')):
                 patch = partial(pack, files, i)
                 packbu = Button(a, text=files, command=patch, activebackground='#a9ff99', width=30)
                 packbu.grid(row=button_row[i], column=button_col[i])
@@ -192,7 +192,7 @@ def open_explorer():  # change directory with C:\Windows\explorer.exe GUI
 
 
 def keep():  # each time the checkbutton keep_tex0 is triggered
-    with open('C:\\Yosh\\a', 'r+b') as checcbutton:
+    with open(os.path.join(install_dir, 'a'), 'r+b') as checcbutton:
         checcbutton.seek(16)
         configg = checcbutton.read(1)
         checcbutton.seek(16)
@@ -234,7 +234,7 @@ Method.grid(row=4, columnspan=3)
 keep_tex0 = Checkbutton(a, text=language[start + 5], command=keep, bg="#ffaaaa", width=25)
 keep_tex0.grid(row=2, column=0)
 
-with open('C:\\Yosh\\a', 'rb') as config:
+with open(os.path.join(install_dir, 'a'), 'rb') as config:
     config.seek(16)
     checkbu = config.read(1)
 if checkbu == b'1':

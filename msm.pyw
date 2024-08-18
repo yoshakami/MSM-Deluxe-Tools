@@ -7,15 +7,18 @@ from winsound import PlaySound
 from tkinter.filedialog import askdirectory
 from tkinter import Button, Label, Entry, OptionMenu, Tk, Canvas, PhotoImage, DISABLED, StringVar, _setit
 
-if len(sys.argv) > 1:
-    args = sys.argv
-    args[0] = 'C:\\Yosh\\msm_cli.py'
-    Popen(args)
-
 if ':\\Windows' in os.getcwd():
     os.chdir(os.environ['userprofile'] + '\\Desktop')
 
-with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as txt:
+install_dir = os.path.dirname(os.path.abspath(__file__))
+
+if len(sys.argv) > 1:
+    args = sys.argv
+    args[0] = os.path.join(install_dir, 'msm_cli.py')
+    Popen(args)
+
+current_language_file = os.path.join(install_dir, '#language.txt')
+with open(current_language_file, 'r', encoding="utf-8") as txt:
     language = txt.read()
     language = [''] + language.splitlines()
 
@@ -25,7 +28,9 @@ a.title(language[start + 2] + " v0.96")
 a.minsize(680, 495)
 a.maxsize(680, 495)
 a.config(bg="#aecfee")
-a.iconbitmap('C:\\Yosh\\msm_stuff\\msm.ico')
+ico = os.path.join('msm_stuff', 'msm.ico')
+a.iconbitmap(os.path.join(install_dir, ico))
+config_file = os.path.join(install_dir, 'a')
 
 run = [f'{language[start + 26]} (c.py)', f'{language[start + 27]} (x.py)', f'{language[start + 28]} (tex3.pyw)',
        f'{language[start + 29]} (hexf.py)', f'{language[start + 30]} (dec.py)', f'{language[start + 31]} (int.py)',
@@ -44,7 +49,8 @@ language_list = [
     'Polskie', '日本語', '中国人', '한국어']
 languages = []
 for lang in language_list:
-    if os.path.exists(f'C:\\Yosh\\languages\\{lang}.txt'):
+    language_file = os.path.join('languages', f'{lang}.txt')
+    if os.path.exists(os.path.join(install_dir, language_file)):
         languages.append(lang)
 LANGUAGES = StringVar()
 LANGUAGES.set(language[start + 21])  # Change Language
@@ -56,12 +62,10 @@ random = (
     'question_mark_coin.wav', 'gnomed.wav',
     f'{os.environ["ProgramFiles"]}\\Internet Explorer\\iexplore.exe',
     "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-    'https://cdn.discordapp.com/attachments/604971224040472577/831235648886407188/rick.gif',
     'https://www.youtube.com/watch?v=hJxFfeyyIXE',  # but luigi, don't be a dino fool, it takes all colos to make a rainbow
-    'https://cdn.discordapp.com/attachments/604971224040472577/831238407971274853/rick.png',
     'https://gamepadviewer.com/', 'https://www.youtube.com/watch?v=vCbwXQuHAIE',  # Waluigi sounds
-    'https://www.youtube.com/watch?v=GPMq_PxMTUI&list=PLGr95qH5dmjDiy8NZ8xNA7HE57JyMSU7y&index=18',
-    'https://www.youtube.com/watch?v=tHjwySePzH0&list=PLk28dkfJOGjBWGTK6MP6m3qNRIc88VES9&index=37',
+    'https://www.youtube.com/watch?v=GPMq_PxMTUI&list=PLGr95qH5dmjDiy8NZ8xNA7HE57JyMSU7y&index=18', # krusty crab remix playlist
+    'https://www.youtube.com/watch?v=tHjwySePzH0&list=PLk28dkfJOGjBWGTK6MP6m3qNRIc88VES9&index=37', # in 2020 it was supposed to be a random japanese music. now I understand what it is
     'https://www.youtube.com/watch?v=kE8xdRjxuIs', 'https://www.youtube.com/watch?v=4X4DAg9K-co',  # Wario sounds
     'https://www.youtube.com/watch?v=t7qdHQRJjeE', 'https://www.youtube.com/watch?v=ZS8FLG3kLQc',  # Pizza Pasta, [YTP] Imagine Nuts - Belieeeeee
     'https://www.youtube.com/watch?v=Mr8h_T4UPEA', 'https://www.youtube.com/watch?v=utRC8rZSiBI',  # Wii Sports Tennis + Bowling
@@ -86,8 +90,8 @@ random = (
 def question_mark():
     rewrite = False
     default_size = 18  # total config size including all apps reading it
-    with open('C:\\Yosh\\a', 'r+b') as config:
-        size = os.path.getsize('C:\\Yosh\\a')
+    with open(config_file, 'r+b') as config:
+        size = os.path.getsize(config_file)
         for n in range(size, default_size):
             config.write(b'0')
         # ints = []
@@ -124,7 +128,7 @@ def question_mark():
             # config.write(bytes(chr(i), 'latin-1'))
             # play(i)
     if rewrite:
-        with open('C:\\Yosh\\a', 'wb') as config2:
+        with open(config_file, 'wb') as config2:
             config2.write(content)
             question_mark()
 
@@ -139,7 +143,7 @@ def play(num):
 
 
 def refresh():
-    with open('C:\\Yosh\\#language.txt', 'r', encoding="utf-8") as text:
+    with open(current_language_file, 'r', encoding="utf-8") as text:
         language = text.read()
         language = [''] + language.splitlines()
     run = [f'{language[start + 26]} (c.py)', f'{language[start + 27]} (x.py)', f'{language[start + 28]} (tex3.pyw)',
@@ -193,15 +197,16 @@ def enter():  # "Run Instant App (Enter)" Button
     cwd_entry.delete(0, 'end')  # empties the entry and change current working directory if it exists
     os.chdir(cwd)
     if lang != language[start + 21]:
-        with open(f'C:\\Yosh\\lang\\{lang}.txt', 'rb') as txt1:
+        language_file = os.path.join('languages', f'{lang}.txt')
+        with open(os.path.join(install_dir, language_file), 'rb') as txt1:
             new_lang = txt1.read()
-        with open('C:\\Yosh\\#language.txt', 'wb') as txt2:
+        with open(current_language_file, 'wb') as txt2:
             txt2.write(new_lang)
         refresh()
         return
     if app == language[start + 25]:
         return
-    Popen(('wscript.exe', f"C:\\Yosh\\{os.path.splitext(app.split('(')[-1])[0]}.vbs"))
+    Popen(('wscript.exe', os.path.join(install_dir, f"{os.path.splitext(app.split('(')[-1])[0]}.vbs")))
 
 
 def change_directory():  # executed when you press "Open FIle Explorer" button
@@ -211,64 +216,64 @@ def change_directory():  # executed when you press "Open FIle Explorer" button
 
 
 def pack():
-    Popen(('wscript.exe', "C:\\Yosh\\pack.vbs"))
+    Popen(('wscript.exe', os.path.join(install_dir, "pack.vbs")))
 
 
 def thp():
-    Popen(('wscript.exe', "C:\\Yosh\\thp.vbs"))
+    Popen(('wscript.exe', os.path.join(install_dir, "thp.vbs")))
 
 
 def brsar():  # run with the current executable (pythonw.exe full path)
-    Popen(('wscript.exe', "C:\\Yosh\\brsar.vbs"))
+    Popen(('wscript.exe', os.path.join(install_dir, "brsar.vbs")))
 
 
 def lh():  # run with command line window (else wszst opens too many windows and closes them instantly too frequently)
-    Popen(('wscript.exe', "C:\\Yosh\\lh.vbs"))
+    Popen(('wscript.exe', os.path.join(install_dir, "lh.vbs")))
 
 
 def web():
-    Popen(('wscript.exe', "C:\\Yosh\\web.vbs"))
+    Popen(('wscript.exe', os.path.join(install_dir, "web.vbs")))
 
 
 def isox():
-    Popen(('wscript.exe', "C:\\Yosh\\isox.vbs"))
+    Popen(('wscript.exe', os.path.join(install_dir, "isox.vbs")))
 
 
 def dump():
-    Popen(('wscript.exe', "C:\\Yosh\\dump.vbs"))
+    Popen(('wscript.exe', os.path.join(install_dir, "dump.vbs")))
 
 
 def iso():
-    Popen(('wscript.exe', "C:\\Yosh\\iso.vbs"))
+    Popen(('wscript.exe', os.path.join(install_dir, "iso.vbs")))
 
 
 def arc():
-    Popen(('wscript.exe', "C:\\Yosh\\arc.vbs"))
+    Popen(('wscript.exe', os.path.join(install_dir, "arc.vbs")))
 
 
 def bstick():
-    Popen(('wscript.exe', "C:\\Yosh\\bstick.vbs"))
+    Popen(('wscript.exe', os.path.join(install_dir, "bstick.vbs")))
 
 
 def tex():
-    Popen(('wscript.exe', "C:\\Yosh\\tex.vbs"))
+    Popen(('wscript.exe', os.path.join(install_dir, "tex.vbs")))
 
 
 def mappyw():
-    Popen(('wscript.exe', "C:\\Yosh\\map.vbs"))
+    Popen(('wscript.exe', os.path.join(install_dir, "map.vbs")))
 
 
 def trib():
-    Popen(('wscript.exe', "C:\\Yosh\\trib.vbs"))
+    Popen(('wscript.exe', os.path.join(install_dir, "trib.vbs")))
 
 
 def msmhelp():
-    Popen(('wscript.exe', "C:\\Yosh\\msmhelp.vbs"))
+    Popen(('wscript.exe', os.path.join(install_dir, "msmhelp.vbs")))
 
 
 def cmn():
-    if not os.path.exists("C:\\Yosh\\kill-msm.bat"):
-        with open("C:\\Yosh\\kill-msm.bat", "w") as bat:
+    if not os.path.exists(os.path.join(install_dir, "kill-msm.bat")):
+        with open(os.path.join(install_dir, "kill-msm.bat"), "w") as bat:
             bat.write("""taskkill /im "python.exe"
 taskkill /im "pythonw.exe"
 taskkill /im "arc.exe"
@@ -300,7 +305,7 @@ taskkill /im "vaporwave.exe"
 taskkill /im "web.exe"
 taskkill /im "x.exe"
 taskkill /im "yt.exe" """)
-    os.system("C:\\Yosh\\kill-msm.bat")
+    os.system(os.path.join(install_dir, "kill-msm.bat"))
 
 
 ltitle = Label(a, text=language[start + 3], font=(None, 15), bg="#aecfee", height=3)
@@ -538,7 +543,7 @@ def color_7f():
 
 
 def change_config():  # change colour when "config" button is pressed
-    with open("C:\\Yosh\\a", "r+b") as config:
+    with open(config_file, "r+b") as config:
         config.seek(11)
         colour = config.read(1)
         config.seek(11)
@@ -562,7 +567,7 @@ def change_config():  # change colour when "config" button is pressed
             color_7f()
 
 
-with open("C:\\Yosh\\a", "rb") as conf:  # change colour after reading config file
+with open(config_file, "rb") as conf:  # change colour after reading config file
     conf.seek(11)
     color = conf.read(1)
 if color == b"1":
@@ -598,11 +603,12 @@ lquestion.grid(row=17, column=1)
 lconfig = Button(a, text=language[start + 24], activebackground="#ff9999", command=change_config, width=25)
 lconfig.grid(row=18, column=1)
 msm1 = Canvas(a, width=220, height=148, bd=-2, bg="#aecfee")
-msm_msm = PhotoImage(file="C:\\Yosh\\msm_stuff\\msm3.png")
+msm_stuff = os.path.join(install_dir, 'msm_stuff')
+msm_msm = PhotoImage(file=os.path.join(msm_stuff, "msm3.png"))
 msm1.create_image(110, 74, image=msm_msm)
 msm1.grid(row=15, column=0, rowspan=6)
 msm2 = Canvas(a, width=216, height=148, bd=-2, bg="#aecfee")
-msm_png = PhotoImage(file="C:\\Yosh\\msm_stuff\\msm4.png")
+msm_png = PhotoImage(file=os.path.join(msm_stuff, "msm4.png"))
 msm2.create_image(100, 100, image=msm_png)
 msm2.grid(row=15, column=2, rowspan=6)
 a.mainloop()
