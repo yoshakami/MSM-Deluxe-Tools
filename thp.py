@@ -12,7 +12,7 @@ import os
 # why not pasting the whole documentation here with my knowledge added :)
 # Offset	Type	Description
 # 0x00	String	File magic. Always THP. in ASCII (0x54485000).
-# 0x04	UInt32	Version number. Mario Kart Wii uses 0x11000.
+# 0x04	UInt32	Version number. MK Wii uses 0x11000.
 # 0x08	UInt32	Max buffer size.
 # 0x0C	UInt32	Max audio samples.
 # 0x10	Float	Frames per second.
@@ -108,7 +108,8 @@ a.config(bg='#eda187')
 ico = os.path.join('msm_stuff', 'thp.ico')
 a.iconbitmap(os.path.join(install_dir, ico))
 japanese = font.Font(size=11)  # (family='MS UI Gothic', size=14) no longer japanses as "japanese emotes are childish"
-m = font.Font(family='MARIO Font v3 Solid', size=20)  # , weight='bold')
+part2 = "IO Font v3 Solid"
+m = font.Font(family=f'MAR{part2}', size=20)  # , weight='bold')
 
 
 def first_frame(file, overwrite):
@@ -172,7 +173,7 @@ def first_frame_vanilla_length(file, overwrite):
         byte = thp.read(4)  # normally b'\x00\x00\x00\x30'
         component_offset = (byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3]  # 4 bytes integer
         offsets_data_offset = thp.read(4)
-        new_data += hex_float(fps) + b'\x00\x00\x00\x01' + frame_length * 2 + byte + offsets_data_offset
+        new_data += hex_float(str(fps)) + b'\x00\x00\x00\x01' + frame_length * 2 + byte + offsets_data_offset
         byte = thp.read(4)
         first_frame_offset = (byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3]  # 4 bytes integer
         thp.seek(0x30)  # new data contains every value of the new header from 0x00 to 0x28 (missing first frame offset)
@@ -328,7 +329,7 @@ def entry_values(file, overwrite):
                     print(error)
                     return language[start + 7]
         try:
-            int(abs(frames)).to_bytes(4, "big")  # checks if the entry is valid
+            abs(int(frames)).to_bytes(4, "big")  # checks if the entry is valid
             frames = int(frames)
         except ValueError or OverflowError as error:
             print(error)
@@ -336,6 +337,8 @@ def entry_values(file, overwrite):
         thp.seek(0x14)
         byte = thp.read(4)  # UInt32	Number of frames in this file.
         frame_count = (byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3]  # 4 bytes integer
+        byte = thp.read(4)  # UInt32	Next total size. (here it's the first frame total size)
+        frame_size = (byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3]  # 4 bytes integer
         if frame_count < frames:
             return language[start + 6]
         if frame_count == frames and overwrite:

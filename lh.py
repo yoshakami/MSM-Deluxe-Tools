@@ -174,22 +174,22 @@ def scan_directory():
     extract_motbu.config(command=extract_mot)
     extract_motbu.grid(row=5, column=2)
 
-    n = 0
+    p = 0
     for file_to_extract in os.listdir('./'):
         try:
             if os.path.isfile(file_to_extract):
                 size = os.path.getsize(file_to_extract)
-                if size < 5 or n >= len(bucolumn):
+                if size < 5 or p >= len(bucolumn):
                     continue
                 with open(file_to_extract, 'rb') as check_xfile:
                     header = check_xfile.read(4)
                 if header[:1] in [b'@', b'\x10', b'\x11', b'\x81', b'\x82', b'$', b'(', b'0', b'P'] and header != b'PK\x03\x04':  # lh @, old lz \x10, lz77 \x11, diff8 \x81, diff16 \x82, huff4 $, huff8 (, runlength 0, lrc P
-                    run_extract_file = partial(extract_file, file_to_extract, n)
+                    run_extract_file = partial(extract_file, file_to_extract, p)
                     temp = Button(a, text=file_to_extract, command=run_extract_file, activebackground='#a9ff99', width=30)
-                    temp.grid(row=burow_extract[n], column=bucolumn[n])
+                    temp.grid(row=burow_extract[p], column=bucolumn[p])
                     extract_list.append(temp)
-                    # print(file_to_extract, n)
-                    n += 1
+                    # print(file_to_extract, p)
+                    p += 1
 
         except PermissionError as error:
             print(error)
@@ -235,7 +235,7 @@ def scan_directory():
         except PermissionError as error:
             print(error)
             continue
-    if i > 50 or n > 50:  # creates a big exit button and make the window fullscreen as it was too tiny to display all buttons
+    if i > 50 or p > 50:  # creates a big exit button and make the window fullscreen as it was too tiny to display all buttons
         exitbu2 = Button(a, text=language[msm + 40], command=a.quit, activebackground='#d9ff8c', bg='#d9ff8c', fg='#ff2222', width=58, height=3, font=100)
         exitbu2.grid(row=0, column=4, rowspan=2, columnspan=3)
         a.attributes('-fullscreen', True)

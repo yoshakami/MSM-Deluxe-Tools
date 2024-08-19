@@ -46,16 +46,16 @@ if header not in bresarc:  # the for can ends after browsing a complete director
     input(f'{language[start + 5]}.\n{language[start + 6]}.')
     exit()
 compress = True
-mode = input(f"{language[start + 7]} : {file}\n{language[start + 33]}\n{language[131]}\n{language[start + 34]}\n{language[start + 35]}\n{language[137]} : ")
+mode = input(f"{language[start + 7]} : {file}\n{language[start + 33]}\n{language[start + 9]}\n{language[start + 34]}\n{language[start + 35]}\n{language[start + 15]} : ")
 if mode in ['2', '3']:  # don't compress
     compress = False
 while mode in ["1", "2"]:  # that's not the file you want, so type manually the filename
-    file = input(f'{language[138]} : ')
+    file = input(f'{language[start + 16]} : ')
     if not os.path.exists(file):
         continue
     with open(file, 'rb') as check:
         if check.read(4) not in bresarc:
-            print(f'{language[139]}.')
+            print(f'{language[start + 17]}.')
         else:
             mode = '0'
 with open(file, 'r+b') as arc:  # though arc could have been named brres as it's the same process for both files
@@ -66,7 +66,7 @@ with open(file, 'r+b') as arc:  # though arc could have been named brres as it's
         short = os.path.splitext(file)[0]
     else:
         short = file  # short has high probabilities to be the name used in the filesystem of the game
-    print(language[140])  # in case it's long
+    print(language[start + 18])  # in case it's long
 
     for z in range(0, size - 17, 16):
         arc.seek(z)
