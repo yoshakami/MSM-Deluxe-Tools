@@ -40,7 +40,7 @@ english = [
     "the buttons are just here to separate actions to let them finish",
     f"When you'll click on 'I agree', it will resize 18 jpg's to your screen dimensions ({w}x{h})",
     "During the installation, it will extract .zips and move their contents to your installation directory ",
-    "If you desire, with admin permission, the installer could (optionnally) add the installation directory to PATH," # 9
+    "If you desire, with admin permission, the installer could (optionnally) add the installation directory to PATH", # 9
     "so scripts will be able to be launched from everywhere !", # 10
     "you can also install a font for the help app to work as intended", # 11
     "Welcome to Mario Sports Mix Modding App Installer !", # 12
