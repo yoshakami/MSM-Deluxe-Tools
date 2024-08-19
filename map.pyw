@@ -1,4 +1,7 @@
 import os
+import sys
+import shutil
+import subprocess
 from tkinter import Tk, Label, Button
 from tkinter.filedialog import askdirectory
 
@@ -20,36 +23,43 @@ a.config(bg='#dfaaff')
 ico = os.path.join("msm_stuff", "map.ico")
 a.iconbitmap(os.path.join(install_dir, ico))
 
+def open_file(file_path):
+    if sys.platform.startswith('win'):
+        os.startfile(file_path)  # Windows
+    elif sys.platform.startswith('darwin'):
+        subprocess.run(['open', file_path])  # macOS
+    else:
+        subprocess.run(['xdg-open', file_path])  # Linux
 
 def pal():
-    os.system(f'"{os.path.join(install_dir, "MSM PAL Symbol Map.txt")}"')
+    open_file(f'"{os.path.join(install_dir, "MSM PAL Symbol Map.txt")}"')
 
 
 def ntscu():
-    os.system(f'"{os.path.join(install_dir, "MSM NTSC-U Symbol Map.txt")}"')
+    open_file(f'"{os.path.join(install_dir, "MSM NTSC-U Symbol Map.txt")}"')
 
 
 def japan():
-    os.system(f'"{os.path.join(install_dir, "MSM NTSC-J Symbol Map.txt")}"')
+    open_file(f'"{os.path.join(install_dir, "MSM NTSC-J Symbol Map.txt")}"')
 
 
 def map_help():
-    os.system(f'"{os.path.join(install_dir, "Symbol Map Help.txt"')
+    open_file(f'"{os.path.join(install_dir, "Symbol Map Help.txt")}"')
 
 
 def save_no_filter():
     path = askdirectory(initialdir=os.getcwd())
-    os.system(f'xcopy "{os.path.join(install_dir, "MSM_PAL.txt")}" "{path}" /i /y /q')
-    os.system(f'xcopy "{os.path.join(install_dir, "MSM_NTSC-U.txt")}" "{path}" /i /y /q')
-    os.system(f'xcopy "{os.path.join(install_dir, "MSM_NTSC-J.txt")}" "{path}" /i /y /q')
+    shutil.copy2(os.path.join(install_dir, "MSM_PAL.txt"), path)
+    shutil.copy2(os.path.join(install_dir, "MSM_NTSC-U.txt"), path)
+    shutil.copy2(os.path.join(install_dir, "MSM_NTSC-J.txt"), path)
 
 
 def save_demangled():
     path = askdirectory(initialdir=os.getcwd())
-    os.system(f'xcopy "{os.path.join(install_dir, "MSM PAL Symbol Map.txt")} "{path}" /i /y /q')
-    os.system(f'xcopy "{os.path.join(install_dir, "MSM NTSC-U Symbol Map.txt")} "{path}" /i /y /q')
-    os.system(f'xcopy "{os.path.join(install_dir, "MSM NTSC-J Symbol Map.txt")} "{path}" /i /y /q')
-    os.system(f'xcopy "{os.path.join(install_dir, "Symbol Map Help.txt")} "{path}" /i /y /q')
+    shutil.copy2(os.path.join(install_dir, "MSM PAL Symbol Map.txt"), path)
+    shutil.copy2(os.path.join(install_dir, "MSM NTSC-U Symbol Map.txt"), path)
+    shutil.copy2(os.path.join(install_dir, "MSM NTSC-J Symbol Map.txt"), path)
+    shutil.copy2(os.path.join(install_dir, "Symbol Map Help.txt"), path)
 
 
 title = Label(a, text=language[start + 1], bg='#dfaaff', font=300, height=3)

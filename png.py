@@ -11,7 +11,7 @@ with open(os.path.join(install_dir, '#language.txt'), 'r', encoding="utf-8") as 
 
 n = os.path.join(install_dir, 'n.exe')
 
-start = int(language[1].split(":")[27])
+start = int(language[1].split(":")[29])
 hashtag = int(language[1].split(":")[3])
 tex0 = [0]
 name, position, bres_list = [], [], []

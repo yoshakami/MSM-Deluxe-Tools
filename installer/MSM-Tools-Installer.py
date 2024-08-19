@@ -466,7 +466,7 @@ def step4_appdata(clean_inst, edit_path=False, install_font=False):
 
 
 def use_python_file_instead_of_vbs():
-    with open('./Yosh/bstick.pyw', 'r+') as bstick:
+    with open('./Yosh/bstick.pyw', 'r+', encoding='utf-8') as bstick:
         data = bstick.read()
         data = data.splitlines()
         new_data = ''
@@ -480,7 +480,7 @@ def use_python_file_instead_of_vbs():
         bstick.seek(0)
         bstick.write(new_data)
     # change msm's way of launching apps.
-    with open('./Yosh/msm.pyw', 'r+') as msmp:
+    with open('./Yosh/msm.pyw', 'r+', encoding='utf-8') as msmp:
         msm_data = msmp.read()
         msm_data = msm_data.splitlines()
         new_data = ''
@@ -489,7 +489,7 @@ def use_python_file_instead_of_vbs():
                 line_os = line.split('"')[1]
                 script = line_os.split(".")[0]
                 if script.startswith('{os'):
-                    new_data += """    Popen((sys.executable.rstrip("w.exe")+".exe", os.path.join(install_dir, os.path.splitext(app.split('(')[-1])[0]}.py"))\n"""
+                    new_data += """    Popen((sys.executable.rstrip("w.exe")+".exe", os.path.join(install_dir, f"{os.path.splitext(app.split('(')[-1])[0]}.py")))\n"""
                     continue
                 # print('.\\Yosh\\' + script + '.py')  # -> '.\Yosh\pack.py'
                 if os.path.exists('./Yosh/' + script + '.py'):

@@ -152,7 +152,7 @@ if (pic_width != w // 5) and (pic_height != h // 5):
         picc = Image.open(os.path.join(msm_stuff, miniatures[n] + '.png'))
         new_pic = picc.resize((w // 5, h // 5))
         picc.close()
-        new_pic.save(os.path.join(msm_stuff, + miniatures[n] + '.png'))
+        new_pic.save(os.path.join(msm_stuff, miniatures[n] + '.png'))
 
 with open(os.path.join(msm_stuff, "m.png"), 'rb') as minipic:
     minipic.seek(16)

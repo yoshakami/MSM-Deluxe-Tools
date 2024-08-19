@@ -55,7 +55,7 @@ def scan_directory():
     def change_scale(file, offset):
         for y in range(12):
             entries[y].config(bg='#ffffff')
-            if not entries[y].get().lstrip('-').replace('.', '', 1).isdigit() or not entries[y].get().lstrip('-').replace(',', '', 1).isdigit():
+            if not entries[y].get().lstrip('-').replace('.', '', 1).isdigit() and not entries[y].get().lstrip('-').replace(',', '', 1).isdigit():
                 entries[y].config(bg='#ffaaaa')
                 return
         j = mdl_list[offset]

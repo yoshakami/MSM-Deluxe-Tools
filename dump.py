@@ -41,7 +41,7 @@ print(f"{language[start + 2]}\n{language[start + 3]}\n")
 def dump(file, index):
     y = os.path.getsize(file)
     counter = z = k = filepath = 0
-    with open(os.path.join(install_dir, 'a', 'rb')) as config3:
+    with open(os.path.join(install_dir, 'a'), 'rb') as config3:
         config3.seek(13)
         keeptex = config3.read(1)
         dumpmips = config3.read(1)

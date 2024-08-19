@@ -126,11 +126,11 @@ exitbu = Button(a, text=language[msm + 39], activebackground="#a9ff91", command=
 exitbu.grid(row=16, column=1)
 msm1 = Canvas(a, width=220, height=148, bd=-2, bg="#aecfee")
 msm_stuff = os.path.join(install_dir, 'msm_stuff')
-msm_msm = PhotoImage(file=os.path.join(install_dir, "msm.png"))
+msm_msm = PhotoImage(file=os.path.join(msm_stuff, "msm.png"))
 msm1.create_image(110, 74, image=msm_msm)
 msm1.grid(row=13, column=0, rowspan=6)
 msm2 = Canvas(a, width=216, height=148, bd=-2, bg="#aecfee")
-msm_png = PhotoImage(file=os.path.join(install_dir, "msm2.png"))
+msm_png = PhotoImage(file=os.path.join(msm_stuff, "msm2.png"))
 msm2.create_image(100, 100, image=msm_png)
 msm2.grid(row=13, column=2, rowspan=6)
 
