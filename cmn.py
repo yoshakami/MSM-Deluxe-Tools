@@ -17,6 +17,7 @@ n = os.path.join(install_dir, 'n.exe')
 arc = int(language[1].split(":")[7])
 start = int(language[1].split(":")[15])
 msm = int(language[1].split(":")[1])
+hashtag = int(language[1].split(":")[3])
 cmn = int(language[1].split(":")[33])
 a = Tk()
 a.title(language[start])
@@ -41,11 +42,11 @@ for j in range(11, 18):
 
 bucolumn = [0, 1, 2] * 5 + [3, 4, 5, 6] * 5 + [0, 1, 2, 3, 4, 5, 6] * 7
 
-burow_compress = [burow_extract[i] + 16 for i in range(len(burow_extract))]
+burow_repack = [burow_extract[i] + 16 for i in range(len(burow_extract))]
 
 extract_list = []
-compress_list = []
-brres_list = ["a", "b",
+repack_list = []
+brres_list = ["Coin.brres", "Coin.brres",
               "md_shootcircle01.brres",
               "Coin.brres",
               "CockpitCoin.brres",  # (same as Coin)
@@ -62,53 +63,62 @@ brres_list = ["a", "b",
               "IT05_Bomb.brres",
               "IT06_GShell.brres",
               "IT07_RShell.brres",
-              "qpanel_h.brres",  # (question pannel, stop pannel from st03 and reverse pannel from st09)
-              "qpanel_s10.brres",
+              "qpanel_h.brres",  # (question panel, stop panel from st03 and reverse panel from st09)
+              "qpanel_s10.brres", # (question panel from Bowser Jr. Boulevard)
               "Marker.brres",  # (contains 47 models for all languages "P1", "P2"... circle on the ground and star shape)
               "score.brres",  # (3D model of figures)
               "Shadow.brres",
               "wipe.brres"]
+brres_len = [0, 0, 0,
+             11392,
+             38528,
+             65664,
+             90880,
+             134400,
+             215168,
+             251008,
+             290304,
+             329600,
+             393088,
+             453632,
+             487424,
+             575104,
+             664448,
+             715904,
+             767360,
+             950912,
+             991360,
+             1352832,
+             1484800,
+             1490048,
+             0x193F7F]
 
 def scan_directory():
-    del compress_list[:]
+    del repack_list[:]
     del extract_list[:]
     for tkstuff in a.winfo_children():
         if tkstuff not in [text_label, cwd_label, entry_dir, refreshbu, open_explorerbu]:
             tkstuff.destroy()
 
-    def compress(cfile):  # compress cfile
-        ismodel = iscmp = False
-        csize = cursor = os.path.getsize(cfile)
-        if csize > 8 and os.path.isfile(cfile):
-            if csize < 2222:  # if the size is very little, don't trigger the while, it's definitely not a mdl file
-                cursor = -3333
-            cursor -= 8  # cursor = csize - 8
-            with open(cfile, 'rb') as cfile_check:
-                if cfile_check.read(4) not in thrice:
-                    return
-                cfile_check.seek(0)
-                if cfile_check.read(1) == b'\x00':
-                    iscmp = True
-                if not iscmp:  # if it's not a cmp, check whether it is a mdl or else a bin.
-                    while cursor > csize - 2222:
-                        cursor -= 1
-                        cfile_check.seek(cursor)
-                        data = cfile_check.read(7)
-                        if data == b'\x06body_h':  # all mdl does have this text before their end (a mdl0 named body_h)
-                            ismodel = True
-                            break
-        if '_' in cfile:
-            shortname = cfile.rsplit('_', 1)[0]  # if there is a _ in the file name, everything after is just the extension
-        elif '.' in cfile:
-            shortname = os.path.splitext(cfile)[0]  # if there is a . in the file name
-        else:
-            shortname = cfile  # else compressed file name will be the file name + its right extension
-        if ismodel:  # future compressed file if it exists  ( == overwrite )
-            os.system(f'{n} "{cfile}" -lh -o "{shortname}.mdl" -A32')  # create a compressed file with mdl extension
-        elif iscmp:
-            os.system(f'{n} "{cfile}" -lh -o "{shortname}.cmp" -A32')
-        else:
-            os.system(f'{n} "{cfile}" -lh -o "{shortname}.bin" -A32')
+    def repack(cmn_dir):  # compress cfile
+        brres_content = b""
+        if not os.path.exists(cmn_dir):
+            cmn_dir = input("drag and drop cmn_test_extracted in this window then press enter\n")
+        if not os.path.exists(cmn):
+            cmn = input("drag and drop cmn_test_DECOMP.bin in this window then press enter\n")
+        with open(cmn, "r+b") as file:
+            for i in range(3, len(brres_list)):
+                if not os.path.exists(cmn_dir + "/" + brres_list[i]):
+                    print(f"cannot find file, skipping {brres_list[i]}")
+                    continue
+                file.seek(brres_len[i])
+                if brres_len[i] + os.path.getsize(cmn_dir + "/" + brres_list[i]) > brres_len[i + 1]:
+                    print(f"{brres_list[i]}'s file size has changed. skipping")
+                    continue
+                with open(cmn_dir + "/" + brres_list[i], "rb") as brres:
+                    brres_content = brres.read()
+                file.write(brres_content)
+        print(f"rebuilt file!\npress enter to exit...")
         manual_entry.delete(0, 'end')
 
     def extract(cmn):
@@ -123,43 +133,42 @@ def scan_directory():
             brres_count = 0
             with open(cmn, "rb") as bina:
                 data = bina.read()
+            if data.count(b'bres') != 22:
+                raise IndexError
             if data[:4] != b'bres':
                 os.system(f'{n} "{cmn}" -x')
                 cmn = os.path.splitext(cmn)[0] + '_DECOMP.bin'
             for i in range(0, len(data), 16):
                 if data[i:i + 4] == b'bres':
-                    print(i)
+                    print(i, brres_count, brres_list[brres_count])
                     brres_count += 1
                     with open(cmn_dir + "/" + brres_list[brres_count], "wb") as brres:
                         brres.write(data[previous:i])
                     previous = i
-            brres_count += 2
             with open(cmn_dir + "/" + brres_list[-1], "wb") as brres:
                 brres.write(data[previous:i])
             print(brres_count)
-            if brres_count != 22:
-                raise IndexError
         except IndexError:
-            print("not_cmn_test.bin!")
-        print(f"extracted {brres_count - 2} files!\npress enter to exit...")
+            return language[cmn + 11]
+        return language[hashtag + 16].replace('#', brres_count)
     
-    def explorer_compress():
-        compressing_file = askopenfilename(initialdir=cwd)
-        compress(compressing_file)
+    def explorer_repack():
+        repack_dir = askdirectory(initialdir=cwd, title="Select a directory to repack")
+        repack(repack_dir)
 
     def explorer_extract():
         file = askopenfilename(initialdir=cwd)
-        extract(file)
+        print(extract(file))
 
     def extract_file(file, number):
-        extract(file)
+        label_text = extract(file)
         extract_list[number].destroy()
-        patched = Label(a, text=language[arc + 1], bg='#dfffaa', width=30)
+        patched = Label(a, text=label_text, bg='#dfffaa', width=30)
         patched.grid(row=burow_extract[number], column=bucolumn[number])
 
-    def compress_file(brres, num):
-        compress(brres)
-        compress_list[num].destroy()
+    def repack_file(brres, num):
+        repack(brres)
+        repack_list[num].destroy()
         patched = Label(a, text=language[arc + 1], bg='#dfffaa', width=30)
         patched.grid(row=burow_extract[num], column=bucolumn[num])
 
@@ -180,7 +189,7 @@ def scan_directory():
                     continue
                 with open(file_to_extract, 'rb') as check_xfile:
                     header = check_xfile.read(4)
-                if header[:1] in [b'@', b'\x10', b'\x11', b'\x81', b'\x82', b'$', b'(', b'0', b'P'] and header != b'PK\x03\x04':  # lh @, old lz \x10, lz77 \x11, diff8 \x81, diff16 \x82, huff4 $, huff8 (, runlength 0, lrc P
+                if header[:1] in [b'@', b'\x10', b'\x11', b'\x81', b'\x82', b'$', b'(', b'0', b'P', b'b'] and header != b'PK\x03\x04':  # lh @, old lz \x10, lz77 \x11, diff8 \x81, diff16 \x82, huff4 $, huff8 (, runlength 0, lrc P
                     run_extract_file = partial(extract_file, file_to_extract, p)
                     temp = Button(a, text=file_to_extract, command=run_extract_file, activebackground='#a9ff99', width=30)
                     temp.grid(row=burow_extract[p], column=bucolumn[p])
@@ -195,7 +204,7 @@ def scan_directory():
     cmn_repack_label = Label(a, text=language[cmn + 6], font=300, bg='#dfffaa', height=2)
     cmn_repack_label.grid(row=18, columnspan=20)
 
-    manual_explorerbu = Button(a, text=language[msm + 19], command=explorer_compress, activebackground='#ffc773', bg='#ffe4bd', width=87)
+    manual_explorerbu = Button(a, text=language[msm + 19], command=explorer_repack, activebackground='#ffc773', bg='#ffe4bd', width=87)
     manual_explorerbu.grid(row=21, column=0, columnspan=3)
 
     manual_label = Label(a, text=language[cmn + 7], bg='#dfffaa', width=30)
@@ -205,25 +214,27 @@ def scan_directory():
     manual_entry.grid(row=20, column=1)
 
     manual_button = Button(a, text=language[cmn + 8], activebackground='#a9ff91', bg='#c9ffba', width=30)
-    manual_compress = partial(compress, manual_entry.get())
-    manual_button.config(command=manual_compress)
+    manual_repack = partial(repack, manual_entry.get())
+    manual_button.config(command=manual_repack)
     manual_button.grid(row=20, column=2)
 
     i = 0
-    for file_to_compress in os.listdir('./'):
+    for dir_to_repack in os.listdir('./'):
         try:
-            if os.path.isfile(file_to_compress):
-                size = os.path.getsize(file_to_compress)
-                if size < 5 or i >= len(bucolumn):
+            if os.path.isdir(dir_to_repack):
+                cmn_dir = os.listdir(dir_to_repack)
+                this_is_a_cmn_dir = True
+                for brres in brres_list:
+                    if brres not in cmn_dir:
+                        this_is_a_cmn_dir = False
+                        break
+                if not this_is_a_cmn_dir or i >= len(bucolumn):
                     continue
-                with open(file_to_compress, 'rb') as check_cfile:
-                    header4 = check_cfile.read(4)
-                if header4 in thrice:
-                    run_compress_file = partial(compress_file, file_to_compress, i)
-                    temp2 = Button(a, text=file_to_compress, command=run_compress_file, activebackground='#a9ff91', width=30)
-                    temp2.grid(row=burow_compress[i], column=bucolumn[i])
-                    compress_list.append(temp2)
-                    i += 1
+                run_repack_file = partial(repack_file, dir_to_repack, i)
+                temp2 = Button(a, text=dir_to_repack, command=run_repack_file, activebackground='#a9ff91', width=30)
+                temp2.grid(row=burow_repack[i], column=bucolumn[i])
+                repack_list.append(temp2)
+                i += 1
 
         except PermissionError as error:
             print(error)

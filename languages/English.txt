@@ -59,6 +59,7 @@ successfully extracted # files into #/external
 Which character do you want the sounds to be copied to # ?
 Are you ready to randomize all files content in # ? This is irreversible.
 Successfully randomized # files
+extracted # brres!
 Welcome ! this app is used to convert hexadecimal float values to decimal float
 hex-float : 
 copied to clipboard the value below
@@ -360,3 +361,4 @@ Manual Repack ->
 Repack
 This app will overwrite the _DECOMP.bin version of the file you choose to extract
 it will also overwrite both the _DECOMP.bin version and the compressed .bin file if you choose to repack
+not_cmn_test.bin!
