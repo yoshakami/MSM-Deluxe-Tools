@@ -32,17 +32,6 @@ ico = os.path.join('msm_stuff', 'msm.ico')
 a.iconbitmap(os.path.join(install_dir, ico))
 config_file = os.path.join(install_dir, 'a')
 
-run = [f'{language[start + 26]} (c.py)', f'{language[start + 27]} (x.py)', f'{language[start + 28]} (tex3.pyw)',
-       f'{language[start + 29]} (hexf.py)', f'{language[start + 30]} (dec.py)', f'{language[start + 31]} (int.py)',
-       f'{language[start + 32]} (rEtUrN-tExT.py)', f'{language[start + 33]} (vaporwave.py)',
-       f'{language[start + 34]} (yt.pyw)', f'{language[start + 35]} (sizeC.pyw)', f'{language[start + 41]} (slot.py)',
-       f'{language[start + 36]} (p.py)', f'{language[start + 37]} (t.py)', f'{language[start + 38]} (png.py)'
-       ]
-RUN = StringVar()
-RUN.set(language[start + 25])
-Run = OptionMenu(a, RUN, *run)
-Run["menu"].config(bg="#000000", fg='#ffffff')
-
 language_list = [
     'English', 'Français', 'Deutsch', 'Español', 'Italiano',
     'Nederlands', 'Português', 'Pусский',  # PAL Wii U
@@ -141,17 +130,24 @@ def play(num):
     else:
         webbrowser.open(random[num])
 
+run = []
+
+def refresh_run():
+    global run
+    run = [f'{language[start + 26]} (c.py)', f'{language[start + 27]} (x.py)', f'{language[start + 28]} (tex3.pyw)',
+       f'{language[start + 29]} (hexf.py)', f'{language[start + 30]} (dec.py)', f'{language[start + 31]} (int.py)',
+       f'{language[start + 32]} (rEtUrN-tExT.py)', f'{language[start + 33]} (vaporwave.py)',
+       f'{language[start + 34]} (yt.pyw)', f'{language[start + 35]} (sizeC.pyw)', f'{language[start + 41]} (slot.py)',
+       f'{language[start + 42]} (stage.py)', f'{language[start + 44]} (stream.py)', f'{language[start + 43]} (hz.py)',
+       f'{language[start + 45]} (kill-msm.bat)',
+       f'{language[start + 36]} (p.py)', f'{language[start + 37]} (t.py)', f'{language[start + 38]} (png.py)'
+       ]
 
 def refresh():
     with open(current_language_file, 'r', encoding="utf-8") as text:
         language = text.read()
         language = [''] + language.splitlines()
-    run = [f'{language[start + 26]} (c.py)', f'{language[start + 27]} (x.py)', f'{language[start + 28]} (tex3.pyw)',
-           f'{language[start + 29]} (hexf.py)', f'{language[start + 30]} (dec.py)', f'{language[start + 31]} (int.py)',
-           f'{language[start + 32]} (rEtUrN-tExT.py)', f'{language[start + 33]} (vaporwave.py)',
-           f'{language[start + 34]} (yt.pyw)', f'{language[start + 35]} (sizeC.pyw)', f'{language[start + 41]} (slot.py)',
-           f'{language[start + 36]} (p.py)', f'{language[start + 37]} (t.py)', f'{language[start + 38]} (png.py)'
-           ]
+    refresh_run()
     Run['menu'].delete(0, 'end')
 
     # Insert list of new options (tk._setit hooks them up to var)
@@ -206,7 +202,10 @@ def enter():  # "Run Instant App (Enter)" Button
         return
     if app == language[start + 25]:
         return
-    Popen(('wscript.exe', os.path.join(install_dir, f"{os.path.splitext(app.split('(')[-1])[0]}.vbs")))
+    app_name = app.split('(')[-1]
+    if app_name == 'kill-msm.bat':
+        kill_msm()
+    Popen(('wscript.exe', os.path.join(install_dir, f"{os.path.splitext(app_name)[0]}.vbs")))
 
 
 def change_directory():  # executed when you press "Open FIle Explorer" button
@@ -270,43 +269,25 @@ def trib():
 def msmhelp():
     Popen(('wscript.exe', os.path.join(install_dir, "msmhelp.vbs")))
 
-
 def cmn():
+    Popen(('wscript.exe', os.path.join(install_dir, "cmn.vbs")))
+    
+taskkill = f'taskkill /im "python.exe"\n'
+for e in os.listdir(install_dir):
+    if os.path.splitext(e)[-1] == '.exe':
+        taskkill += f'taskkill /im "{e}"\n'
+def kill_msm():
     if not os.path.exists(os.path.join(install_dir, "kill-msm.bat")):
         with open(os.path.join(install_dir, "kill-msm.bat"), "w") as bat:
-            bat.write("""taskkill /im "python.exe"
-taskkill /im "pythonw.exe"
-taskkill /im "arc.exe"
-taskkill /im "brsar.exe"
-taskkill /im "bstick.exe"
-taskkill /im "c.exe"
-taskkill /im "dec.exe"
-taskkill /im "dump.exe"
-taskkill /im "hexf.exe"
-taskkill /im "int.exe"
-taskkill /im "iso.exe"
-taskkill /im "isox.exe"
-taskkill /im "lh.exe"
-taskkill /im "map.exe"
-taskkill /im "msm.exe"
-taskkill /im "msmhelp.exe"
-taskkill /im "p.exe"
-taskkill /im "pack.exe"
-taskkill /im "png.exe"
-taskkill /im "rEtUrN-tExT.exe"
-taskkill /im "sizeC.exe"
-taskkill /im "slot.exe"
-taskkill /im "t.exe"
-taskkill /im "tex.exe"
-taskkill /im "tex3.exe"
-taskkill /im "thp.exe"
-taskkill /im "trib.exe"
-taskkill /im "vaporwave.exe"
-taskkill /im "web.exe"
-taskkill /im "x.exe"
-taskkill /im "yt.exe" """)
+            bat.write(taskkill)
     os.system(os.path.join(install_dir, "kill-msm.bat"))
 
+
+refresh_run()
+RUN = StringVar()
+RUN.set(language[start + 25])
+Run = OptionMenu(a, RUN, *run)
+Run["menu"].config(bg="#000000", fg='#ffffff')
 
 ltitle = Label(a, text=language[start + 3], font=(None, 15), bg="#aecfee", height=3)
 ltitle.grid(row=0, columnspan=3)

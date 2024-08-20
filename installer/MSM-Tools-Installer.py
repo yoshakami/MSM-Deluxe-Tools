@@ -10,7 +10,7 @@ import os
 
 apps = ['arc.py', 'brsar.pyw', 'bstick.pyw', 'c.py', 'dec.py', 'dump.py', 'hexf.py', 'int.py', 'iso.py', 'isox.py',
         'lh.py', 'map.pyw', 'msm.pyw', 'msmhelp.pyw', 'p.py', 'pack.py', 'png.py', 'rEtUrN-tExT.py', 'sizeC.pyw',
-        'slot.py', 't.py', 'tex.py', 'tex3.pyw', 'thp.py', 'trib.py', 'vaporwave.py', 'web.pyw', 'x.py', 'yt.pyw']
+        'slot.py', 'stage.py', 'stream.py', 'gmk.py', 'cmn.py', 't.py', 'tex.py', 'tex3.pyw', 'thp.py', 'trib.py', 'vaporwave.py', 'web.pyw', 'x.py', 'yt.pyw']
 
 root = sys.argv[0]
 root = os.path.splitext(root)[0]
@@ -74,7 +74,7 @@ english = [
     "[requires admin perm]", # 40
     "another msm folder is already added to PATH, please check both USER and SYSTEM PATH variable", # 41
     "current installation's msm folder is not added to PATH. You won't be able to launch scripts from the explorer menu if it's not added to PATH.", # 42
-    "Edit path manually"
+    "Edit path manually" # 43
     ]
 
 french = [

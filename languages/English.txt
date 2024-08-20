@@ -1,4 +1,4 @@
-/* msm.pyw :0:   hashtag :42:   short :54:   arc.py :95:   bstick.pyw :106:   dump.py :135:   isox.py :145:   lh.py :151:   map.pyw :162:   pack.py :170:   tex.py :180:   thp.pyw :187:   trib.py :219:    web.pyw :228:   old cli :244:   msmhelp.pyw :287: ---- */
+/* msm.pyw :0:   hashtag :46:   short :62:   arc.py :103:   bstick.pyw :114:   dump.py :143:   isox.py :153:   lh.py :159:   map.pyw :170:   pack.py :178:   tex.py :188:   thp.pyw :195:   trib.py :227:    web.pyw :236:   old cli :252:   msmhelp.pyw :295: new :352: ---- */
 Mario Sports Mix Modding App
 Mario Sports Mix Modding App Menu
 Pack Textures
@@ -13,7 +13,7 @@ MSM arc extract and compress
 Change bstick colour
 Encode png to tex0
 MSM Symbol Map Viewer
-Kill All Apps
+cmn_test.bin editor
 Change root bone attributes
 Current working directory is :
 Open file Explorer
@@ -39,6 +39,10 @@ Png texture replace ext
 Exit
 Enter
 Change Character Slot in cwd
+Extract stage external files
+ffmpeg convert to right Hz
+Take sounds from stream
+Kill All Apps
 $$change between the hashtags$$    # texture has # mipmaps while # has #
 $$change between the hashtags$$    # texture is in # colour encoding format while # is in #
 patched # brstm
@@ -51,6 +55,10 @@ $$ a.png is 512x512 while ...$$     # is #x# while # texture is #x#
 what's happening with >#< ?? this file no longer exists
 the file >#< doesn't fit in the texture data. you can't edit texture sizes
 Your screen dimensions §are #x% pixels
+successfully extracted # files into #/external
+Which character do you want the sounds to be copied to # ?
+Are you ready to randomize all files content in # ? This is irreversible.
+Successfully randomized # files
 Welcome ! this app is used to convert hexadecimal float values to decimal float
 hex-float : 
 copied to clipboard the value below
@@ -271,7 +279,7 @@ or type anything else to add another png
 replacing texture will override next header, this happens when you use twice the same png.
 this texture will not be replaced, press enter to replace all other textures...
 png name with extension
-Did you opened external folder ???
+Did you open external folder ???
 Note also that all textures are counted for all brres in an arc or brres file.
 press enter to go try again...
 press enter to continue (compress at the end) or
@@ -279,7 +287,7 @@ press enter to continue (compress at the end) or
 - type 3 if you don't want to compress your file when the program ends
 texture name with extension :
 a texture is intended
-You didn't used a tex0 on this app that only works with already encoded textures.
+You didn't use a tex0 on this app that only works with already encoded textures.
 try again
 replacing texture will override next header
 Success, press 1 then enter to exit
@@ -304,11 +312,11 @@ Click on the pictures to view on fullscreen
 40     Change root bone attributes
 50                Credits
 50 18 (no need to translate this line) the first number is the font size, and the second is the colour ID. '\n' or '§' is a new line, '\t' is a tabulation, and ¤36 16 is a new color (use spaces to fit it on where it was before, else it starts again at the beginning of the line) ---- Problems : changing font size also changes line size so using a big then a small font will make text collapse ---------- the function to auto-wrap at the right spot isn't perfect, to counter this you can make your line start with * so it won't auto-wrap and you'll have to manually do it.  /******************************************************************************************************/
-23 31 Use this app after launching "Dump Textures". §§§¤20 23 This app will look for brres and arc in the current directory, which were already dump before.§§¤20 9 It'll then check which png were changed (with help from the file zzzdump.txt by calculating the sha256), finally, it will replace all of them in the file chosen.§§§¤18 9 (by encoding them to tex0 with wimgt)
-20 30 The file changed isn't rebuilded, so it won't be corrupted because only the texture data changes.§§¤20 17 this software is useful to edit textures in external folder or do custom stages.
+23 31 Use this app after launching "Dump Textures". §§§¤20 23 This app will look for brres and arc in the current directory, which were already dumped before.§§¤20 9 It'll then check which png were changed (with help from the file zzzdump.txt by calculating the sha256), finally, it will replace all of them in the file chosen.§§§¤18 9 (by encoding them to tex0 with wimgt)
+20 30 The file changed isn't rebuilt, so it won't be corrupted because only the texture data changes.§§¤20 17 this software is useful to edit textures in external folder or do custom stages.
 20 19 This app displays all thp files in the current directory. §§¤20 23 there are 6 different functions to manipulate these thp files (by clicking in the drop down menu). §§§¤20 22 OffsetsDataOffset is an int array (of 4 bytes each) with a length of 4 times the number of frame, and each int is the start offset of their corresponding frame
-20 3 A checkbox can be ticked to overwrite the old file, else the app will create a new one
-20 18 When using your custom brstm in game, if the song cuts out at the middle, it's because you didn't patched the brsar, brstm's max size are defined in it. §§¤20 0 This application is used to edit a brsar file by setting the max size of brstm files (linked into it) to the max value of a 4 bytes signed int (7F FF FF FF) which equals to 2GB max per brstm. You can also use PCM16 encoding, which uses 16 bits per sample, while ADPCM uses 4 bits per sample.
+20 3 A checkbox can be ticked to overwrite the old file, else the app will create a new file
+20 18 When using your custom brstm in game, if the song cuts out at the middle, it's because you didn't patch the brsar, brstm's max size are defined in it. §§¤20 0 This application is used to edit a brsar file by setting the max size of brstm files (linked into it) to the max value of a 4 bytes signed int (7F FF FF FF) which equals to 2GB max per brstm. You can also use PCM16 encoding, which uses 16 bits per sample, while ADPCM uses 4 bits per sample.
 20 2 This software is compatible with every brsar, no matter their size or the game they're from. (please note that some brsar don't have any brstm link into them) §§¤20 3 In order to save Red_Star.brsar in Brawlcrate, you'll need to double click on the empty "External" element at the index 788, then click on the [...] next to the text entry, select Music00.mus, and click on OK.
 30 5 haha, that's a surprise, click on it to know what it does
 20 8 (off-topic)\n a Symbol Map is a heavy text containing a lot of in-game functions name, their size, alongside their offset in the ram. A Symbol Map is useful to create gecko codes because it helps to reverse engineer the game's code. §(it consists on understanding the game code by doing the inverse process of compilation to machine code)
@@ -317,7 +325,7 @@ Click on the pictures to view on fullscreen
 20 2 This application is used to extract textures from an arc or a brres file, as well as making them compatible with the "Pack Textures" app, which can be used to replace them in the file afterwards. §§§¤20 18 With this goal, simply edit the png files right after dumping them from the file.
 20 8 This Software can also convert a tex0 to png. §§¤20 21 A mipmap is a smaller version of a texture, used by the game when you're far away from the texture. §§¤20 27 All textures must have their dimensions in power of 2 ( 2, 4, 8, 16, 32, 64, 128, 256, 512, or 1024 ) else your Wii or any console (or dolphin) won't display it correctly.
 *20 0 §Pack Textures\n    ¤20 1 THP Compressor\n    ¤20 2 Every Game Brsar Patcher\n    ¤20 3 MSM Files extract and compress\n    ¤20 4 Dump Textures\n    ¤20 6 MSM iso patcher\n    ¤20 7 Arc Extract and Compress\n    ¤20 8 iso/wbfs/ciso extract and compress\n    ¤20 9 Change bstick colour\n    ¤20 10 Encode png to tex0\n    ¤20 11 MSM Symbol Map Viewer\n    ¤20 12 Change root bone attributes\n    ¤20 13 Change Character Slot in cwd\n    ¤20 14 Compress files in cwd\n    ¤20 15 Extract files in cwd\n    ¤20 16 YouTube Thumbnail Download
-*20 0 pack.py\n    ¤20 1 thp.pyw\n    ¤20 2 brsar.pyw\n    ¤20 3 lh.py\n    ¤20 4 dump.py\n    ¤20 6 iso.py\n    ¤20 7 arc.py\n    ¤20 8 isox.py\n    ¤20 9 bstick.pyw\n    ¤20 10 tex.py\n    ¤20 11 map.pyw\n    ¤20 12 trib.py\n    ¤20 13 slot.py\n    ¤20 14 c.py\n    ¤20 15 x.py\n    ¤20 16 yt.pyw\n    ¤20 17 tex3.pyw
+*20 0 pack.py\n    ¤20 1 thp.pyw\n    ¤20 2 brsar.pyw\n    ¤20 3 lh.py\n    ¤20 4 dump.py\n    ¤20 6 iso.py\n    ¤20 7 arc.py\n    ¤20 8 isox.py\n    ¤20 9 bstick.pyw\n    ¤20 10 tex.py\n    ¤20 11 map.pyw\n    ¤20 12 trib.py\n    ¤20 13 slot.py\n    ¤20 14 c.py\n    ¤20 15 x.py\n    ¤20 16 yt.pyw
 20 0 soon
 20 20 This app will be available after Mario Sports Mix V2 comes out
 19 20 You must use this software to decompress Menu_DECOMP.bin or Tour_DECOMP.bin as well as other arc files (in the lyt folder). §§§¤19 23 Brawlcrate corrupts arc files when saving them, while Wiimms SZS Tools can create arc files with exactly the same data as the game's vanilla files. It always packs correctly (so if your file crashes, the cause should be the files inside the archive)
@@ -335,8 +343,20 @@ Click on the pictures to view on fullscreen
 20 23 This app is useful to change the attributes of an armature bone of a mdl0. §§§¤22 30 By default, the application will find the root bone first. You can change the default values to fit another bone in order to change its values with the entries textboxes.
 20 25 The first line must stay to 1.0   1.0   1.0 except if you know what you're looking for. §§¤20 26 The other lines are your own custom values that will be replaced into the whole model, it's often used to distort and create memes, though it can also change the hitbox size of objects inside cmn_test.bin
 *50 36 Much Thanks §¤21 2 §§\t to everyone in the discord §\t server, and thanks to you §\t as well for using my apps :) §§§¤20 22 \t Without you, §the community would never exist, §it's really an awesome project §we can be proud of §§§¤20 29 This project is open source, ¤20 27 §feel free to edit it like you want ^-^
-*30 0 -Python\t-Windows\t-Linux§-Discord\t-My Friends§-Stack Overflow§-Notepad++          -utf-8§-HxD Hex Editor  -latin-1§-Pycharm  -Nuitka   -gcc§-Wiimms SZS Tools§-Wiimms ISO Tools§-Nintendo§¤30 19\t\t          yosh#0304
+*30 0 -Python\t-Windows\t-Linux§-Discord\t-My Friends§-Stack Overflow§-Notepad++\t-utf-8§-HxD Hex Editor\t-latin-1§-Pycharm  -Nuitka\t-gcc§-Wiimms SZS Tools§-Wiimms ISO Tools\t-plt0§-Nintendo§¤30 19\t\t          yoshakami
 
 you're done translating this text file :D feel free to put the two line below on the above lines to test the display and find the right color you want
 *30 0 0 hello¤30 1 \t1 hello¤30 2 \t\t2 hello§¤30 3 3 hello¤30 4 \t4 hello¤30 5 \t\t5 hello§¤30 6 6 hello¤30 7 \t7 hello¤30 8 \t\t8 hello§¤30 9 9 hello¤30 10 \t10 hello¤30 11 \t\t11 hello§¤30 12 12 hello¤30 13 \t13 hello¤30 14 \t\t14 hello§¤30 15 15 hello¤30 16 \t16 hello¤30 17 \t\t17 hello§¤30 18 18 hello¤30 19 \t19 hello¤30 20 \t\t20 hello§¤30 21 21 hello¤30 22 \t22 hello¤30 23 \t\t23 hello§¤30 24 24 hello¤30 25 \t25 hello¤30 26 \t\t26 hello§¤30 27 27 hello¤30 28 \t28 hello¤30 29 \t\t29 hello§¤30 30 30 hello¤30 31 \t31 hello¤30 32 \t\t32 hello§¤30 33 33 hello¤30 34 \t34 hello¤30 35 \t\t35 hello§¤30 36 36 hello
 *30 0 0 hello¤30 1 \t1 hello¤30 2 \t\t2 hello§¤30 3 3 hello¤30 4 \t4 hello¤30 5 \t\t5 hello§¤30 6 6 hello¤30 7 \t7 hello¤30 8 \t\t8 hello§¤30 9 9 hello¤30 10 \t10 hello¤30 11 \t\t11 hello§¤30 12 12 hello¤30 13 \t13 hello¤30 14 \t\t14 hello§¤30 15 15 hello¤30 16 \t16 hello¤30 17 \t\t17 hello§¤30 18 18 hello¤30 19 \t19 hello¤30 20 \t\t20 hello§¤30 21 21 hello¤30 22 \t22 hello¤30 23 \t\t23 hello§¤30 24 24 hello¤30 25 \t25 hello¤30 26 \t\t26 hello§¤30 27 27 hello¤30 28 \t28 hello¤30 29 \t\t29 hello§¤30 30 30 hello¤30 31 \t31 hello¤30 32 \t\t32 hello§¤30 33 33 hello¤30 34 \t34 hello¤30 35 \t\t35 hello§¤30 36 36 hello
+
+no stage folder in cwd.
+press enter to exit...
+please input the stream path (or drag and drop the stream folder here. it should be inside the snd folder) : 
+source slot number
+press enter to continue.
+cmn_test.bin extract
+cmn_test.bin repack
+Manual Repack ->
+Repack
+This app will overwrite the _DECOMP.bin version of the file you choose to extract
+it will also overwrite both the _DECOMP.bin version and the compressed .bin file if you choose to repack
