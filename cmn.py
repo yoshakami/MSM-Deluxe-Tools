@@ -1,4 +1,5 @@
 import os
+import struct
 from functools import partial
 from tkinter import Tk, Button, Label, Entry
 from tkinter.filedialog import askopenfilename, askdirectory
@@ -252,8 +253,16 @@ msm_files_offset = []
 msm_files_absolute_filepath = []
 every_offset_of_a_new_thing = []
 extracted_files = ['']
+mdl0_sections = []
+mdl0_brres_index_group_new_offsets = {}
+mdl0_file_end = [b'']
+
 
 def extract_brres(brres):
+    msm_files_offset.clear()
+    msm_files_absolute_filepath.clear()
+    every_offset_of_a_new_thing.clear()
+    extracted_files.clear()
     with open(brres, "rb") as bina:
         data = bina.read(12)
         ASSERT(data[:4] == b'bres') # makes sure the file is a brres
@@ -295,7 +304,7 @@ def calc_short(data, offset, endian):
     else:
         raise RuntimeError # invalid endian
 
-def hex_float(number): # number => float
+def hex_float(number): # number is of type float
     num = b''
     w = hex(struct.unpack('<I', struct.pack('<f', number))[0])[2:]
     # add zeros to always make the value length to 8
@@ -310,7 +319,64 @@ def extract_brres_sub_file(data, offset, root_name, root_absolute_filepath):
     file_length = calc_int(data, offset + 8, endian) # u32
     with open(root_absolute_filepath, 'wb') as sub:
         sub.write(data[offset:offset+file_length])
+        
+def extract_mdl0(data, offset, root_name, root_absolute_filepath, endian, file_length, version):
+    extracted_data = data[offset:offset+0xC] + b'\x00' * 4 + data[offset+0x10:offset+0x48]
+    mdl0_sections.clear()
+    mdl0_brres_index_group_new_offsets.clear()
+    root_name_bytes = bytes(root_name, 'latin-1')
+    len_bytes = bytes(chr(len(root_name_bytes)))  # len_bytes[0] = int(len_bytes) but python prefers making ["1,,," ",2"] a valid list instead of making support to calculate integers so I made calc_int and calc_short
+    mdl0_file_end[0] = b'\x00' * 7 + len_bytes + root_name_bytes + b'\x00' * (8 - (len_bytes[0] % 8))
+    x = 0x10
+    assert version == 11 # only mdl0 v11 is supported
+    while x < 0x48:
+        mdl0_sections.append(calc_int(data, offset + x, endian))
+        x += 4
+    data += hex_float(file_length + 4) # change offset to filename, even if the file itself is named like what's written
+    x = 0x4C
+    assert data[offset + x:offset + x + 8] == b'\x00\x00\x00\x40\xff\xff\xff\xb4'
+    x = 0x70
+    bone_link_table_offset = calc_int(data, offset + x, endian)
+    number_of_bones = calc_int(data, bone_link_table_offset, endian)
+    end_of_bone_link_table = bone_link_table_offset + 4 * number_of_bones + 4
+    parse_brres_index_group_inside_of_mdl0(data, end_of_bone_link_table, "", "", endian, file_length)
+    extracted_data += data[offset + 0x4C:offset + bone_link_table_offset]
+    # todo: walk flat through the bytes until the end of the brres_index_groups. (calculate their size)
 
+def parse_brres_index_group_inside_of_mdl0(data, offset, root_name, root_folder, endian, file_length):
+    print(offset, root_name, root_folder, data[offset: offset + 4])
+    if data[offset + 8: offset + 10] != [b'\xff\xff']: 
+        return
+    brres_index_group_length = calc_int(data, offset, endian) # u32
+    number_of_entries = calc_int(data, offset + 4, endian)  # u32
+    print(brres_index_group_length, number_of_entries)
+    # parse Brres Index Group 1
+    x = 8 + 16 # skip reference point since we're extracting
+    ASSERT(data[offset + 8: offset + 12] == b'\xff\xff\x00\x00')
+    # info_list = [create_brres_info(id=0, left_idx=0, right_idx=0, name=root_name, nlen=0)]
+    # we're extracting!!! no creating the binary tree
+    while number_of_entries > 0:
+        x += 8 # skip binary tree info
+        entry_name_offset = calc_int(data, offset + x, endian) + offset # u32
+        entry_name_offset_len = data[entry_name_offset - 1] # u8
+        entry_name = data[entry_name_offset:entry_name_offset + entry_name_offset_len].decode() # converts to str using UTF-8 encoding
+        x += 4
+        entry_start_offset = calc_int(data, offset + x, endian) + offset # u32
+        every_offset_of_a_new_thing.append(entry_name_offset - 1)
+        every_offset_of_a_new_thing.append(entry_start_offset)
+        name_bytes = bytes(root_name, 'latin-1')
+        name_len = bytes(chr(len(name_bytes)))
+        w = hex(calc_int(file_length + len(mdl0_file_end) + 1)).zfill(8)
+        new_name_offset = b''
+        for octet in range(0, 8, 2):  # transform for example "3f800000" to b'\x3f\x80\x00\x00'
+            new_name_offset += bytes(chr(int(w[octet:(octet + 2)], 16)), 'latin-1')
+        mdl0_file_end[0] += name_len + name_bytes + b'\x00' * (8 - (name_len[0] % 8))
+        mdl0_brres_index_group_new_offsets[data[offset + x - 16:offset + x - 4]] = new_name_offset
+        parse_brres_index_group(data, entry_start_offset, entry_name, os.path.join(root_folder, entry_name), endian, file_length)
+        x += 4
+        number_of_entries -= 1
+        
+    
 def change_offsets(data, offset, file_length, root_name, outer_brres_offset_in_the_header, name_offset_in_the_header):
     extracted_data = data[offset: offset + outer_brres_offset_in_the_header] + b'\x00\x00\x00\x00' # change offset to brres file (no brres since it's an extracted file)
     extracted_data += data[offset + outer_brres_offset_in_the_header + 4:offset + name_offset_in_the_header] + hex_float(file_length + 4) # change offset to filename, even if the file itself is named like what's written
@@ -318,12 +384,15 @@ def change_offsets(data, offset, file_length, root_name, outer_brres_offset_in_t
     return extracted_data
 
 magic_version_name_offset = {
-    (b'TEX0', 1): 0x14
-    (b'TEX0', 3): 0x14,
-    (b'TEX0', 1): 0x14,
-    (b'PAT0', 3): 0x24,
-    (b'PAT0', 4): 0x28,
-    
+    (b'TEX0', 1): 0x14, (b'TEX0', 2): 0x18, (b'TEX0', 3): 0x14,
+    (b'SRT0', 4): 0x14, (b'SRT0', 5): 0x18,
+    (b'CHR0', 4): 0x14, (b'CHR0', 5): 0x18,
+    (b'PAT0', 3): 0x24, (b'PAT0', 4): 0x28,
+    (b'CLR0', 3): 0x14, (b'SRT0', 4): 0x18,
+    (b'SHP0', 3): 0x18, (b'SHP0', 4): 0x1C,
+    (b'SCN0', 4): 0x28, (b'SCN0', 5): 0x2C,
+    (b'PLT0', 1): 0x14, (b'PLT0', 3): 0x14,
+    (b'VIS0', 3): 0x14, (b'VIS0', 4): 0x18
 }
 def extract_sub_file(data, offset, root_name, root_absolute_filepath, endian):
     file_length = calc_int(data, offset + 4, endian) # u32
@@ -331,39 +400,11 @@ def extract_sub_file(data, offset, root_name, root_absolute_filepath, endian):
     # now we need to change the file content and add data at the end, else brawlcrate crashes
     magic = data[offset:offset + 4]
     version = calc_int(data, offset + 8, endian)
-    if magic == b'TEX0':
-        if version in [1, 3]:
-            extracted_data = change_offsets(data, offset, file_length, root_name, 0xC, 0x14)
-        elif version in [2]:
-            extracted_data = change_offsets(data, offset, file_length, root_name, 0xC, 0x18)
-        else:
-            raise InterruptedError # unsupported TEX0 Version
-    elif magic == b'PAT0':
-        if version == 3:
-            extracted_data = change_offsets(data, offset, file_length, root_name, 0xC, 0x24)
-        elif version == 4:
-            extracted_data = change_offsets(data, offset, file_length, root_name, 0xC, 0x28)
-        else:
-            raise InterruptedError # unsupported PAT0 Version
-    elif magic in [b'CHR0', b'SRT0']:
-        if version == 4:
-            extracted_data = change_offsets(data, offset, file_length, root_name, 0xC, 0x14)
-        elif version == 5:
-            extracted_data = change_offsets(data, offset, file_length, root_name, 0xC, 0x18)
-        else:
-            raise InterruptedError # unsupported PAT0 Version
-    elif magic == b'CLR0':
-        if version == 3:
-            extracted_data = change_offsets(data, offset, file_length, root_name, 0xC, 0x14)
-        if version == 4:
-            extracted_data = change_offsets(data, offset, file_length, root_name, 0xC, 0x18)
-    elif magic == b'SCN0':
-        if version == 4:
-            extracted_data = change_offsets(data, offset, file_length, root_name, 0xC, 0x28)
-        if version == 5:
-            extracted_data = change_offsets(data, offset, file_length, root_name, 0xC, 0x2C)
-    
-            
+    if magic == b'MDL0':
+        return extract_mdl0(data, offset, root_name, root_absolute_filepath, endian, file_length, version)
+    name_offset = magic_version_name_offset.get((magic, version))
+    ASSERT(name_offset is not None)
+    extracted_data = change_offsets(data, offset, file_length, root_name, 0xC, name_offset)
     with open(root_absolute_filepath + '.' + magic.lower(), 'wb') as sub:
         sub.write(extracted_data)
 
@@ -377,8 +418,7 @@ def extract_msm_files(data):  # these files have no filesize at offset 4 or 8
             administrator.write(data[offset:next_offset])
 
 def parse_brres_index_group(data, offset, root_name, root_folder, endian):
-    print(offset, root_name, root_folder)
-    print(data[offset: offset + 4])
+    print(offset, root_name, root_folder, data[offset: offset + 4])
     if data[offset: offset + 4] in [b'bres']: 
         # root_folder is a file, and not a folder, so I will extract it and quit the function
         extract_brres_sub_file(data, offset, root_name, root_folder)
