@@ -93,6 +93,293 @@ brres_len = [0, 0, 0,
              1490048,
              0x193F7F]
 
+##################################################################################
+#  TRANSLATION OF MSM BINARY TREE FROM C TO PYTHON 
+#  SOURCE 1 : https://wiki.tockdom.com/wiki/BRRES_(File_Format)
+#  SOURCE 2 : https://wiki.tockdom.com/wiki/BRRES_Index_Group_(File_Format)
+#  Feel free to copy and paste this part into your own file,
+#  All functions will not depend on any external variable or file.
+##################################################################################
+"""The ID of each entry is not a unique number, but is calculated from the name comparing it to another name (see below) and used to search for a given entry. The entries form a binary search tree, with the first entry being the root. The left and right indicies describe this tree.
+Calculation of the ID
+
+The ID is calculated by comparing a filename (subject) to an other filename (object) using the following algorithm:
+
+    Find the last non equal character of both names and store the INDEX.
+        If the length of the subject filename is greater than the length of the object filename, INDEX is the length of the subject filename minus 1.
+        Otherwise compare each pair of characters until a difference is found.
+    Now compare both characters of position INDEX and find the highest bit that is not equal. If INDEX exceeds the length of object, assume character value 0. Store the bit index (7 for 0x80 .. 0 for 0x01) as BITNUM.
+    Calculate: ID := INDEX << 3 | BITNUM
+
+Initially the subject filename is compared with the the root filename, which is always empty. If an ID with the same value is found while walking through the tree, then a new ID is calculated using the other filename as object. 
+"""
+
+def get_highest_bit(val):
+    i = 7
+    while i > 0 and not (val & 0x80):
+        i -= 1
+        val <<= 1
+    return i
+
+
+def calc_brres_id (
+      object_name,
+     object_len,
+      subject_name,
+     subject_len
+):
+    if ( object_len < subject_len ):
+        return subject_len - 1 << 3 | get_highest_bit(ord(subject_name[subject_len-1]))
+
+    while ( subject_len > 0 ):
+    
+        subject_len -= 1
+        ch = ord(object_name[subject_len]) ^ ord(subject_name[subject_len])
+        if (ch):
+            return subject_len << 3 | get_highest_bit(ch)
+    
+    # default case if the root name is empty, for reference point
+    return 65535 # ~(u16)0; // this was the C code
+
+
+"""typedef struct brres_info_t
+{
+    u16  id;          // id
+    u16  left_idx;    // left index
+    u16  right_idx;   // right index
+    ccp  name;        // pointer to name
+    uint nlen;        // lenght of name
+
+} brres_info_t;"""
+
+# Define the structure as a dictionary
+def create_brres_info(id, left_idx, right_idx, name, nlen):
+    return {
+        'id': id,
+        'left_idx': left_idx,
+        'right_idx': right_idx,
+        'name': name,
+        'nlen': nlen
+    }
+
+def ASSERT(var):
+    if not var:
+        raise InterruptedError
+    
+# info: a dictionnary with the C structure above
+# id: a 2 bytes integer
+def get_brres_id_bit (info, id):
+    ASSERT(info) # check that info is not empty
+    char_idx = id >> 3
+    return char_idx < info["nlen"] and ord(info["name"][char_idx]) >> ( id & 7 ) & 1
+
+
+def calc_brres_entry(info_list, entry_idx):
+    ASSERT(info_list)
+    
+    # Extract entry
+    entry = info_list[entry_idx]
+    entry['id'] = calc_brres_id(0, 0, entry['name'], entry['nlen'])
+    entry['left_idx'] = entry['right_idx'] = entry_idx
+    
+    # Previous item
+    prev_idx = 0
+    prev = info_list[prev_idx]
+    
+    # Current item
+    current_idx = prev['left_idx']
+    current = info_list[current_idx] if current_idx < len(info_list) else None
+    
+    is_right = False
+    
+    while current and entry['id'] <= current['id'] and current['id'] < prev['id']:
+        if entry['id'] == current['id']:
+            entry['id'] = calc_brres_id(current['name'], current['nlen'], entry['name'], entry['nlen'])
+            if get_brres_id_bit(current, entry['id']):
+                entry['left_idx'] = entry_idx
+                entry['right_idx'] = current_idx
+            else:
+                entry['left_idx'] = current_idx
+                entry['right_idx'] = entry_idx
+        
+        prev = current
+        is_right = get_brres_id_bit(entry, current['id'])
+        current_idx = current['right_idx'] if is_right else current['left_idx']
+        current = info_list[current_idx] if current_idx < len(info_list) else None
+    
+    if current and current['nlen'] == entry['nlen'] and get_brres_id_bit(current, entry['id']):
+        entry['right_idx'] = current_idx
+    else:
+        entry['left_idx'] = current_idx
+    
+    if is_right:
+        prev['right_idx'] = entry_idx
+    else:
+        prev['left_idx'] = entry_idx
+
+
+def calc_brres_entries(info_list):
+    ASSERT(info_list)
+    ASSERT(len(info_list) > 0)
+    
+    # Setup root entry
+    root = info_list[0]
+    root['id'] = 0xffff
+    root['left_idx'] = root['right_idx'] = 0
+    
+    for idx in range(len(info_list)):
+        calc_brres_entry(info_list, idx)
+
+"""
+# Example data for testing
+info_list = [
+    create_brres_info(id=0, left_idx=0, right_idx=0, name="", nlen=0),  # Root
+    create_brres_info(id=0, left_idx=-1, right_idx=-1, name="3DModels(NW4R)", nlen=14),
+    create_brres_info(id=0, left_idx=-1, right_idx=-1, name="Textures(NW4R)", nlen=14),
+    create_brres_info(id=0, left_idx=-1, right_idx=-1, name="External", nlen=8)
+]
+calc_brres_entries(info_list)
+print(info_list)"""
+
+##################################################################################
+#  REWRITE OF WSZST BRRES EXTRACTOR IN PYTHON BY HAND
+#  ASSUMPTIONS : all brres are little endian. all ASSERT contents are true
+#  SOURCE : me
+#  USAGE : extract_brres('cmn_test_DECOMP.brres')
+##################################################################################
+def extract_brres(brres):
+    with open(brres, "rb") as bina:
+        data = bina.read(12)
+        ASSERT(data[:4] == b'bres') # makes sure the file is a brres
+        endian = data[4:6]
+        if endian == b'\xfe\xff': # big endian
+            # calculating filesize in case another editor added buch of crap after the end of the brres
+            filesize = (data[8] << 24) + (data[9] << 16) + (data[10] << 8) + (data[11]) # u32 = 4 bytes unsigned integer
+        elif endian == b'\xff\xfe': # little endian -> reversed order
+            # calculating filesize in case another editor added buch of crap after the end of the brres
+            filesize = (data[8] << 24) + (data[9] << 16) + (data[10] << 8) + (data[11]) # u32 = 4 bytes unsigned integer
+        else:
+            raise RuntimeError # invalid endian
+        data += bina.read(filesize - 12) # read filesize minus what's already read
+    # create extracted brres dir
+    extracted_dir = os.path.splitext(brres)[0].split('_DECOMP')[0] + "_extracted"
+    while os.path.exists(extracted_dir):
+        extracted_dir += "_new"
+    os.makedirs(extracted_dir)
+    
+    root_offset = (data[12] << 8) + data[13] # u16 = 2 bytes unsigned short
+    sections_number = (data[14] << 8) + data[15] # number of files inside the first brres + 1
+    # in cmn_test.bin, there are 1 mdl0 + 2 tex0 + 21 brres + 1 = 0x19 = 25
+    
+    # parse Brres Index Group 1
+    ASSERT(data[root_offset:root_offset + 4] == b'root')
+    root_section_size = (data[root_offset + 4] << 24) + (data[root_offset + 5] << 16) + (data[root_offset + 6] << 8) + data[root_offset + 7] # u32
+    parse_brres_index_group(data, root_offset + 8, "", extracted_dir) # launch recursive func
+    extract_msm_files(data)
+    return extracted_dir # return extracted folder name
+
+def calc_int(data, offset, endian):
+    if endian == b'\xfe\xff': # big endian
+        return (data[offset] << 24) + (data[offset + 1] << 16) + (data[offset + 2] << 8) + data[offset + 3] # u32integer
+    elif endian == b'\xff\xfe': # little endian -> reversed order
+        return (data[offset + 3] << 24) + (data[offset + 2] << 16) + (data[offset + 1] << 8) + data[offset] # u32integer
+    else:
+        raise RuntimeError # invalid endian
+    
+def calc_short(data, offset, endian):
+    if endian == b'\xfe\xff': # big endian
+        return (data[8] << 24) + (data[9] << 16) + (data[10] << 8) + (data[11]) # u32 = 4 bytes unsigned integer
+    elif endian == b'\xff\xfe': # little endian -> reversed order
+        return (data[8] << 24) + (data[9] << 16) + (data[10] << 8) + (data[11]) # u32 = 4 bytes unsigned integer
+    else:
+        raise RuntimeError # invalid endian
+    
+def extract_brres_sub_file(data, offset, root_name, root_absolute_filepath):
+    x = 8
+    file_length = 0
+    if data[offset + 4:offset + 6] == b'\xFE\xFF':
+        file_length = (data[offset + x] << 24) + (data[offset + x + 1] << 16) + (data[offset + x + 2] << 8) + data[offset + x + 3] + offset # u32
+    elif data[offset + 4:offset + 6] == b'\xFF\xFE':
+        file_length = (data[offset + x + 3] << 24) + (data[offset + x + 2] << 16) + (data[offset + x + 1] << 8) + data[offset + x] + offset # u32
+    else:
+        print(data[offset + 4:offset + 6], offset, root_name, root_absolute_filepath, data[offset:offset + 32])
+        raise InterruptedError # invalid endian bytes
+    with open(root_absolute_filepath, 'wb') as sub:
+        sub.write(data[offset:offset+file_length])
+        
+def extract_sub_file(data, offset, root_name, root_absolute_filepath, endian):
+    x = 8
+    file_length = 0
+    if endian == b'\xFE\xFF':
+        file_length = (data[offset + x] << 24) + (data[offset + x + 1] << 16) + (data[offset + x + 2] << 8) + data[offset + x + 3] + offset # u32
+    elif endian == b'\xFF\xFE':
+        file_length = (data[offset + x + 3] << 24) + (data[offset + x + 2] << 16) + (data[offset + x + 1] << 8) + data[offset + x] + offset # u32
+    else:
+        print(data[offset + 4:offset + 6], offset, root_name, root_absolute_filepath, data[offset:offset + 32])
+        raise InterruptedError # invalid endian bytes
+    with open(root_absolute_filepath, 'wb') as sub:
+        sub.write(data[offset:offset+file_length])
+
+msm_files_offset = []
+msm_files_absolute_filepath = []
+every_offset_of_a_new_thing = []
+
+def extract_msm_files(data):  # these files have no filesize at offset 8
+    every_offset_of_a_new_thing.sort()
+    for i in range(len(msm_files_offset)):
+        offset = msm_files_offset[i]
+        file = msm_files_absolute_filepath[i]
+        next_offset = every_offset_of_a_new_thing[every_offset_of_a_new_thing.index(offset) + 1]
+        with open(file, 'wb') as administrator:
+            administrator.write(data[offset:next_offset])
+
+def parse_brres_index_group(data, offset, root_name, root_folder):
+    print(offset, root_name, root_folder)
+    print(data[offset: offset + 4])
+    if data[offset: offset + 4] in [b'bres']: 
+        # root_folder is a file, and not a folder, so I will extract it and quit the function
+        extract_brres_sub_file(data, offset, root_name, root_folder)
+        return # end of tree
+    elif data[offset: offset + 4] in [b'MDL0', b'TEX0', b'SRT0', b'CHR0', b'PAT0', b'CLR0', b'SHP0', b'SCN0', b'PLT0', b'VIS0']:
+        # root_folder is a file, and not a folder, so I will extract it and quit the function
+        extract_sub_file(data, offset, root_name, root_folder)
+        return # end of tree
+    if data[offset: offset + 4] in [b'@ARN', b'@FOG', b'@LGT', b'MEI0']: # MSM Special files
+        # store file information and extract at the end
+        msm_files_offset.append(offset)
+        msm_files_absolute_filepath.append(root_folder)
+        return # end of tree
+    if not os.path.exists(root_folder):
+        os.makedirs(root_folder)
+        
+    brres_index_group_length = (data[offset] << 24) + (data[offset + 1] << 16) + (data[offset + 2] << 8) + data[offset + 3] # u32
+    number_of_entries = (data[offset + 4] << 24) + (data[offset + 5] << 16) + (data[offset + 6] << 8) + data[offset + 7] # u32
+    print(brres_index_group_length, number_of_entries)
+    # parse Brres Index Group 1
+    x = 8 + 16 # skip reference point since we're extracting
+    ASSERT(data[offset + 8: offset + 12] == b'\xff\xff\x00\x00')
+    # info_list = [create_brres_info(id=0, left_idx=0, right_idx=0, name=root_name, nlen=0)]
+    # we're extracting!!! no creating the binary tree
+    while number_of_entries > 0:
+        x += 8 # skip binary tree info
+        entry_name_offset = (data[offset + x] << 24) + (data[offset + x + 1] << 16) + (data[offset + x + 2] << 8) + data[offset + x + 3] + offset # u32
+        entry_name_offset_len = data[entry_name_offset - 1] # u8
+        entry_name = data[entry_name_offset:entry_name_offset + entry_name_offset_len].decode() # converts to str using UTF-8 encoding
+        x += 4
+        entry_start_offset = (data[offset + x] << 24) + (data[offset + x + 1] << 16) + (data[offset + x + 2] << 8) + data[offset + x + 3] + offset # u32
+        every_offset_of_a_new_thing.append(entry_name_offset - 1)
+        every_offset_of_a_new_thing.append(entry_start_offset)
+        parse_brres_index_group(data, entry_start_offset, entry_name, os.path.join(root_folder, entry_name))
+        x += 4
+        number_of_entries -= 1
+        
+##################################################################################
+#  REWRITE OF WSZST BRRES CREATOR IN PYTHON BY HAND
+#  ASSUMPTIONS : all brres are little endian. all ASSERT contents are true
+#  SOURCE : me
+#  USAGE : create_brres('cmn_test_DECOMP_new')
+##################################################################################
+
 def scan_directory():
     del repack_list[:]
     del extract_list[:]
@@ -104,9 +391,9 @@ def scan_directory():
         brres_content = b""
         if not os.path.exists(cmn_dir):
             cmn_dir = input("drag and drop cmn_test_extracted in this window then press enter\n")
-        if not os.path.exists(cmn):
-            cmn = input("drag and drop cmn_test_DECOMP.bin in this window then press enter\n")
-        with open(cmn, "r+b") as file:
+        if not os.path.exists(brres):
+            brres = input("drag and drop cmn_test_DECOMP.bin in this window then press enter\n")
+        with open(brres, "r+b") as file:
             for i in range(3, len(brres_list)):
                 if not os.path.exists(cmn_dir + "/" + brres_list[i]):
                     print(f"cannot find file, skipping {brres_list[i]}")
@@ -121,36 +408,22 @@ def scan_directory():
         print(f"rebuilt file!\npress enter to exit...")
         manual_entry.delete(0, 'end')
 
-    def extract(cmn):
-        try:
-            data = b''
-            data2 = b''
-            cmn_dir = os.path.splitext(cmn)[0].split('_DECOMP')[0] + "_extracted"
-            while os.path.exists(cmn_dir):
-                cmn_dir += "_new"
-            os.makedirs(cmn_dir)
-            previous = 0
-            brres_count = 0
-            with open(cmn, "rb") as bina:
-                data = bina.read()
-            if data.count(b'bres') != 22:
-                raise IndexError
-            if data[:4] != b'bres':
-                os.system(f'{n} "{cmn}" -x')
-                cmn = os.path.splitext(cmn)[0] + '_DECOMP.bin'
-            for i in range(0, len(data), 16):
-                if data[i:i + 4] == b'bres':
-                    print(i, brres_count, brres_list[brres_count])
-                    brres_count += 1
-                    with open(cmn_dir + "/" + brres_list[brres_count], "wb") as brres:
-                        brres.write(data[previous:i])
-                    previous = i
-            with open(cmn_dir + "/" + brres_list[-1], "wb") as brres:
-                brres.write(data[previous:i])
-            print(brres_count)
-        except IndexError:
-            return language[cmn + 11]
-        return language[hashtag + 16].replace('#', brres_count)
+    def extract(brres):
+        data = b''
+        with open(brres, "rb") as bina:
+            data = bina.read(8)
+        if data[:8] != b'bres\xfe\xff\x00\x00': # if it's not a brres
+            os.system(f'{n} "{brres}" -x') # convert it to brres
+            brres = os.path.splitext(brres)[0] + '_DECOMP.bin'
+        print(brres)
+        extract_brres(brres)
+        """except InterruptedError:
+            raise InterruptedError
+            print(language[cmn + 11])  # message that it's not a brres
+        except FileNotFoundError:
+            raise InterruptedError
+            print(language[cmn + 11])  # message that it's not a brres"""
+        return language[arc + 1]
     
     def explorer_repack():
         repack_dir = askdirectory(initialdir=cwd, title="Select a directory to repack")
@@ -158,7 +431,13 @@ def scan_directory():
 
     def explorer_extract():
         file = askopenfilename(initialdir=cwd)
-        print(extract(file))
+        try:
+            extract_brres(file)
+        except InterruptedError:
+            print(language[cmn + 11])  # message that it's not a brres
+        except FileNotFoundError:
+            print(language[cmn + 11])  # message that it's not a brres
+        print(language[arc + 1])
 
     def extract_file(file, number):
         label_text = extract(file)
