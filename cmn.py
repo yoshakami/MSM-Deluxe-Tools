@@ -243,23 +243,23 @@ print(info_list)"""
 
 ##################################################################################
 #  REWRITE OF WSZST BRRES EXTRACTOR IN PYTHON BY HAND
-#  ASSUMPTIONS : all brres are little endian. all ASSERT contents are true
+#  ASSUMPTIONS : all ASSERT contents are true
 #  SOURCE : me
 #  USAGE : extract_brres('cmn_test_DECOMP.brres')
 ##################################################################################
+
+msm_files_offset = []
+msm_files_absolute_filepath = []
+every_offset_of_a_new_thing = []
+extracted_files = ['']
+
 def extract_brres(brres):
     with open(brres, "rb") as bina:
         data = bina.read(12)
         ASSERT(data[:4] == b'bres') # makes sure the file is a brres
         endian = data[4:6]
-        if endian == b'\xfe\xff': # big endian
-            # calculating filesize in case another editor added buch of crap after the end of the brres
-            filesize = (data[8] << 24) + (data[9] << 16) + (data[10] << 8) + (data[11]) # u32 = 4 bytes unsigned integer
-        elif endian == b'\xff\xfe': # little endian -> reversed order
-            # calculating filesize in case another editor added buch of crap after the end of the brres
-            filesize = (data[8] << 24) + (data[9] << 16) + (data[10] << 8) + (data[11]) # u32 = 4 bytes unsigned integer
-        else:
-            raise RuntimeError # invalid endian
+        # calculating filesize in case another editor added buch of crap after the end of the brres
+        filesize = calc_int(data, 8, endian) # u32 = 4 bytes unsigned integer
         data += bina.read(filesize - 12) # read filesize minus what's already read
     # create extracted brres dir
     extracted_dir = os.path.splitext(brres)[0].split('_DECOMP')[0] + "_extracted"
@@ -267,15 +267,16 @@ def extract_brres(brres):
         extracted_dir += "_new"
     os.makedirs(extracted_dir)
     
-    root_offset = (data[12] << 8) + data[13] # u16 = 2 bytes unsigned short
-    sections_number = (data[14] << 8) + data[15] # number of files inside the first brres + 1
+    root_offset = calc_short(data, 12, endian) # u16 = 2 bytes unsigned short
+    sections_number = calc_short(data, 14, endian) # number of files inside the first brres + 1
     # in cmn_test.bin, there are 1 mdl0 + 2 tex0 + 21 brres + 1 = 0x19 = 25
     
     # parse Brres Index Group 1
     ASSERT(data[root_offset:root_offset + 4] == b'root')
-    root_section_size = (data[root_offset + 4] << 24) + (data[root_offset + 5] << 16) + (data[root_offset + 6] << 8) + data[root_offset + 7] # u32
-    parse_brres_index_group(data, root_offset + 8, "", extracted_dir) # launch recursive func
+    # root_section_size = (data[root_offset + 4] << 24) + (data[root_offset + 5] << 16) + (data[root_offset + 6] << 8) + data[root_offset + 7] # u32
+    parse_brres_index_group(data, root_offset + 8, "", extracted_dir, endian) # launch recursive func
     extract_msm_files(data)
+    ASSERT(sections_number == len(extracted_files))
     return extracted_dir # return extracted folder name
 
 def calc_int(data, offset, endian):
@@ -288,43 +289,24 @@ def calc_int(data, offset, endian):
     
 def calc_short(data, offset, endian):
     if endian == b'\xfe\xff': # big endian
-        return (data[8] << 24) + (data[9] << 16) + (data[10] << 8) + (data[11]) # u32 = 4 bytes unsigned integer
+        return (data[offset] << 8) + (data[offset + 1]) # u16 = 2 bytes unsigned short
     elif endian == b'\xff\xfe': # little endian -> reversed order
-        return (data[8] << 24) + (data[9] << 16) + (data[10] << 8) + (data[11]) # u32 = 4 bytes unsigned integer
+        return (data[offset + 1] << 8) + (data[offset]) # u16 = 2 bytes unsigned short
     else:
         raise RuntimeError # invalid endian
     
 def extract_brres_sub_file(data, offset, root_name, root_absolute_filepath):
-    x = 8
-    file_length = 0
-    if data[offset + 4:offset + 6] == b'\xFE\xFF':
-        file_length = (data[offset + x] << 24) + (data[offset + x + 1] << 16) + (data[offset + x + 2] << 8) + data[offset + x + 3] + offset # u32
-    elif data[offset + 4:offset + 6] == b'\xFF\xFE':
-        file_length = (data[offset + x + 3] << 24) + (data[offset + x + 2] << 16) + (data[offset + x + 1] << 8) + data[offset + x] + offset # u32
-    else:
-        print(data[offset + 4:offset + 6], offset, root_name, root_absolute_filepath, data[offset:offset + 32])
-        raise InterruptedError # invalid endian bytes
+    endian = data[offset + 4: offset + 6]
+    file_length = calc_int(data, offset + 8, endian) # u32
     with open(root_absolute_filepath, 'wb') as sub:
         sub.write(data[offset:offset+file_length])
         
 def extract_sub_file(data, offset, root_name, root_absolute_filepath, endian):
-    x = 8
-    file_length = 0
-    if endian == b'\xFE\xFF':
-        file_length = (data[offset + x] << 24) + (data[offset + x + 1] << 16) + (data[offset + x + 2] << 8) + data[offset + x + 3] + offset # u32
-    elif endian == b'\xFF\xFE':
-        file_length = (data[offset + x + 3] << 24) + (data[offset + x + 2] << 16) + (data[offset + x + 1] << 8) + data[offset + x] + offset # u32
-    else:
-        print(data[offset + 4:offset + 6], offset, root_name, root_absolute_filepath, data[offset:offset + 32])
-        raise InterruptedError # invalid endian bytes
+    file_length = calc_int(data, offset + 4, endian) # u32
     with open(root_absolute_filepath, 'wb') as sub:
         sub.write(data[offset:offset+file_length])
 
-msm_files_offset = []
-msm_files_absolute_filepath = []
-every_offset_of_a_new_thing = []
-
-def extract_msm_files(data):  # these files have no filesize at offset 8
+def extract_msm_files(data):  # these files have no filesize at offset 4 or 8
     every_offset_of_a_new_thing.sort()
     for i in range(len(msm_files_offset)):
         offset = msm_files_offset[i]
@@ -333,27 +315,30 @@ def extract_msm_files(data):  # these files have no filesize at offset 8
         with open(file, 'wb') as administrator:
             administrator.write(data[offset:next_offset])
 
-def parse_brres_index_group(data, offset, root_name, root_folder):
+def parse_brres_index_group(data, offset, root_name, root_folder, endian):
     print(offset, root_name, root_folder)
     print(data[offset: offset + 4])
     if data[offset: offset + 4] in [b'bres']: 
         # root_folder is a file, and not a folder, so I will extract it and quit the function
         extract_brres_sub_file(data, offset, root_name, root_folder)
+        extracted_files.append(root_folder)
         return # end of tree
     elif data[offset: offset + 4] in [b'MDL0', b'TEX0', b'SRT0', b'CHR0', b'PAT0', b'CLR0', b'SHP0', b'SCN0', b'PLT0', b'VIS0']:
         # root_folder is a file, and not a folder, so I will extract it and quit the function
-        extract_sub_file(data, offset, root_name, root_folder)
+        extract_sub_file(data, offset, root_name, root_folder, endian)
+        extracted_files.append(root_folder)
         return # end of tree
     if data[offset: offset + 4] in [b'@ARN', b'@FOG', b'@LGT', b'MEI0']: # MSM Special files
         # store file information and extract at the end
         msm_files_offset.append(offset)
         msm_files_absolute_filepath.append(root_folder)
+        extracted_files.append(root_folder)
         return # end of tree
     if not os.path.exists(root_folder):
         os.makedirs(root_folder)
         
-    brres_index_group_length = (data[offset] << 24) + (data[offset + 1] << 16) + (data[offset + 2] << 8) + data[offset + 3] # u32
-    number_of_entries = (data[offset + 4] << 24) + (data[offset + 5] << 16) + (data[offset + 6] << 8) + data[offset + 7] # u32
+    brres_index_group_length = calc_int(data, offset, endian) # u32
+    number_of_entries = calc_int(data, offset + 4, endian)  # u32
     print(brres_index_group_length, number_of_entries)
     # parse Brres Index Group 1
     x = 8 + 16 # skip reference point since we're extracting
@@ -362,11 +347,11 @@ def parse_brres_index_group(data, offset, root_name, root_folder):
     # we're extracting!!! no creating the binary tree
     while number_of_entries > 0:
         x += 8 # skip binary tree info
-        entry_name_offset = (data[offset + x] << 24) + (data[offset + x + 1] << 16) + (data[offset + x + 2] << 8) + data[offset + x + 3] + offset # u32
+        entry_name_offset = calc_int(data, offset + x, endian) + offset # u32
         entry_name_offset_len = data[entry_name_offset - 1] # u8
         entry_name = data[entry_name_offset:entry_name_offset + entry_name_offset_len].decode() # converts to str using UTF-8 encoding
         x += 4
-        entry_start_offset = (data[offset + x] << 24) + (data[offset + x + 1] << 16) + (data[offset + x + 2] << 8) + data[offset + x + 3] + offset # u32
+        entry_start_offset = calc_int(data, offset + x, endian) + offset # u32
         every_offset_of_a_new_thing.append(entry_name_offset - 1)
         every_offset_of_a_new_thing.append(entry_start_offset)
         parse_brres_index_group(data, entry_start_offset, entry_name, os.path.join(root_folder, entry_name))
