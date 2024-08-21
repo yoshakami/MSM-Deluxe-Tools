@@ -294,17 +294,78 @@ def calc_short(data, offset, endian):
         return (data[offset + 1] << 8) + (data[offset]) # u16 = 2 bytes unsigned short
     else:
         raise RuntimeError # invalid endian
-    
+
+def hex_float(number): # number => float
+    num = b''
+    w = hex(struct.unpack('<I', struct.pack('<f', number))[0])[2:]
+    # add zeros to always make the value length to 8
+    # w = '0' * (8-len(w)) + w
+    w = w.zfill(8)
+    for octet in range(0, 8, 2):  # transform for example "3f800000" to b'\x3f\x80\x00\x00'
+        num += bytes(chr(int(w[octet:(octet + 2)], 16)), 'latin-1')
+    return num
+
 def extract_brres_sub_file(data, offset, root_name, root_absolute_filepath):
     endian = data[offset + 4: offset + 6]
     file_length = calc_int(data, offset + 8, endian) # u32
     with open(root_absolute_filepath, 'wb') as sub:
         sub.write(data[offset:offset+file_length])
-        
+
+def change_offsets(data, offset, file_length, root_name, outer_brres_offset_in_the_header, name_offset_in_the_header):
+    extracted_data = data[offset: offset + outer_brres_offset_in_the_header] + b'\x00\x00\x00\x00' # change offset to brres file (no brres since it's an extracted file)
+    extracted_data += data[offset + outer_brres_offset_in_the_header + 4:offset + name_offset_in_the_header] + hex_float(file_length + 4) # change offset to filename, even if the file itself is named like what's written
+    extracted_data += data[offset + name_offset_in_the_header + 4:offset + file_length] + b'\x00' * 4 + bytes(root_name, 'latin-1') + b'\x00' * 4 # don't ask me why ANSI is named latin-1 in python
+    return extracted_data
+
+magic_version_name_offset = {
+    (b'TEX0', 1): 0x14
+    (b'TEX0', 3): 0x14,
+    (b'TEX0', 1): 0x14,
+    (b'PAT0', 3): 0x24,
+    (b'PAT0', 4): 0x28,
+    
+}
 def extract_sub_file(data, offset, root_name, root_absolute_filepath, endian):
     file_length = calc_int(data, offset + 4, endian) # u32
-    with open(root_absolute_filepath, 'wb') as sub:
-        sub.write(data[offset:offset+file_length])
+    extracted_data = b''
+    # now we need to change the file content and add data at the end, else brawlcrate crashes
+    magic = data[offset:offset + 4]
+    version = calc_int(data, offset + 8, endian)
+    if magic == b'TEX0':
+        if version in [1, 3]:
+            extracted_data = change_offsets(data, offset, file_length, root_name, 0xC, 0x14)
+        elif version in [2]:
+            extracted_data = change_offsets(data, offset, file_length, root_name, 0xC, 0x18)
+        else:
+            raise InterruptedError # unsupported TEX0 Version
+    elif magic == b'PAT0':
+        if version == 3:
+            extracted_data = change_offsets(data, offset, file_length, root_name, 0xC, 0x24)
+        elif version == 4:
+            extracted_data = change_offsets(data, offset, file_length, root_name, 0xC, 0x28)
+        else:
+            raise InterruptedError # unsupported PAT0 Version
+    elif magic in [b'CHR0', b'SRT0']:
+        if version == 4:
+            extracted_data = change_offsets(data, offset, file_length, root_name, 0xC, 0x14)
+        elif version == 5:
+            extracted_data = change_offsets(data, offset, file_length, root_name, 0xC, 0x18)
+        else:
+            raise InterruptedError # unsupported PAT0 Version
+    elif magic == b'CLR0':
+        if version == 3:
+            extracted_data = change_offsets(data, offset, file_length, root_name, 0xC, 0x14)
+        if version == 4:
+            extracted_data = change_offsets(data, offset, file_length, root_name, 0xC, 0x18)
+    elif magic == b'SCN0':
+        if version == 4:
+            extracted_data = change_offsets(data, offset, file_length, root_name, 0xC, 0x28)
+        if version == 5:
+            extracted_data = change_offsets(data, offset, file_length, root_name, 0xC, 0x2C)
+    
+            
+    with open(root_absolute_filepath + '.' + magic.lower(), 'wb') as sub:
+        sub.write(extracted_data)
 
 def extract_msm_files(data):  # these files have no filesize at offset 4 or 8
     every_offset_of_a_new_thing.sort()
@@ -354,7 +415,7 @@ def parse_brres_index_group(data, offset, root_name, root_folder, endian):
         entry_start_offset = calc_int(data, offset + x, endian) + offset # u32
         every_offset_of_a_new_thing.append(entry_name_offset - 1)
         every_offset_of_a_new_thing.append(entry_start_offset)
-        parse_brres_index_group(data, entry_start_offset, entry_name, os.path.join(root_folder, entry_name))
+        parse_brres_index_group(data, entry_start_offset, entry_name, os.path.join(root_folder, entry_name), endian)
         x += 4
         number_of_entries -= 1
         
