@@ -285,7 +285,7 @@ def extract_brres(brres):
     # root_section_size = (data[root_offset + 4] << 24) + (data[root_offset + 5] << 16) + (data[root_offset + 6] << 8) + data[root_offset + 7] # u32
     parse_brres_index_group(data, root_offset + 8, "", extracted_dir, endian) # launch recursive func
     extract_msm_files(data)
-    ASSERT(sections_number == len(extracted_files))
+    ASSERT(sections_number == len(extracted_files) + 1)
     return extracted_dir # return extracted folder name
 
 def calc_int(data, offset, endian):
@@ -314,7 +314,7 @@ def hex_float(number): # number is of type float
         num += bytes(chr(int(w[octet:(octet + 2)], 16)), 'latin-1')
     return num
 
-def extract_brres_sub_file(data, offset, root_name, root_absolute_filepath):
+def extract_brres_inside_brres(data, offset, root_name, root_absolute_filepath):
     endian = data[offset + 4: offset + 6]
     file_length = calc_int(data, offset + 8, endian) # u32
     with open(root_absolute_filepath, 'wb') as sub:
@@ -325,7 +325,7 @@ def extract_mdl0(data, offset, root_name, root_absolute_filepath, endian, file_l
     mdl0_sections.clear()
     mdl0_brres_index_group_new_offsets.clear()
     root_name_bytes = bytes(root_name, 'latin-1')
-    len_bytes = bytes(chr(len(root_name_bytes)))  # len_bytes[0] = int(len_bytes) but python prefers making ["1,,," ",2"] a valid list instead of making support to calculate integers so I made calc_int and calc_short
+    len_bytes = bytes(chr(len(root_name_bytes)), 'latin-1')  # len_bytes[0] = int(len_bytes) but python prefers making ["1,,," ",2"] a valid list instead of making support to calculate integers so I made calc_int and calc_short
     mdl0_file_end[0] = b'\x00' * 7 + len_bytes + root_name_bytes + b'\x00' * (8 - (len_bytes[0] % 8))
     x = 0x10
     assert version == 11 # only mdl0 v11 is supported
@@ -359,39 +359,52 @@ def parse_brres_index_group_inside_of_mdl0(data, offset, root_name, root_folder,
         x += 8 # skip binary tree info
         entry_name_offset = calc_int(data, offset + x, endian) + offset # u32
         entry_name_offset_len = data[entry_name_offset - 1] # u8
-        entry_name = data[entry_name_offset:entry_name_offset + entry_name_offset_len].decode() # converts to str using UTF-8 encoding
+        entry_name = data[entry_name_offset:entry_name_offset + entry_name_offset_len].decode('latin-1') # converts to str using latin-1 encoding
         x += 4
         entry_start_offset = calc_int(data, offset + x, endian) + offset # u32
         every_offset_of_a_new_thing.append(entry_name_offset - 1)
         every_offset_of_a_new_thing.append(entry_start_offset)
         name_bytes = bytes(root_name, 'latin-1')
-        name_len = bytes(chr(len(name_bytes)))
-        w = hex(calc_int(file_length + len(mdl0_file_end) + 1)).zfill(8)
+        name_len = bytes(chr(len(name_bytes)), 'latin-1')
+        w = hex(file_length + len(mdl0_file_end) + 1)[2:].zfill(8)
         new_name_offset = b''
         for octet in range(0, 8, 2):  # transform for example "3f800000" to b'\x3f\x80\x00\x00'
             new_name_offset += bytes(chr(int(w[octet:(octet + 2)], 16)), 'latin-1')
+        if endian == b'\xff\xfe':
+            new_name_offset = new_name_offset[::-1] # reverse bytes order
         mdl0_file_end[0] += name_len + name_bytes + b'\x00' * (8 - (name_len[0] % 8))
+        print(entry_start_offset, entry_name, os.path.join(root_folder, entry_name))
         mdl0_brres_index_group_new_offsets[data[offset + x - 16:offset + x - 4]] = new_name_offset
         parse_brres_index_group(data, entry_start_offset, entry_name, os.path.join(root_folder, entry_name), endian, file_length)
         x += 4
         number_of_entries -= 1
         
     
-def change_offsets(data, offset, file_length, root_name, outer_brres_offset_in_the_header, name_offset_in_the_header):
+def change_offsets(data, offset, file_length, root_name, outer_brres_offset_in_the_header, name_offset_in_the_header, endian):
     extracted_data = data[offset: offset + outer_brres_offset_in_the_header] + b'\x00\x00\x00\x00' # change offset to brres file (no brres since it's an extracted file)
-    extracted_data += data[offset + outer_brres_offset_in_the_header + 4:offset + name_offset_in_the_header] + hex_float(file_length + 4) # change offset to filename, even if the file itself is named like what's written
-    extracted_data += data[offset + name_offset_in_the_header + 4:offset + file_length] + b'\x00' * 4 + bytes(root_name, 'latin-1') + b'\x00' * 4 # don't ask me why ANSI is named latin-1 in python
+    name_bytes = bytes(root_name, 'latin-1') # don't ask me why ANSI is named latin-1 in python
+    name_len = bytes(chr(len(name_bytes)), 'latin-1')
+    w = hex(file_length + 4)[2:].zfill(8)
+    new_name_offset = b''
+    for octet in range(0, 8, 2):  # transform for example "3f800000" to b'\x3f\x80\x00\x00'
+        new_name_offset += bytes(chr(int(w[octet:(octet + 2)], 16)), 'latin-1')
+    if endian == b'\xff\xfe':
+        new_name_offset = new_name_offset[::-1] # reverse bytes order
+    print(b'new name offset', new_name_offset)
+    extracted_data += data[offset + outer_brres_offset_in_the_header + 4:offset + name_offset_in_the_header] + new_name_offset # change offset to filename, even if the file itself is named like what's written
+    extracted_data += data[offset + name_offset_in_the_header + 4:offset + file_length]
+    extracted_data += b'\x00' * 3 + name_len + name_bytes + b'\x00' * (12 - (name_len[0] % 12))
     return extracted_data
 
 magic_version_name_offset = {
     (b'TEX0', 1): 0x14, (b'TEX0', 2): 0x18, (b'TEX0', 3): 0x14,
+    (b'PLT0', 1): 0x14, (b'PLT0', 3): 0x14,
     (b'SRT0', 4): 0x14, (b'SRT0', 5): 0x18,
     (b'CHR0', 4): 0x14, (b'CHR0', 5): 0x18,
     (b'PAT0', 3): 0x24, (b'PAT0', 4): 0x28,
-    (b'CLR0', 3): 0x14, (b'SRT0', 4): 0x18,
+    (b'CLR0', 3): 0x14, (b'CLR0', 4): 0x18,
     (b'SHP0', 3): 0x18, (b'SHP0', 4): 0x1C,
     (b'SCN0', 4): 0x28, (b'SCN0', 5): 0x2C,
-    (b'PLT0', 1): 0x14, (b'PLT0', 3): 0x14,
     (b'VIS0', 3): 0x14, (b'VIS0', 4): 0x18
 }
 def extract_sub_file(data, offset, root_name, root_absolute_filepath, endian):
@@ -404,8 +417,8 @@ def extract_sub_file(data, offset, root_name, root_absolute_filepath, endian):
         return extract_mdl0(data, offset, root_name, root_absolute_filepath, endian, file_length, version)
     name_offset = magic_version_name_offset.get((magic, version))
     ASSERT(name_offset is not None)
-    extracted_data = change_offsets(data, offset, file_length, root_name, 0xC, name_offset)
-    with open(root_absolute_filepath + '.' + magic.lower(), 'wb') as sub:
+    extracted_data = change_offsets(data, offset, file_length, root_name, 0xC, name_offset, endian)
+    with open(root_absolute_filepath + '.' + magic.decode('latin-1').lower(), 'wb') as sub:
         sub.write(extracted_data)
 
 def extract_msm_files(data):  # these files have no filesize at offset 4 or 8
@@ -421,7 +434,7 @@ def parse_brres_index_group(data, offset, root_name, root_folder, endian):
     print(offset, root_name, root_folder, data[offset: offset + 4])
     if data[offset: offset + 4] in [b'bres']: 
         # root_folder is a file, and not a folder, so I will extract it and quit the function
-        extract_brres_sub_file(data, offset, root_name, root_folder)
+        extract_brres_inside_brres(data, offset, root_name, root_folder)
         extracted_files.append(root_folder)
         return # end of tree
     elif data[offset: offset + 4] in [b'MDL0', b'TEX0', b'SRT0', b'CHR0', b'PAT0', b'CLR0', b'SHP0', b'SCN0', b'PLT0', b'VIS0']:
@@ -450,7 +463,7 @@ def parse_brres_index_group(data, offset, root_name, root_folder, endian):
         x += 8 # skip binary tree info
         entry_name_offset = calc_int(data, offset + x, endian) + offset # u32
         entry_name_offset_len = data[entry_name_offset - 1] # u8
-        entry_name = data[entry_name_offset:entry_name_offset + entry_name_offset_len].decode() # converts to str using UTF-8 encoding
+        entry_name = data[entry_name_offset:entry_name_offset + entry_name_offset_len].decode('latin-1') # converts to str using latin-1 encoding
         x += 4
         entry_start_offset = calc_int(data, offset + x, endian) + offset # u32
         every_offset_of_a_new_thing.append(entry_name_offset - 1)
