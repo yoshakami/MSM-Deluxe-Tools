@@ -378,9 +378,72 @@ def parse_brres_index_group_inside_of_mdl0(data, offset, root_name, root_folder,
         parse_brres_index_group(data, entry_start_offset, entry_name, os.path.join(root_folder, entry_name), endian, file_length)
         x += 4
         number_of_entries -= 1
+
+string_pool_table = {}
+
+def extract_pat0(data, offset, file_length, root_name, endian, name_offset_in_the_header, extracted_data, sub_file_end):
+    sub_file_end += b'\x00' * 3
+    section_1_offset = calc_int(data, offset + 0x10, endian)
+    section_2_offset = calc_int(data, offset + 0x14, endian)
+    section_3_offset = calc_int(data, offset + 0x18, endian)
+    N_BASE = calc_short(data, offset + 0x32, endian)
+    N_STR = calc_short(data, offset + 0x34, endian)
+    x = section_1_offset + 0x18
+    data_offsets = []
+    extracted_data += data[offset + len(extracted_data):offset + x]
+    for i in range(N_BASE):
+        x += 8
+        name_offset = calc_int(data, offset + x, endian)
+        name_len = data[offset + section_1_offset + name_offset - 1]
+        name = data[offset + section_1_offset + name_offset: offset + section_1_offset + name_offset + name_len]
+        name_new_offset = string_pool_table.get(name)
+        if name_new_offset is None:
+            w = hex(file_length + len(sub_file_end))[2:].zfill(8)
+            new_name_offset = b''
+            for octet in range(0, 8, 2):  # transform for example "3f800000" to b'\x3f\x80\x00\x00'
+                new_name_offset += bytes(chr(int(w[octet:(octet + 2)], 16)), 'latin-1')
+            if endian == b'\xff\xfe':
+                new_name_offset = new_name_offset[::-1] # reverse bytes order
+            string_pool_table[name] = (new_name_offset, section_1_offset)
+        else:
+            w = hex(new_name_offset[0] + new_name_offset[1] - section_1_offset)[2:].zfill(8)
+            new_name_offset = b''
+            for octet in range(0, 8, 2):  # transform for example "3f800000" to b'\x3f\x80\x00\x00'
+                new_name_offset += bytes(chr(int(w[octet:(octet + 2)], 16)), 'latin-1')
+            if endian == b'\xff\xfe':
+                new_name_offset = new_name_offset[::-1] # reverse bytes order
+        data_offsets.append(calc_int(data, offset + x + 4, endian) + section_1_offset)
+        extracted_data += data[offset + x - 8:offset + x] + new_name_offset + data[offset + x + 4:offset + x + 8]
+        x += 8
+    if len(data_offsets) > 0:
+        extracted_data += data[offset + x:offset + x + data_offsets[0]]
+    for i in range(N_BASE):
+        extracted_data += data[offset + x - 8:offset + x] + new_name_offset + data[offset + x + 4:offset + x + 8]
+        x += 8
         
+def calc_new_name_offset(data, offset, x, endian, section_1_offset, file_length, sub_file_end):
+    name_offset = calc_int(data, offset + x, endian)
+    name_len = data[offset + section_1_offset + name_offset - 1]
+    name = data[offset + section_1_offset + name_offset: offset + section_1_offset + name_offset + name_len]
+    name_new_offset = string_pool_table.get(name)
+    if name_new_offset is None:
+        w = hex(file_length + len(sub_file_end))[2:].zfill(8)
+        new_name_offset = b''
+        for octet in range(0, 8, 2):  # transform for example "3f800000" to b'\x3f\x80\x00\x00'
+            new_name_offset += bytes(chr(int(w[octet:(octet + 2)], 16)), 'latin-1')
+        if endian == b'\xff\xfe':
+            new_name_offset = new_name_offset[::-1] # reverse bytes order
+        string_pool_table[name] = (new_name_offset, section_1_offset)
+    else:
+        w = hex(new_name_offset[0] + new_name_offset[1] - section_1_offset)[2:].zfill(8)
+        new_name_offset = b''
+        for octet in range(0, 8, 2):  # transform for example "3f800000" to b'\x3f\x80\x00\x00'
+            new_name_offset += bytes(chr(int(w[octet:(octet + 2)], 16)), 'latin-1')
+        if endian == b'\xff\xfe':
+            new_name_offset = new_name_offset[::-1] # reverse bytes order
+    data_offsets.append(calc_int(data, offset + x + 4, endian))
     
-def change_offsets(data, offset, file_length, root_name, outer_brres_offset_in_the_header, name_offset_in_the_header, endian):
+def change_offsets(data, offset, file_length, root_name, endian, magic, outer_brres_offset_in_the_header, name_offset_in_the_header):
     extracted_data = data[offset: offset + outer_brres_offset_in_the_header] + b'\x00\x00\x00\x00' # change offset to brres file (no brres since it's an extracted file)
     name_bytes = bytes(root_name, 'latin-1') # don't ask me why ANSI is named latin-1 in python
     name_len = bytes(chr(len(name_bytes)), 'latin-1')
@@ -392,8 +455,13 @@ def change_offsets(data, offset, file_length, root_name, outer_brres_offset_in_t
         new_name_offset = new_name_offset[::-1] # reverse bytes order
     print(b'new name offset', new_name_offset)
     extracted_data += data[offset + outer_brres_offset_in_the_header + 4:offset + name_offset_in_the_header] + new_name_offset # change offset to filename, even if the file itself is named like what's written
+    string_pool_table.clear()
+    string_pool_table[name_bytes] = (new_name_offset, 0)
+    sub_file_end = b'\x00' * 3 + name_len + name_bytes + b'\x00' * (12 - (name_len[0] % 12))
+    if magic == b'PAT0':
+        return extract_pat0(data, offset, file_length, root_name, endian, name_offset_in_the_header, extracted_data, sub_file_end
     extracted_data += data[offset + name_offset_in_the_header + 4:offset + file_length]
-    extracted_data += b'\x00' * 3 + name_len + name_bytes + b'\x00' * (12 - (name_len[0] % 12))
+    extracted_data += sub_file_end
     return extracted_data
 
 magic_version_name_offset = {
@@ -417,7 +485,7 @@ def extract_sub_file(data, offset, root_name, root_absolute_filepath, endian):
         return extract_mdl0(data, offset, root_name, root_absolute_filepath, endian, file_length, version)
     name_offset = magic_version_name_offset.get((magic, version))
     ASSERT(name_offset is not None)
-    extracted_data = change_offsets(data, offset, file_length, root_name, 0xC, name_offset, endian)
+    extracted_data = change_offsets(data, offset, file_length, root_name, endian, magic, 0xC, name_offset)
     with open(root_absolute_filepath + '.' + magic.decode('latin-1').lower(), 'wb') as sub:
         sub.write(extracted_data)
 
