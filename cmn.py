@@ -272,8 +272,13 @@ def extract_brres(brres):
         data += bina.read(filesize - 12) # read filesize minus what's already read
     # create extracted brres dir
     extracted_dir = os.path.splitext(brres)[0].split('_DECOMP')[0] + "_extracted"
+    num = 1
     while os.path.exists(extracted_dir):
-        extracted_dir += "_new"
+        if num == 1:
+            extracted_dir = extracted_dir + str(num)
+        else:
+            extracted_dir = extracted_dir[:-len(str(num))] + str(num)
+        num += 1
     os.makedirs(extracted_dir)
     
     root_offset = calc_short(data, 12, endian) # u16 = 2 bytes unsigned short
@@ -385,7 +390,7 @@ def extract_pat0(data, offset, file_length, root_name, endian, name_offset_in_th
     sub_file_end += b'\x00' * 3
     section_1_offset = calc_int(data, offset + 0x10, endian)
     section_2_offset = calc_int(data, offset + 0x14, endian)
-    section_3_offset = calc_int(data, offset + 0x18, endian)
+    # section_3_offset = calc_int(data, offset + 0x18, endian)
     N_BASE = calc_short(data, offset + 0x32, endian)
     N_STR = calc_short(data, offset + 0x34, endian)
     x = section_1_offset + 0x18
@@ -393,55 +398,50 @@ def extract_pat0(data, offset, file_length, root_name, endian, name_offset_in_th
     extracted_data += data[offset + len(extracted_data):offset + x]
     for i in range(N_BASE):
         x += 8
-        name_offset = calc_int(data, offset + x, endian)
-        name_len = data[offset + section_1_offset + name_offset - 1]
-        name = data[offset + section_1_offset + name_offset: offset + section_1_offset + name_offset + name_len]
-        name_new_offset = string_pool_table.get(name)
-        if name_new_offset is None:
-            w = hex(file_length + len(sub_file_end))[2:].zfill(8)
-            new_name_offset = b''
-            for octet in range(0, 8, 2):  # transform for example "3f800000" to b'\x3f\x80\x00\x00'
-                new_name_offset += bytes(chr(int(w[octet:(octet + 2)], 16)), 'latin-1')
-            if endian == b'\xff\xfe':
-                new_name_offset = new_name_offset[::-1] # reverse bytes order
-            string_pool_table[name] = (new_name_offset, section_1_offset)
-        else:
-            w = hex(new_name_offset[0] + new_name_offset[1] - section_1_offset)[2:].zfill(8)
-            new_name_offset = b''
-            for octet in range(0, 8, 2):  # transform for example "3f800000" to b'\x3f\x80\x00\x00'
-                new_name_offset += bytes(chr(int(w[octet:(octet + 2)], 16)), 'latin-1')
-            if endian == b'\xff\xfe':
-                new_name_offset = new_name_offset[::-1] # reverse bytes order
+        new_name_offset, sub_file_end = calc_new_name_offset(data, offset, x, endian, section_1_offset, file_length, sub_file_end)
         data_offsets.append(calc_int(data, offset + x + 4, endian) + section_1_offset)
         extracted_data += data[offset + x - 8:offset + x] + new_name_offset + data[offset + x + 4:offset + x + 8]
         x += 8
     if len(data_offsets) > 0:
-        extracted_data += data[offset + x:offset + x + data_offsets[0]]
+        extracted_data += data[offset + x:offset + data_offsets[0]]
     for i in range(N_BASE):
-        extracted_data += data[offset + x - 8:offset + x] + new_name_offset + data[offset + x + 4:offset + x + 8]
-        x += 8
+        x = data_offsets[i]
+        new_name_offset, sub_file_end = calc_new_name_offset(data, offset, x, endian, x, file_length, sub_file_end)
+        if i == N_BASE - 1: # skip to section 2
+            extracted_data += new_name_offset + data[offset + data_offsets[i] + 4:offset + section_2_offset]
+        else:
+            extracted_data += new_name_offset + data[offset + data_offsets[i] + 4:offset + data_offsets[i + 1]]
+    x = section_2_offset
+    for i in range(N_STR):
+        new_name_offset, sub_file_end = calc_new_name_offset(data, offset, x, endian, section_2_offset, file_length, sub_file_end)
+        extracted_data += new_name_offset
+        x += 4
+    extracted_data += data[offset + x: offset + file_length] + sub_file_end + b'\x00'
+    return extracted_data
         
-def calc_new_name_offset(data, offset, x, endian, section_1_offset, file_length, sub_file_end):
+        
+def calc_new_name_offset(data, offset, x, endian, section_offset, file_length, sub_file_end):
     name_offset = calc_int(data, offset + x, endian)
-    name_len = data[offset + section_1_offset + name_offset - 1]
-    name = data[offset + section_1_offset + name_offset: offset + section_1_offset + name_offset + name_len]
-    name_new_offset = string_pool_table.get(name)
-    if name_new_offset is None:
-        w = hex(file_length + len(sub_file_end))[2:].zfill(8)
+    name_len = data[offset + section_offset + name_offset - 1]
+    name = data[offset + section_offset + name_offset: offset + section_offset + name_offset + name_len]
+    new_name_offset = string_pool_table.get(name)
+    if new_name_offset is None:
+        w = hex(file_length + len(sub_file_end) + 1 - section_offset)[2:].zfill(8)
         new_name_offset = b''
         for octet in range(0, 8, 2):  # transform for example "3f800000" to b'\x3f\x80\x00\x00'
             new_name_offset += bytes(chr(int(w[octet:(octet + 2)], 16)), 'latin-1')
         if endian == b'\xff\xfe':
             new_name_offset = new_name_offset[::-1] # reverse bytes order
-        string_pool_table[name] = (new_name_offset, section_1_offset)
+        string_pool_table[name] = (new_name_offset, w, section_offset)
+        sub_file_end += bytes(chr(name_len), 'latin-1') + name + b'\x00' * 3 + b'\x00' * (4 - (name_len % 4))
     else:
-        w = hex(new_name_offset[0] + new_name_offset[1] - section_1_offset)[2:].zfill(8)
+        w = hex(int(new_name_offset[1], 16) + new_name_offset[2] - section_offset)[2:].zfill(8)
         new_name_offset = b''
         for octet in range(0, 8, 2):  # transform for example "3f800000" to b'\x3f\x80\x00\x00'
             new_name_offset += bytes(chr(int(w[octet:(octet + 2)], 16)), 'latin-1')
         if endian == b'\xff\xfe':
             new_name_offset = new_name_offset[::-1] # reverse bytes order
-    data_offsets.append(calc_int(data, offset + x + 4, endian))
+    return new_name_offset, sub_file_end
     
 def change_offsets(data, offset, file_length, root_name, endian, magic, outer_brres_offset_in_the_header, name_offset_in_the_header):
     extracted_data = data[offset: offset + outer_brres_offset_in_the_header] + b'\x00\x00\x00\x00' # change offset to brres file (no brres since it's an extracted file)
@@ -456,10 +456,10 @@ def change_offsets(data, offset, file_length, root_name, endian, magic, outer_br
     print(b'new name offset', new_name_offset)
     extracted_data += data[offset + outer_brres_offset_in_the_header + 4:offset + name_offset_in_the_header] + new_name_offset # change offset to filename, even if the file itself is named like what's written
     string_pool_table.clear()
-    string_pool_table[name_bytes] = (new_name_offset, 0)
+    string_pool_table[name_bytes] = (new_name_offset, w, 0)
     sub_file_end = b'\x00' * 3 + name_len + name_bytes + b'\x00' * (12 - (name_len[0] % 12))
     if magic == b'PAT0':
-        return extract_pat0(data, offset, file_length, root_name, endian, name_offset_in_the_header, extracted_data, sub_file_end
+        return extract_pat0(data, offset, file_length, root_name, endian, name_offset_in_the_header, extracted_data, sub_file_end)
     extracted_data += data[offset + name_offset_in_the_header + 4:offset + file_length]
     extracted_data += sub_file_end
     return extracted_data
