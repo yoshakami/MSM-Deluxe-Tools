@@ -404,6 +404,7 @@ def extract_pat0(data, offset, file_length, root_name, endian, name_offset_in_th
         x += 8
     if len(data_offsets) > 0:
         extracted_data += data[offset + x:offset + data_offsets[0]]
+        data_offsets.sort()  # in case it isn't sorted already
     for i in range(N_BASE):
         x = data_offsets[i]
         new_name_offset, sub_file_end = calc_new_name_offset(data, offset, x, endian, x, file_length, sub_file_end)
@@ -418,7 +419,33 @@ def extract_pat0(data, offset, file_length, root_name, endian, name_offset_in_th
         x += 4
     extracted_data += data[offset + x: offset + file_length] + sub_file_end + b'\x00'
     return extracted_data
-        
+
+def extract_clr0_srt0_vis0_chr0(data, offset, file_length, root_name, endian, name_offset_in_the_header, extracted_data, sub_file_end):
+    sub_file_end += b'\x00' * 3
+    section_1_offset = calc_int(data, offset + 0x10, endian)
+    x = section_1_offset + 4
+    data_offsets = []
+    extracted_data += data[offset + len(extracted_data):offset + x + 20]
+    entry_number = calc_int(data, offset + x, endian)
+    x += 20
+    for i in range(entry_number):  # parse each entry of the brres index group
+        x += 8
+        new_name_offset, sub_file_end = calc_new_name_offset(data, offset, x, endian, section_1_offset, file_length, sub_file_end)
+        data_offsets.append(calc_int(data, offset + x + 4, endian) + section_1_offset)
+        extracted_data += data[offset + x - 8:offset + x] + new_name_offset + data[offset + x + 4:offset + x + 8]
+        x += 8
+    if len(data_offsets) > 0:
+        extracted_data += data[offset + x:offset + data_offsets[0]]
+        data_offsets.sort()  # in case it isn't sorted already
+    for i in range(entry_number):
+        x = data_offsets[i]
+        new_name_offset, sub_file_end = calc_new_name_offset(data, offset, x, endian, x, file_length, sub_file_end)
+        if i == entry_number - 1: # skip to section 2
+            extracted_data += new_name_offset + data[offset + data_offsets[i] + 4:offset + file_length]
+        else:
+            extracted_data += new_name_offset + data[offset + data_offsets[i] + 4:offset + data_offsets[i + 1]]
+    extracted_data += sub_file_end + b'\x00'
+    return extracted_data
         
 def calc_new_name_offset(data, offset, x, endian, section_offset, file_length, sub_file_end):
     name_offset = calc_int(data, offset + x, endian)
@@ -453,13 +480,17 @@ def change_offsets(data, offset, file_length, root_name, endian, magic, outer_br
         new_name_offset += bytes(chr(int(w[octet:(octet + 2)], 16)), 'latin-1')
     if endian == b'\xff\xfe':
         new_name_offset = new_name_offset[::-1] # reverse bytes order
-    print(b'new name offset', new_name_offset)
+    # print(b'new name offset', new_name_offset)
     extracted_data += data[offset + outer_brres_offset_in_the_header + 4:offset + name_offset_in_the_header] + new_name_offset # change offset to filename, even if the file itself is named like what's written
     string_pool_table.clear()
     string_pool_table[name_bytes] = (new_name_offset, w, 0)
     sub_file_end = b'\x00' * 3 + name_len + name_bytes + b'\x00' * (12 - (name_len[0] % 12))
     if magic == b'PAT0':
         return extract_pat0(data, offset, file_length, root_name, endian, name_offset_in_the_header, extracted_data, sub_file_end)
+    if magic in [b'CLR0', b'SRT0', b'VIS0', b'CHR0']:
+        return extract_clr0_srt0_vis0_chr0(data, offset, file_length, root_name, endian, name_offset_in_the_header, extracted_data, sub_file_end)
+    if magic in [b'SHP0', b'SCN0']:
+        
     extracted_data += data[offset + name_offset_in_the_header + 4:offset + file_length]
     extracted_data += sub_file_end
     return extracted_data
