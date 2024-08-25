@@ -645,14 +645,12 @@ def change_offsets(data, offset, file_length, root_name, endian, magic, outer_br
         sub_file_end += b'\x0fAmbLights(NW4R)\x00\x00\x00\x00\x0aCameras(NW4R)\x00\x00\x00\x00\x00\x00\x0eLightSet(NW4R)\x00\x00\x00\x00\x00\x0cLights(NW4R)\x00\x00\x00\x00\x00\x00\x00\x0dambientLight0\x00\x00\x00\x00\x00\x00\x07camera0\x00\x00\x00\x00\x06light0\x00\x00\x00\x00\x00\x09lightSet0\x00\x00\x00'
         string_pool_table[b"AmbLights(NW4R)"] = (b'', hex(file_length + 0x4), 0)
         string_pool_table[b"Cameras(NW4R)"] = (b'', hex(file_length + 0x18), 0)
-        string_pool_table[b"Fogs(NW4R)"] = (b'', hex(file_length + 0x2C), 0)
-        string_pool_table[b"LightSet(NW4R)"] = (b'', hex(file_length + 0x3C), 0)
-        string_pool_table[b"Lights(NW4R)"] = (b'', hex(file_length + 0x50), 0)
-        string_pool_table[b"ambientLight0"] = (b'', hex(file_length + 0x64), 0)
-        string_pool_table[b"camera0"] = (b'', hex(file_length + 0x78), 0)
-        string_pool_table[b"fog0"] = (b'', hex(file_length + 0x84), 0)
-        string_pool_table[b"light0"] = (b'', hex(file_length + 0x90), 0)
-        string_pool_table[b"lightSet0"] = (b'', hex(file_length + 0x9C), 0)
+        string_pool_table[b"LightSet(NW4R)"] = (b'', hex(file_length + 0x2C), 0)
+        string_pool_table[b"Lights(NW4R)"] = (b'', hex(file_length + 0x40), 0)
+        string_pool_table[b"ambientLight0"] = (b'', hex(file_length + 0x54), 0)
+        string_pool_table[b"camera0"] = (b'', hex(file_length + 0x68), 0)
+        string_pool_table[b"light0"] = (b'', hex(file_length + 0x74), 0)
+        string_pool_table[b"lightSet0"] = (b'', hex(file_length + 0x80), 0)
     w = hex(file_length + len(sub_file_end) + 1)[2:].zfill(8)
     new_name_offset = b''
     for octet in range(0, 8, 2):  # transform for example "3f800000" to b'\x3f\x80\x00\x00'
