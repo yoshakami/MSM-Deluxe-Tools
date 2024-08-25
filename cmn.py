@@ -390,7 +390,7 @@ def extract_shp0(data, offset, file_length, root_name, endian, name_offset_in_th
     sub_file_end += b'\x00' * 3
     section_1_offset = calc_int(data, offset + 0x10, endian)
     section_2_offset = calc_int(data, offset + 0x14, endian)
-    N_STR = calc_short(data, offset + 0x26, endian)
+    N_STR = calc_short(data, offset + section_1_offset - 6, endian)
     x = section_1_offset + 4
     data_offsets = []
     extracted_data += data[offset + len(extracted_data):offset + x + 20]
@@ -459,9 +459,9 @@ def extract_pat0(data, offset, file_length, root_name, endian, name_offset_in_th
     section_1_offset = calc_int(data, offset + 0x10, endian)
     section_2_offset = calc_int(data, offset + 0x14, endian)
     # section_3_offset = calc_int(data, offset + 0x18, endian)
-    N_BASE = calc_short(data, offset + 0x32, endian)
-    N_STR = calc_short(data, offset + 0x34, endian)
     x = section_1_offset + 0x18
+    N_BASE = calc_short(data, offset + x - 10, endian)
+    N_STR = calc_short(data, offset + x - 8, endian)
     data_offsets = []
     extracted_data += data[offset + len(extracted_data):offset + x]
     for i in range(N_BASE):
