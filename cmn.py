@@ -461,13 +461,60 @@ v--- Section 234567 start offset ---v
 0x04    4    Section start offset (negative value) relative to SCN0 start
 0x08    4    Name offset relative to section start
 
-the rest of the data of each section is out of my scope, since I only need to edit offsets, not actual data.
+v--- Section 2 (lightset0): ---v
+0x00    4    Section size in bytes (00 00 00 4C)
+0x04    4    Section start offset (negative value) relative to SCN0 start
+0x08    4    Name offset relative to section 2 start offset
+0x0C    4    lightset current number Index (count starts at 0)
+0x10    4    lightset current number Index (count starts at 0)
+0x14    4    Name offset to the AmbiantLight (or zero if unset) relative to section 2 start offset
+0x18    2    FF FF
+0x1A    1    number of lights set
+0x1B    1    00
+0x1C    4    offset to light0 (or zero if unset) relative to section 2 + 0x1C
+0x20    4    offset to light1 (or zero if unset) relative to section 2 + 0x20
+0x24    4    offset to light2 (or zero if unset) relative to section 2 + 0x24
+0x28    4    offset to light3 (or zero if unset) relative to section 2 + 0x28
+0x2C    4    offset to light4 (or zero if unset) relative to section 2 + 0x2C
+0x30    4    offset to light5 (or zero if unset) relative to section 2 + 0x30
+0x34    4    offset to light6 (or zero if unset) relative to section 2 + 0x34
+0x38    4    offset to light7 (or zero if unset) relative to section 2 + 0x38
+0x3C    4    FF FF FF FF
+0x40    4    FF FF FF FF
+0x44    4    FF FF FF FF
+0x48    4    FF FF FF FF
+0x4C    4    FF FF FF FF
+
+v--- Section 3 (ambiantLight0): ---v
+0x00    4    Section size in bytes (00 00 00 18) + ((Frame Num + 1) * 4)
+0x04    4    Section start offset (negative value) relative to SCN0 start
+0x08    4    Name offset relative to section 3 start offset
+0x0C    4    00 00 00 00
+0x10    4    00 00 00 00
+0x14    1    80 if constant colour, 00 otherwise
+0x15    2    00 00
+0x17    1    +1 if color is enabled, +2 if alpha is enabled
+0x18    1    Red byte for frame 0
+0x19    1    Green byte for frame 0
+0x1A    4    Blue byte for frame 0
+0x1B    4    Alpha byte for frame 0
+there will be 4 bytes more for each frame, with RGBA values between 00 and FF if it is not constant.
+
+the rest of the data of each section is unknown to me
 if you wanna edit SCN0 data, use brawlcrate
 ```
 """
 def extract_scn0(data, offset, file_length, root_name, endian, name_offset_in_the_header, extracted_data, sub_file_end):
     sub_file_end += b'\x00' * 3
     section_1_offset = calc_int(data, offset + 0x10, endian)
+    section_2_offset = calc_int(data, offset + 0x14, endian)
+    section_3_offset = calc_int(data, offset + 0x18, endian)
+    if section_3_offset == 0:
+        section_3_offset = calc_int(data, offset + 0x1C, endian)
+    if section_3_offset == 0:
+        section_3_offset = calc_int(data, offset + 0x20, endian)
+    if section_3_offset == 0:
+        section_3_offset = calc_int(data, offset + 0x24, endian)
     x = section_1_offset + 4
     data_offsets = []
     brres_index_groups_offset = []
@@ -488,7 +535,7 @@ def extract_scn0(data, offset, file_length, root_name, endian, name_offset_in_th
         sub_entry_number = calc_int(data, offset + x + 4, endian)
         x += 24  # skip header + reference entry of brres index group
         extracted_data += data[offset + x - 24:offset + x]
-        for j in range(sub_entry_number):  # parse each entry of each brres index group
+        for _ in range(sub_entry_number):  # parse each entry of each brres index group
             x += 8
             print(f"changing offset {x}, group {i}")
             new_name_offset, sub_file_end = calc_new_name_offset(data, offset, x, endian, brres_index_groups_offset[i], file_length, sub_file_end)
@@ -505,10 +552,21 @@ def extract_scn0(data, offset, file_length, root_name, endian, name_offset_in_th
     for i in range(len(data_offsets)):
         x = data_offsets[i] # -8 because SCN0
         new_name_offset, sub_file_end = calc_new_name_offset(data, offset, x, endian, x - 8, file_length, sub_file_end)
-        if i == entry_number - 1: # skip to section 2
-            extracted_data += new_name_offset + data[offset + data_offsets[i] + 4:offset + file_length]
+        if section_2_offset <= x < section_3_offset:  # lightset references
+            ambiant_light_name_offset, sub_file_end = calc_new_name_offset(data, offset, x + 0xC, endian, x - 8, file_length, sub_file_end)
+            num_lights = data[offset + x + 0x1A - 8]
+            extracted_data += new_name_offset + data[offset + x + 4:offset + x + 0xC] + ambiant_light_name_offset + data[offset + x + 0x10:offset + x + 0x14]
+            x += 0x14
+            for _ in range(num_lights): # name of each light, relative to section 2 + 0x1C, but -8 because I've offset everything to +8
+                light_name_offset, sub_file_end = calc_new_name_offset(data, offset, x, endian, x, file_length, sub_file_end)
+                extracted_data += light_name_offset
+                x += 4
+            new_name_offset = b''
+            x -= 4
+        if i == entry_number - 1: # skip to section 3
+            extracted_data += new_name_offset + data[offset + x + 4:offset + file_length]
         else:
-            extracted_data += new_name_offset + data[offset + data_offsets[i] + 4:offset + data_offsets[i + 1]]
+            extracted_data += new_name_offset + data[offset + x + 4:offset + data_offsets[i + 1]]
     extracted_data += sub_file_end + b'\x00'
     return extracted_data
 
@@ -641,16 +699,6 @@ def change_offsets(data, offset, file_length, root_name, endian, magic, outer_br
     name_len = bytes(chr(len(name_bytes)), 'latin-1')
     sub_file_end = b'\x00' * 3
     string_pool_table.clear()
-    if magic == b'SCN0':
-        sub_file_end += b'\x0fAmbLights(NW4R)\x00\x00\x00\x00\x0aCameras(NW4R)\x00\x00\x00\x00\x00\x00\x0eLightSet(NW4R)\x00\x00\x00\x00\x00\x0cLights(NW4R)\x00\x00\x00\x00\x00\x00\x00\x0dambientLight0\x00\x00\x00\x00\x00\x00\x07camera0\x00\x00\x00\x00\x06light0\x00\x00\x00\x00\x00\x09lightSet0\x00\x00\x00'
-        string_pool_table[b"AmbLights(NW4R)"] = (b'', hex(file_length + 0x4), 0)
-        string_pool_table[b"Cameras(NW4R)"] = (b'', hex(file_length + 0x18), 0)
-        string_pool_table[b"LightSet(NW4R)"] = (b'', hex(file_length + 0x2C), 0)
-        string_pool_table[b"Lights(NW4R)"] = (b'', hex(file_length + 0x40), 0)
-        string_pool_table[b"ambientLight0"] = (b'', hex(file_length + 0x54), 0)
-        string_pool_table[b"camera0"] = (b'', hex(file_length + 0x68), 0)
-        string_pool_table[b"light0"] = (b'', hex(file_length + 0x74), 0)
-        string_pool_table[b"lightSet0"] = (b'', hex(file_length + 0x80), 0)
     w = hex(file_length + len(sub_file_end) + 1)[2:].zfill(8)
     new_name_offset = b''
     for octet in range(0, 8, 2):  # transform for example "3f800000" to b'\x3f\x80\x00\x00'
