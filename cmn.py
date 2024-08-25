@@ -277,7 +277,7 @@ def extract_brres(brres):
         if num == 1:
             extracted_dir = extracted_dir + str(num)
         else:
-            extracted_dir = extracted_dir[:-len(str(num))] + str(num)
+            extracted_dir = extracted_dir[:-len(str(num - 1))] + str(num)
         num += 1
     os.makedirs(extracted_dir)
     
@@ -419,39 +419,97 @@ def extract_shp0(data, offset, file_length, root_name, endian, name_offset_in_th
         x += 4
     extracted_data += data[offset + x: offset + file_length] + sub_file_end + b'\x00'
     return extracted_data
+"""
+SCN0 (File Format) Made by me
+```Offset Size  Description
+0x00    4    The magic "VIS0" to identify the sub file. 
+0x04    4    Length of the sub file. (internal name/ other string at the end not counted)
+0x08    4    Sub file version number. ( 00 00 00 04 else crash)
+0x0C    4    Offset to outer BRRES File (negative value) -> (00 00 00 00).
+0x10    4    section 1 offset (brres index group)
+0x14    4    section 2 offset (lightset0)
+0x18    4    section 3 offset (ambiantLight0)
+0x1C    4    section 4 offset (light0)
+0x20    4    section 5 offset (fogset0)
+0x24    4    section 6 offset (camera0)
+0x28    4    section 7 offset
+0x2C    4    String offset to the name of this sub file. relative to SCN0 start (that means if it's 0 it will point to 'VIS0'. one byte before the string is its length, so it would read the byte before 'VIS0' if the pointer was 0 )
+0x30    4    Unknown (00 00 00 00 in s20DO.bin)
+0x34    4    Unknown (00 01 00 01 in s20DO.bin)
+0x38    4    Frame count -1 (00 00 00 00 in s20DO.bin)
+0x3C    2    Unknown (00 00 in s20DO.bin)
+0x3E    2    Looping, 0=disabled, 1=enabled
 
+v-- SCN0 section 1 brres index group --v
+0x00    4    Size of the brres index group
+0x04    4    Number of entries -1
+
+v--- for each entry ----v
+0x00    2    Binary tree ID
+0x02    2    00 00
+0x04    2    Binary tree Left index
+0x06    2    Binary tree Right index
+0x08    4    Name offset minus section 1 offset
+0x0C    4    brres index group start offset minus section 1 offset
+
+the first brres index group only references folder names and points to another brres index group for each folder.
+so there are as much folders as brres index groups (+ 1, the first one)
+these [depth 2] brres index group name "lightSet0" for example, and point to their respective data, which is also pointed by the section offsets in the header
+
+v--- Section 234567 start offset ---v
+0x00    4    Section size in bytes
+0x04    4    Section start offset (negative value) relative to SCN0 start
+0x08    4    Name offset relative to section start
+
+the rest of the data of each section is out of my scope, since I only need to edit offsets, not actual data.
+if you wanna edit SCN0 data, use brawlcrate
+```
+"""
 def extract_scn0(data, offset, file_length, root_name, endian, name_offset_in_the_header, extracted_data, sub_file_end):
     sub_file_end += b'\x00' * 3
     section_1_offset = calc_int(data, offset + 0x10, endian)
-    section_2_offset = calc_int(data, offset + 0x14, endian)
-    # section_3_offset = calc_int(data, offset + 0x18, endian)
-    N_BASE = calc_short(data, offset + 0x32, endian)
-    N_STR = calc_short(data, offset + 0x34, endian)
-    x = section_1_offset + 0x18
+    x = section_1_offset + 4
     data_offsets = []
-    extracted_data += data[offset + len(extracted_data):offset + x]
-    for i in range(N_BASE):
+    brres_index_groups_offset = []
+    extracted_data += data[offset + len(extracted_data):offset + x + 20]
+    entry_number = calc_int(data, offset + x, endian)
+    x += 20
+    for i in range(entry_number):  # parse each entry of the brres index group
         x += 8
         new_name_offset, sub_file_end = calc_new_name_offset(data, offset, x, endian, section_1_offset, file_length, sub_file_end)
-        data_offsets.append(calc_int(data, offset + x + 4, endian) + section_1_offset)
+        brres_index_groups_offset.append(calc_int(data, offset + x + 4, endian) + section_1_offset)
         extracted_data += data[offset + x - 8:offset + x] + new_name_offset + data[offset + x + 4:offset + x + 8]
         x += 8
+    if len(brres_index_groups_offset) > 0:
+        extracted_data += data[offset + x:offset + brres_index_groups_offset[0]]
+        brres_index_groups_offset.sort()  # in case it isn't sorted already
+    for i in range(entry_number):
+        x = brres_index_groups_offset[i]
+        sub_entry_number = calc_int(data, offset + x + 4, endian)
+        x += 24  # skip header + reference entry of brres index group
+        extracted_data += data[offset + x - 24:offset + x]
+        for j in range(sub_entry_number):  # parse each entry of each brres index group
+            x += 8
+            print(f"changing offset {x}, group {i}")
+            new_name_offset, sub_file_end = calc_new_name_offset(data, offset, x, endian, brres_index_groups_offset[i], file_length, sub_file_end)
+            data_offsets.append(calc_int(data, offset + x + 4, endian) + brres_index_groups_offset[i] + 8) # +8 because SCN0
+            extracted_data += data[offset + x - 8:offset + x] + new_name_offset + data[offset + x + 4:offset + x + 8]
+            x += 8
+        if i != entry_number -1:
+            extracted_data += data[offset + x:offset + brres_index_groups_offset[i+1]]
     if len(data_offsets) > 0:
         extracted_data += data[offset + x:offset + data_offsets[0]]
         data_offsets.sort()  # in case it isn't sorted already
-    for i in range(N_BASE):
-        x = data_offsets[i]
-        new_name_offset, sub_file_end = calc_new_name_offset(data, offset, x, endian, x, file_length, sub_file_end)
-        if i == N_BASE - 1: # skip to section 2
-            extracted_data += new_name_offset + data[offset + data_offsets[i] + 4:offset + section_2_offset]
+    else:
+        extracted_data += data[offset + x: offset + file_length]
+    for i in range(len(data_offsets)):
+        x = data_offsets[i] # -8 because SCN0
+        new_name_offset, sub_file_end = calc_new_name_offset(data, offset, x, endian, x - 8, file_length, sub_file_end)
+        if i == entry_number - 1: # skip to section 2
+            extracted_data += new_name_offset + data[offset + data_offsets[i] + 4:offset + file_length]
         else:
             extracted_data += new_name_offset + data[offset + data_offsets[i] + 4:offset + data_offsets[i + 1]]
-    x = section_2_offset
-    for i in range(N_STR):
-        new_name_offset, sub_file_end = calc_new_name_offset(data, offset, x, endian, section_2_offset, file_length, sub_file_end)
-        extracted_data += new_name_offset
-        x += 4
-    extracted_data += data[offset + x: offset + file_length] + sub_file_end + b'\x00'
+    extracted_data += sub_file_end + b'\x00'
     return extracted_data
 
 def extract_pat0(data, offset, file_length, root_name, endian, name_offset_in_the_header, extracted_data, sub_file_end):
@@ -487,7 +545,45 @@ def extract_pat0(data, offset, file_length, root_name, endian, name_offset_in_th
         x += 4
     extracted_data += data[offset + x: offset + file_length] + sub_file_end + b'\x00'
     return extracted_data
+"""
+VIS0 (File Format) Made by me
+```Offset Size  Description
+0x00    4    The magic "VIS0" to identify the sub file. 
+0x04    4    Length of the sub file. (internal name/ other string at the end not counted)
+0x08    4    Sub file version number. ( 00 00 00 04 else crash)
+0x0C    4    Offset to outer BRRES File (negative value) -> (00 00 00 00).
+0x10    8    section offsets. (offset to when data is -> after each VIS0 subheader, usually 00 00 00 28 00 00 00 00)
+0x18    4    String offset to the name of this sub file. relative to VIS0 start (that means if it's 0 it will point to 'VIS0'. one byte before the string is its length, so it would read the byte before 'VIS0' if the pointer was 0 )
 
+v-- VIS0 SubHeader --v
+0x1C    4    00 00 00 00.
+0x20    2    Frame Count
+0x22    2    Number of bones (entries / Nodes / Animation data count)
+0x24    4    Looping 0x00=disabled 0x01=enabled.
+
+v-- VIS0 brres index group --v
+0x28    4    Size of the brres index group
+0x2C    4    Number of entries -1
+
+v--- for each entry ----v
+0x00    2    Binary tree ID
+0x02    2    00 00
+0x04    2    Binary tree Left index
+0x06    2    Binary tree Right index
+0x08    4    Name offset minus section 1 offset (-0x28)
+0x0C    4    data start offset minus section 1 offset (-0x28)
+
+v--- data start ---v
+0x00    4    Name offset minus data start offset
+0x04    4    +2 if constant, and +1 if bone is visible
+if not constant:
+0x08    X    one bit per frame, 1 = visible, 0 = not visible
+0x0Y    4    00 00 00 00
+
+X = ceiling(number of frames / 8). fill with last byte with ones to make a full byte
+Y = X + 8
+```
+"""
 def extract_clr0_srt0_vis0_chr0(data, offset, file_length, root_name, endian, name_offset_in_the_header, extracted_data, sub_file_end):
     sub_file_end += b'\x00' * 3
     section_1_offset = calc_int(data, offset + 0x10, endian)
@@ -530,6 +626,7 @@ def calc_new_name_offset(data, offset, x, endian, section_offset, file_length, s
         string_pool_table[name] = (new_name_offset, w, section_offset)
         sub_file_end += bytes(chr(name_len), 'latin-1') + name + b'\x00' * 3 + b'\x00' * (4 - (name_len % 4))
     else:
+        print(new_name_offset)
         w = hex(int(new_name_offset[1], 16) + new_name_offset[2] - section_offset)[2:].zfill(8)
         new_name_offset = b''
         for octet in range(0, 8, 2):  # transform for example "3f800000" to b'\x3f\x80\x00\x00'
@@ -542,17 +639,31 @@ def change_offsets(data, offset, file_length, root_name, endian, magic, outer_br
     extracted_data = data[offset: offset + outer_brres_offset_in_the_header] + b'\x00\x00\x00\x00' # change offset to brres file (no brres since it's an extracted file)
     name_bytes = bytes(root_name, 'latin-1') # don't ask me why ANSI is named latin-1 in python
     name_len = bytes(chr(len(name_bytes)), 'latin-1')
-    w = hex(file_length + 4)[2:].zfill(8)
+    sub_file_end = b'\x00' * 3
+    string_pool_table.clear()
+    if magic == b'SCN0':
+        sub_file_end += b'\x0fAmbLights(NW4R)\x00\x00\x00\x00\x0aCameras(NW4R)\x00\x00\x00\x00\x00\x00\x0eLightSet(NW4R)\x00\x00\x00\x00\x00\x0cLights(NW4R)\x00\x00\x00\x00\x00\x00\x00\x0dambientLight0\x00\x00\x00\x00\x00\x00\x07camera0\x00\x00\x00\x00\x06light0\x00\x00\x00\x00\x00\x09lightSet0\x00\x00\x00'
+        string_pool_table[b"AmbLights(NW4R)"] = (b'', hex(file_length + 0x4), 0)
+        string_pool_table[b"Cameras(NW4R)"] = (b'', hex(file_length + 0x18), 0)
+        string_pool_table[b"Fogs(NW4R)"] = (b'', hex(file_length + 0x2C), 0)
+        string_pool_table[b"LightSet(NW4R)"] = (b'', hex(file_length + 0x3C), 0)
+        string_pool_table[b"Lights(NW4R)"] = (b'', hex(file_length + 0x50), 0)
+        string_pool_table[b"ambientLight0"] = (b'', hex(file_length + 0x64), 0)
+        string_pool_table[b"camera0"] = (b'', hex(file_length + 0x78), 0)
+        string_pool_table[b"fog0"] = (b'', hex(file_length + 0x84), 0)
+        string_pool_table[b"light0"] = (b'', hex(file_length + 0x90), 0)
+        string_pool_table[b"lightSet0"] = (b'', hex(file_length + 0x9C), 0)
+    w = hex(file_length + len(sub_file_end) + 1)[2:].zfill(8)
     new_name_offset = b''
     for octet in range(0, 8, 2):  # transform for example "3f800000" to b'\x3f\x80\x00\x00'
         new_name_offset += bytes(chr(int(w[octet:(octet + 2)], 16)), 'latin-1')
     if endian == b'\xff\xfe':
         new_name_offset = new_name_offset[::-1] # reverse bytes order
-    # print(b'new name offset', new_name_offset)
     extracted_data += data[offset + outer_brres_offset_in_the_header + 4:offset + name_offset_in_the_header] + new_name_offset # change offset to filename, even if the file itself is named like what's written
-    string_pool_table.clear()
+    
     string_pool_table[name_bytes] = (new_name_offset, w, 0)
-    sub_file_end = b'\x00' * 3 + name_len + name_bytes + b'\x00' * (12 - (name_len[0] % 12))
+    sub_file_end += name_len + name_bytes + b'\x00' * (12 - (name_len[0] % 12))
+    print(b'new name offset', new_name_offset, root_name, sub_file_end, file_length)
     if magic == b'PAT0':
         return extract_pat0(data, offset, file_length, root_name, endian, name_offset_in_the_header, extracted_data, sub_file_end)
     if magic in [b'CLR0', b'SRT0', b'VIS0', b'CHR0']:
