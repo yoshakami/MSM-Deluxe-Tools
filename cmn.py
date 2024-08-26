@@ -325,8 +325,8 @@ def extract_mdl0(data, offset, file_length, root_name, endian, name_offset_in_th
         x = index + 24
         for i in range(entry_number):  # parse each entry of the brres index group
             x += 8
-            print(section, index, x)
-            print(x)
+            # print(section, index, x)
+            # print(x)
             new_name_offset, sub_file_end = calc_new_name_offset(data, offset, x, endian, index, file_length, sub_file_end)
             entries_unsorted[calc_int(data, offset + x + 4, endian) + index] = section
             extracted_data += data[offset + x - 8:offset + x] + new_name_offset + data[offset + x + 4:offset + x + 8]
@@ -521,7 +521,7 @@ def extract_scn0(data, offset, file_length, root_name, endian, name_offset_in_th
         extracted_data += data[offset + x - 24:offset + x]
         for _ in range(sub_entry_number):  # parse each entry of each brres index group
             x += 8
-            print(f"changing offset {x}, group {i}")
+            # print(f"changing offset {x}, group {i}")
             new_name_offset, sub_file_end = calc_new_name_offset(data, offset, x, endian, brres_index_groups_offset[i], file_length, sub_file_end)
             data_offsets.append(calc_int(data, offset + x + 4, endian) + brres_index_groups_offset[i] + 8) # +8 because SCN0
             extracted_data += data[offset + x - 8:offset + x] + new_name_offset + data[offset + x + 4:offset + x + 8]
@@ -655,7 +655,7 @@ def extract_clr0_srt0_vis0_chr0(data, offset, file_length, root_name, endian, na
         
 def calc_new_name_offset(data, offset, x, endian, section_offset, file_length, sub_file_end):
     name_offset = calc_int(data, offset + x, endian)
-    print(offset + x, x, name_offset)
+    # print(offset + x, x, name_offset)
     name_len = data[offset + section_offset + name_offset - 1]
     name = data[offset + section_offset + name_offset: offset + section_offset + name_offset + name_len]
     new_name_offset = string_pool_table.get(name)
@@ -669,7 +669,7 @@ def calc_new_name_offset(data, offset, x, endian, section_offset, file_length, s
         string_pool_table[name] = (new_name_offset, w, section_offset)
         sub_file_end += bytes(chr(name_len), 'latin-1') + name + b'\x00' * 3 + b'\x00' * (4 - (name_len % 4))
     else:
-        print(new_name_offset)
+        # print(new_name_offset)
         w = hex(int(new_name_offset[1], 16) + new_name_offset[2] - section_offset)[2:].zfill(8)
         new_name_offset = b''
         for octet in range(0, 8, 2):  # transform for example "3f800000" to b'\x3f\x80\x00\x00'
@@ -694,7 +694,7 @@ def change_offsets(data, offset, file_length, root_name, endian, magic, outer_br
     
     string_pool_table[name_bytes] = (new_name_offset, w, 0)
     sub_file_end += name_len + name_bytes + b'\x00' * (12 - (name_len[0] % 12))
-    print(b'new name offset', new_name_offset, root_name, sub_file_end, file_length)
+    # print(b'new name offset', new_name_offset, root_name, sub_file_end, file_length)
     if magic == b'PAT0':
         return extract_pat0(data, offset, file_length, root_name, endian, name_offset_in_the_header, extracted_data, sub_file_end)
     if magic in [b'CLR0', b'SRT0', b'VIS0', b'CHR0']:
@@ -768,9 +768,9 @@ def parse_brres_index_group(data, offset, root_name, root_folder, endian):
     if not os.path.exists(root_folder):
         os.makedirs(root_folder)
         
-    brres_index_group_length = calc_int(data, offset, endian) # u32
+    # brres_index_group_length = calc_int(data, offset, endian) # u32
     number_of_entries = calc_int(data, offset + 4, endian)  # u32
-    print(brres_index_group_length, number_of_entries, hex(offset), data[offset: offset + 4])
+    # print(brres_index_group_length, number_of_entries, hex(offset), data[offset: offset + 4])
     # parse Brres Index Group 1
     x = 8 + 16 # skip reference point since we're extracting
     # info_list = [create_brres_info(id=0, left_idx=0, right_idx=0, name=root_name, nlen=0)]
@@ -802,27 +802,21 @@ def scan_directory():
         if tkstuff not in [text_label, cwd_label, entry_dir, refreshbu, open_explorerbu]:
             tkstuff.destroy()
 
-    def repack(cmn_dir):  # compress cfile
+    def repack(cmn_dir):  # repack cmn_dir
         if not os.path.exists(cmn_dir):
             cmn_dir = print(f"folder doesn't exist => {cmn_dir}")
         out_name = cmn_dir + '.brres'
         name = cmn_dir.rsplit('_', 1)[1].lower()
         if name.startswith('extracted') or name.startswith('decomp'):
-            pass
-        if not os.path.exists(brres):
-            brres = input("drag and drop cmn_test_DECOMP.bin in this window then press enter\n")
-        with open(brres, "r+b") as file:
-            for i in range(3, len(brres_list)):
-                if not os.path.exists(cmn_dir + "/" + brres_list[i]):
-                    print(f"cannot find file, skipping {brres_list[i]}")
-                    continue
-                file.seek(brres_len[i])
-                if brres_len[i] + os.path.getsize(cmn_dir + "/" + brres_list[i]) > brres_len[i + 1]:
-                    print(f"{brres_list[i]}'s file size has changed. skipping")
-                    continue
-                with open(cmn_dir + "/" + brres_list[i], "rb") as brres:
-                    brres_content = brres.read()
-                file.write(brres_content)
+            out_name = cmn_dir.rsplit('_', 1)[0]
+        if os.path.exists(out_name + '.brres'):
+            number = 1
+            while os.path.exists(f"{out_name}_{number}.brres"):
+                number += 1
+            out_name = f"{out_name}_{number}.brres"
+        else:
+            out_name = f"{out_name}.brres"
+        
         print(f"rebuilt file!\npress enter to exit...")
         manual_entry.delete(0, 'end')
 
