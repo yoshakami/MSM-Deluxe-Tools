@@ -253,9 +253,6 @@ msm_files_offset = []
 msm_files_absolute_filepath = []
 every_offset_of_a_new_thing = []
 extracted_files = ['']
-mdl0_sections = []
-mdl0_brres_index_group_new_offsets = {}
-mdl0_file_end = [b'']
 
 
 def extract_brres(brres):
@@ -324,65 +321,88 @@ def extract_brres_inside_brres(data, offset, root_name, root_absolute_filepath):
     file_length = calc_int(data, offset + 8, endian) # u32
     with open(root_absolute_filepath, 'wb') as sub:
         sub.write(data[offset:offset+file_length])
-        
-def extract_mdl0(data, offset, root_name, root_absolute_filepath, endian, file_length, version):
-    extracted_data = data[offset:offset+0xC] + b'\x00' * 4 + data[offset+0x10:offset+0x48]
-    mdl0_sections.clear()
-    mdl0_brres_index_group_new_offsets.clear()
-    root_name_bytes = bytes(root_name, 'latin-1')
-    len_bytes = bytes(chr(len(root_name_bytes)), 'latin-1')  # len_bytes[0] = int(len_bytes) but python prefers making ["1,,," ",2"] a valid list instead of making support to calculate integers so I made calc_int and calc_short
-    mdl0_file_end[0] = b'\x00' * 7 + len_bytes + root_name_bytes + b'\x00' * (8 - (len_bytes[0] % 8))
-    x = 0x10
-    assert version == 11 # only mdl0 v11 is supported
-    while x < 0x48:
-        mdl0_sections.append(calc_int(data, offset + x, endian))
-        x += 4
-    data += hex_float(file_length + 4) # change offset to filename, even if the file itself is named like what's written
-    x = 0x4C
-    assert data[offset + x:offset + x + 8] == b'\x00\x00\x00\x40\xff\xff\xff\xb4'
-    x = 0x70
-    bone_link_table_offset = calc_int(data, offset + x, endian)
-    number_of_bones = calc_int(data, bone_link_table_offset, endian)
-    end_of_bone_link_table = bone_link_table_offset + 4 * number_of_bones + 4
-    parse_brres_index_group_inside_of_mdl0(data, end_of_bone_link_table, "", "", endian, file_length)
-    extracted_data += data[offset + 0x4C:offset + bone_link_table_offset]
-    # todo: walk flat through the bytes until the end of the brres_index_groups. (calculate their size)
 
-def parse_brres_index_group_inside_of_mdl0(data, offset, root_name, root_folder, endian, file_length):
-    print(offset, root_name, root_folder, data[offset: offset + 4])
-    if data[offset + 8: offset + 10] != [b'\xff\xff']: 
-        return
-    brres_index_group_length = calc_int(data, offset, endian) # u32
-    number_of_entries = calc_int(data, offset + 4, endian)  # u32
-    print(brres_index_group_length, number_of_entries)
-    # parse Brres Index Group 1
-    x = 8 + 16 # skip reference point since we're extracting
-    ASSERT(data[offset + 8: offset + 12] == b'\xff\xff\x00\x00')
-    # info_list = [create_brres_info(id=0, left_idx=0, right_idx=0, name=root_name, nlen=0)]
-    # we're extracting!!! no creating the binary tree
-    while number_of_entries > 0:
-        x += 8 # skip binary tree info
-        entry_name_offset = calc_int(data, offset + x, endian) + offset # u32
-        entry_name_offset_len = data[entry_name_offset - 1] # u8
-        entry_name = data[entry_name_offset:entry_name_offset + entry_name_offset_len].decode('latin-1') # converts to str using latin-1 encoding
+"""
+algorithm:
+parse 14 section offsets from 0x10 to 0x48
+if zero, skip,  else parse brres index group at offset then change name offset for each entry
+name offset is at the following offset, depending on the section it belongs to
+section 0: skip
+section 1: 0x08
+section 2: 0x0c
+section 3: 0x0c
+section 4: 0x0c
+section 5: 0x0c
+section 6: 0x0c
+section 7: 0x0c
+section 8: 0x08 + (0x418 + 0x34 per new texture ref. textures int32 is at offset 0x2C of section 8)
+section 9: skip
+section 10: 0x38
+section 11: skip
+section 12: skip
+section 13: 0x10
+"""
+name_offset_sections = [None, 0x08, 0x0c, 0x0c, 0xc, 0xc, 0xc, 0xc, 0x8, None, 0x38, None, None, 0x10]
+# todo: know which sections are missing for v8, v9, and v10
+def extract_mdl0(data, offset, file_length, root_name, endian, name_offset_in_the_header, extracted_data, sub_file_end):
+    brres_index_groups_unsorted = {}
+    entries_unsorted = {}
+    sub_file_end += b'\x00' * 3
+    x = 0
+    for i in range(14): # TODO: change this number for other mdl0 versions than 11
+        if data[offset + x: offset + x + 4] != b'\x00' * 4: # if section exists
+            brres_index_groups_unsorted[calc_int(data, offset + x, endian)] = i
         x += 4
-        entry_start_offset = calc_int(data, offset + x, endian) + offset # u32
-        every_offset_of_a_new_thing.append(entry_name_offset - 1)
-        every_offset_of_a_new_thing.append(entry_start_offset)
-        name_bytes = bytes(root_name, 'latin-1')
-        name_len = bytes(chr(len(name_bytes)), 'latin-1')
-        w = hex(file_length + len(mdl0_file_end) + 1)[2:].zfill(8)
-        new_name_offset = b''
-        for octet in range(0, 8, 2):  # transform for example "3f800000" to b'\x3f\x80\x00\x00'
-            new_name_offset += bytes(chr(int(w[octet:(octet + 2)], 16)), 'latin-1')
-        if endian == b'\xff\xfe':
-            new_name_offset = new_name_offset[::-1] # reverse bytes order
-        mdl0_file_end[0] += name_len + name_bytes + b'\x00' * (8 - (name_len[0] % 8))
-        print(entry_start_offset, entry_name, os.path.join(root_folder, entry_name))
-        mdl0_brres_index_group_new_offsets[data[offset + x - 16:offset + x - 4]] = new_name_offset
-        parse_brres_index_group(data, entry_start_offset, entry_name, os.path.join(root_folder, entry_name), endian, file_length)
-        x += 4
-        number_of_entries -= 1
+    brres_index_groups = dict(sorted(brres_index_groups_unsorted))
+    
+    for index, section in brres_index_groups.items(): # parse all brres index groups except the last one
+        if section == 13:  # user data is at the end of the file
+            continue
+        entry_number = calc_int(data, offset + index + 4, endian)
+        extracted_data += data[offset + len(extracted_data):offset + index + 20]
+        x = index + 20
+        for i in range(entry_number):  # parse each entry of the brres index group
+            x += 8
+            new_name_offset, sub_file_end = calc_new_name_offset(data, offset, x, endian, index, file_length, sub_file_end)
+            entries_unsorted[calc_int(data, offset + x + 4, endian) + index] = section
+            extracted_data += data[offset + x - 8:offset + x] + new_name_offset + data[offset + x + 4:offset + x + 8]
+            x += 8
+    entries = dict(sorted(entries_unsorted))
+    for index, section in entries.items():
+        if name_offset_sections[section] is None:
+            continue # no offset to change in this section
+        x = name_offset_sections[section]
+        new_name_offset, sub_file_end = calc_new_name_offset(data, offset, index + x, endian, index, file_length, sub_file_end)
+        extracted_data += data[offset + len(extracted_data):offset + index + x] + new_name_offset
+        if section == 8:
+            x = 0x418
+            num_textures = calc_int(data, offset + index + 0x2C, endian)
+            for i in range(num_textures):
+                new_name_offset, sub_file_end = calc_new_name_offset(data, offset, index + x, endian, index + x, file_length, sub_file_end)
+                extracted_data += data[offset + len(extracted_data):offset + index + x] + new_name_offset
+                x += 0x34
+
+    # parse section 13
+    entries_unsorted = {}
+    for index, section in brres_index_groups.items(): # parse all brres index groups except the last one
+        if section == 13:  # user data is at the end of the file
+            entry_number = calc_int(data, offset + index + 4, endian)
+            extracted_data += data[offset + len(extracted_data):offset + index + 20]
+            x = index + 20
+            for i in range(entry_number):  # parse each entry of the brres index group
+                x += 8
+                new_name_offset, sub_file_end = calc_new_name_offset(data, offset, x, endian, index, file_length, sub_file_end)
+                entries_unsorted[calc_int(data, offset + x + 4, endian) + index] = section
+                extracted_data += data[offset + x - 8:offset + x] + new_name_offset + data[offset + x + 4:offset + x + 8]
+                x += 8
+    entries = dict(sorted(entries_unsorted))
+    for index, section in entries.items():
+        x = name_offset_sections[section]
+        new_name_offset, sub_file_end = calc_new_name_offset(data, offset, index + x, endian, index, file_length, sub_file_end)
+        extracted_data += data[offset + len(extracted_data):offset + index + x] + new_name_offset
+    
+    extracted_data += data[offset + len(extracted_data):offset + file_length] + sub_file_end + b'\x00'
+    return extracted_data
 
 string_pool_table = {}
 
@@ -718,11 +738,14 @@ def change_offsets(data, offset, file_length, root_name, endian, magic, outer_br
         return extract_shp0(data, offset, file_length, root_name, endian, name_offset_in_the_header, extracted_data, sub_file_end)
     if magic == b'SCN0':
         return extract_scn0(data, offset, file_length, root_name, endian, name_offset_in_the_header, extracted_data, sub_file_end)
+    if magic == b'MDL0':
+        return extract_mdl0(data, offset, file_length, root_name, endian, name_offset_in_the_header, extracted_data, sub_file_end)
     extracted_data += data[offset + name_offset_in_the_header + 4:offset + file_length]
     extracted_data += sub_file_end
     return extracted_data
 
 magic_version_name_offset = {
+    (b'MDL0', 11): 0x48, (b'MDL0', 10): 0x44, (b'MDL0', 9): 0x3C, (b'MDL0', 8): 0x3C,
     (b'TEX0', 1): 0x14, (b'TEX0', 2): 0x18, (b'TEX0', 3): 0x14,
     (b'PLT0', 1): 0x14, (b'PLT0', 3): 0x14,
     (b'SRT0', 4): 0x14, (b'SRT0', 5): 0x18,
@@ -739,8 +762,6 @@ def extract_sub_file(data, offset, root_name, root_absolute_filepath, endian):
     # now we need to change the file content and add data at the end, else brawlcrate crashes
     magic = data[offset:offset + 4]
     version = calc_int(data, offset + 8, endian)
-    if magic == b'MDL0':
-        return extract_mdl0(data, offset, root_name, root_absolute_filepath, endian, file_length, version)
     name_offset = magic_version_name_offset.get((magic, version))
     ASSERT(name_offset is not None)
     extracted_data = change_offsets(data, offset, file_length, root_name, endian, magic, 0xC, name_offset)
