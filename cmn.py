@@ -344,12 +344,14 @@ section 13: 0x10
 """
 name_offset_sections = [None, 0x08, 0x0c, 0x0c, 0xc, 0xc, 0xc, 0xc, 0x8, None, 0x38, None, None, 0x10]
 # todo: know which sections are missing for v8, v9, and v10
-def extract_mdl0(data, offset, file_length, root_name, endian, name_offset_in_the_header, extracted_data, sub_file_end):
+def extract_mdl0(data, offset, file_length, root_name, endian, name_offset_in_the_header, version, extracted_data, sub_file_end):
     brres_index_groups_unsorted = {}
     entries_unsorted = {}
     sub_file_end += b'\x00' * 3
     x = 0x10
     for i in range(14): # TODO: change this number for other mdl0 versions than 11
+        if version < 10 and i in [6, 7]:
+            continue  # these sections don't exist in mdl0 version 8 and 9 
         if data[offset + x: offset + x + 4] != b'\x00' * 4: # if section exists
             brres_index_groups_unsorted[calc_int(data, offset + x, endian)] = i
         x += 4
@@ -383,26 +385,26 @@ def extract_mdl0(data, offset, file_length, root_name, endian, name_offset_in_th
                 new_name_offset, sub_file_end = calc_new_name_offset(data, offset, index + x, endian, index + x, file_length, sub_file_end)
                 extracted_data += data[offset + len(extracted_data):offset + index + x] + new_name_offset
                 x += 0x34
-
-    # parse section 13
-    entries_unsorted = {}
-    for index, section in brres_index_groups.items(): # parse all brres index groups except the last one
-        if section == 13:  # user data is at the end of the file
-            entry_number = calc_int(data, offset + index + 4, endian)
-            extracted_data += data[offset + len(extracted_data):offset + index + 24]
-            x = index + 24
-            for i in range(entry_number):  # parse each entry of the brres index group
-                x += 8
-                new_name_offset, sub_file_end = calc_new_name_offset(data, offset, x, endian, index, file_length, sub_file_end)
-                entries_unsorted[calc_int(data, offset + x + 4, endian) + index] = section
-                extracted_data += data[offset + x - 8:offset + x] + new_name_offset + data[offset + x + 4:offset + x + 8]
-                x += 8
-    entries = dict(sorted(entries_unsorted.items()))
-    for index, section in entries.items():
-        x = name_offset_sections[section]
-        new_name_offset, sub_file_end = calc_new_name_offset(data, offset, index + x, endian, index, file_length, sub_file_end)
-        extracted_data += data[offset + len(extracted_data):offset + index + x] + new_name_offset
-    
+    if version == 11:
+        # parse section 13, only here in mdl0 version 11
+        entries_unsorted = {}
+        for index, section in brres_index_groups.items(): # parse all brres index groups except the last one
+            if section == 13:  # user data is at the end of the file
+                entry_number = calc_int(data, offset + index + 8, endian)
+                extracted_data += data[offset + len(extracted_data):offset + index + 28]
+                x = index + 28
+                for i in range(entry_number):  # parse each entry of the brres index group
+                    x += 8
+                    new_name_offset, sub_file_end = calc_new_name_offset(data, offset, x, endian, index, file_length, sub_file_end)
+                    entries_unsorted[calc_int(data, offset + x + 4, endian) + index] = section
+                    extracted_data += data[offset + x - 8:offset + x] + new_name_offset + data[offset + x + 4:offset + x + 8]
+                    x += 8
+        entries = dict(sorted(entries_unsorted.items()))
+        for index, section in entries.items():
+            x = name_offset_sections[section]
+            new_name_offset, sub_file_end = calc_new_name_offset(data, offset, index + x, endian, index, file_length, sub_file_end)
+            extracted_data += data[offset + len(extracted_data):offset + index + x] + new_name_offset
+        
     extracted_data += data[offset + len(extracted_data):offset + file_length] + sub_file_end + b'\x00'
     return extracted_data
 
@@ -716,7 +718,7 @@ def calc_new_name_offset(data, offset, x, endian, section_offset, file_length, s
             new_name_offset = new_name_offset[::-1] # reverse bytes order
     return new_name_offset, sub_file_end
     
-def change_offsets(data, offset, file_length, root_name, endian, magic, outer_brres_offset_in_the_header, name_offset_in_the_header):
+def change_offsets(data, offset, file_length, root_name, endian, magic, outer_brres_offset_in_the_header, name_offset_in_the_header, version):
     extracted_data = data[offset: offset + outer_brres_offset_in_the_header] + b'\x00\x00\x00\x00' # change offset to brres file (no brres since it's an extracted file)
     name_bytes = bytes(root_name, 'latin-1') # don't ask me why ANSI is named latin-1 in python
     name_len = bytes(chr(len(name_bytes)), 'latin-1')
@@ -742,7 +744,7 @@ def change_offsets(data, offset, file_length, root_name, endian, magic, outer_br
     if magic == b'SCN0':
         return extract_scn0(data, offset, file_length, root_name, endian, name_offset_in_the_header, extracted_data, sub_file_end)
     if magic == b'MDL0':
-        return extract_mdl0(data, offset, file_length, root_name, endian, name_offset_in_the_header, extracted_data, sub_file_end)
+        return extract_mdl0(data, offset, file_length, root_name, endian, name_offset_in_the_header, version, extracted_data, sub_file_end)
     extracted_data += data[offset + name_offset_in_the_header + 4:offset + file_length]
     extracted_data += sub_file_end
     return extracted_data
@@ -767,7 +769,7 @@ def extract_sub_file(data, offset, root_name, root_absolute_filepath, endian):
     version = calc_int(data, offset + 8, endian)
     name_offset = magic_version_name_offset.get((magic, version))
     ASSERT(name_offset is not None)
-    extracted_data = change_offsets(data, offset, file_length, root_name, endian, magic, 0xC, name_offset)
+    extracted_data = change_offsets(data, offset, file_length, root_name, endian, magic, 0xC, name_offset, version)
     with open(root_absolute_filepath + '.' + magic.decode('latin-1').lower(), 'wb') as sub:
         sub.write(extracted_data)
 
