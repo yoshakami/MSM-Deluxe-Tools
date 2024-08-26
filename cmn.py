@@ -348,26 +348,28 @@ def extract_mdl0(data, offset, file_length, root_name, endian, name_offset_in_th
     brres_index_groups_unsorted = {}
     entries_unsorted = {}
     sub_file_end += b'\x00' * 3
-    x = 0
+    x = 0x10
     for i in range(14): # TODO: change this number for other mdl0 versions than 11
         if data[offset + x: offset + x + 4] != b'\x00' * 4: # if section exists
             brres_index_groups_unsorted[calc_int(data, offset + x, endian)] = i
         x += 4
-    brres_index_groups = dict(sorted(brres_index_groups_unsorted))
+    brres_index_groups = dict(sorted(brres_index_groups_unsorted.items()))
     
     for index, section in brres_index_groups.items(): # parse all brres index groups except the last one
         if section == 13:  # user data is at the end of the file
             continue
         entry_number = calc_int(data, offset + index + 4, endian)
-        extracted_data += data[offset + len(extracted_data):offset + index + 20]
-        x = index + 20
+        extracted_data += data[offset + len(extracted_data):offset + index + 24]
+        x = index + 24
         for i in range(entry_number):  # parse each entry of the brres index group
             x += 8
+            print(section, index, x)
+            print(x)
             new_name_offset, sub_file_end = calc_new_name_offset(data, offset, x, endian, index, file_length, sub_file_end)
             entries_unsorted[calc_int(data, offset + x + 4, endian) + index] = section
             extracted_data += data[offset + x - 8:offset + x] + new_name_offset + data[offset + x + 4:offset + x + 8]
             x += 8
-    entries = dict(sorted(entries_unsorted))
+    entries = dict(sorted(entries_unsorted.items()))
     for index, section in entries.items():
         if name_offset_sections[section] is None:
             continue # no offset to change in this section
@@ -387,15 +389,15 @@ def extract_mdl0(data, offset, file_length, root_name, endian, name_offset_in_th
     for index, section in brres_index_groups.items(): # parse all brres index groups except the last one
         if section == 13:  # user data is at the end of the file
             entry_number = calc_int(data, offset + index + 4, endian)
-            extracted_data += data[offset + len(extracted_data):offset + index + 20]
-            x = index + 20
+            extracted_data += data[offset + len(extracted_data):offset + index + 24]
+            x = index + 24
             for i in range(entry_number):  # parse each entry of the brres index group
                 x += 8
                 new_name_offset, sub_file_end = calc_new_name_offset(data, offset, x, endian, index, file_length, sub_file_end)
                 entries_unsorted[calc_int(data, offset + x + 4, endian) + index] = section
                 extracted_data += data[offset + x - 8:offset + x] + new_name_offset + data[offset + x + 4:offset + x + 8]
                 x += 8
-    entries = dict(sorted(entries_unsorted))
+    entries = dict(sorted(entries_unsorted.items()))
     for index, section in entries.items():
         x = name_offset_sections[section]
         new_name_offset, sub_file_end = calc_new_name_offset(data, offset, index + x, endian, index, file_length, sub_file_end)
@@ -691,6 +693,7 @@ def extract_clr0_srt0_vis0_chr0(data, offset, file_length, root_name, endian, na
         
 def calc_new_name_offset(data, offset, x, endian, section_offset, file_length, sub_file_end):
     name_offset = calc_int(data, offset + x, endian)
+    print(offset + x, x, name_offset)
     name_len = data[offset + section_offset + name_offset - 1]
     name = data[offset + section_offset + name_offset: offset + section_offset + name_offset + name_len]
     new_name_offset = string_pool_table.get(name)
