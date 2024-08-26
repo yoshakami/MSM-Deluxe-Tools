@@ -24,7 +24,7 @@ a = Tk()
 a.title(language[start])
 a.minsize(660, 440)
 a.config(bg='#dfffaa')
-ico = os.path.join('msm_stuff', 'lh.ico')
+ico = os.path.join('msm_stuff', 'miku.ico')
 a.iconbitmap(os.path.join(install_dir, ico))
 print(language[cmn + 9])
 print(language[cmn + 10])
@@ -47,52 +47,6 @@ burow_repack = [burow_extract[i] + 16 for i in range(len(burow_extract))]
 
 extract_list = []
 repack_list = []
-brres_list = ["Coin.brres", "Coin.brres",
-              "md_shootcircle01.brres",
-              "Coin.brres",
-              "CockpitCoin.brres",  # (same as Coin)
-              "StarPiece.brres",  # (coin models from st16)
-              "IB00.brres",  # (Minishroom ball transformation)
-              "IB01.brres",  # (Banana ball transformation)
-              "IB02.brres",  # (Bob-Omb ball transformation)
-              "IB03.brres",  # (Green Shell ball transformation)
-              "IB04.brres",  # (Red Shell ball transformation)
-              "IB07.brres",  # (Star ball transformation)
-              "IT01_Toadstool.brres",  # (Minishroom item)
-              "IT02_Star.brres",
-              "IT04_Banana.brres",
-              "IT05_Bomb.brres",
-              "IT06_GShell.brres",
-              "IT07_RShell.brres",
-              "qpanel_h.brres",  # (question panel, stop panel from st03 and reverse panel from st09)
-              "qpanel_s10.brres", # (question panel from Bowser Jr. Boulevard)
-              "Marker.brres",  # (contains 47 models for all languages "P1", "P2"... circle on the ground and star shape)
-              "score.brres",  # (3D model of figures)
-              "Shadow.brres",
-              "wipe.brres"]
-brres_len = [0, 0, 0,
-             11392,
-             38528,
-             65664,
-             90880,
-             134400,
-             215168,
-             251008,
-             290304,
-             329600,
-             393088,
-             453632,
-             487424,
-             575104,
-             664448,
-             715904,
-             767360,
-             950912,
-             991360,
-             1352832,
-             1484800,
-             1490048,
-             0x193F7F]
 
 ##################################################################################
 #  TRANSLATION OF MSM BINARY TREE FROM C TO PYTHON 
@@ -287,6 +241,7 @@ def extract_brres(brres):
     # root_section_size = (data[root_offset + 4] << 24) + (data[root_offset + 5] << 16) + (data[root_offset + 6] << 8) + data[root_offset + 7] # u32
     parse_brres_index_group(data, root_offset + 8, "", extracted_dir, endian) # launch recursive func
     extract_msm_files(data)
+    print(sections_number, extracted_files)
     ASSERT(sections_number == len(extracted_files) + 1)
     return extracted_dir # return extracted folder name
 
@@ -321,7 +276,12 @@ def extract_brres_inside_brres(data, offset, root_name, root_absolute_filepath):
     file_length = calc_int(data, offset + 8, endian) # u32
     with open(root_absolute_filepath, 'wb') as sub:
         sub.write(data[offset:offset+file_length])
-
+        
+def extract_xbin(data, offset, root_name, root_absolute_filepath, endian):
+    file_length = calc_int(data, offset + 8, endian) # u32
+    with open(root_absolute_filepath, 'wb') as sub:
+        sub.write(data[offset:offset+file_length])
+        
 """
 algorithm:
 parse 14 section offsets from 0x10 to 0x48
@@ -789,7 +749,7 @@ def parse_brres_index_group(data, offset, root_name, root_folder, endian):
         extract_brres_inside_brres(data, offset, root_name, root_folder)
         extracted_files.append(root_folder)
         return # end of tree
-    elif data[offset: offset + 4] in [b'MDL0', b'TEX0', b'SRT0', b'CHR0', b'PAT0', b'CLR0', b'SHP0', b'SCN0', b'PLT0', b'VIS0']:
+    if data[offset: offset + 4] in [b'MDL0', b'TEX0', b'SRT0', b'CHR0', b'PAT0', b'CLR0', b'SHP0', b'SCN0', b'PLT0', b'VIS0']:
         # root_folder is a file, and not a folder, so I will extract it and quit the function
         extract_sub_file(data, offset, root_name, root_folder, endian)
         extracted_files.append(root_folder)
@@ -800,15 +760,19 @@ def parse_brres_index_group(data, offset, root_name, root_folder, endian):
         msm_files_absolute_filepath.append(root_folder)
         extracted_files.append(root_folder)
         return # end of tree
+    if data[offset: offset + 4] in [b'XBIN']:
+        extract_xbin(data, offset, root_name, root_folder, endian)
+        extracted_files.append(root_folder)
+        return
+    ASSERT(data[offset + 8: offset + 12] == b'\xff\xff\x00\x00') # add an if statement above this line with the 4 bytes to add then write your extract function
     if not os.path.exists(root_folder):
         os.makedirs(root_folder)
         
     brres_index_group_length = calc_int(data, offset, endian) # u32
     number_of_entries = calc_int(data, offset + 4, endian)  # u32
-    print(brres_index_group_length, number_of_entries)
+    print(brres_index_group_length, number_of_entries, hex(offset), data[offset: offset + 4])
     # parse Brres Index Group 1
     x = 8 + 16 # skip reference point since we're extracting
-    ASSERT(data[offset + 8: offset + 12] == b'\xff\xff\x00\x00')
     # info_list = [create_brres_info(id=0, left_idx=0, right_idx=0, name=root_name, nlen=0)]
     # we're extracting!!! no creating the binary tree
     while number_of_entries > 0:
@@ -839,9 +803,12 @@ def scan_directory():
             tkstuff.destroy()
 
     def repack(cmn_dir):  # compress cfile
-        brres_content = b""
         if not os.path.exists(cmn_dir):
-            cmn_dir = input("drag and drop cmn_test_extracted in this window then press enter\n")
+            cmn_dir = print(f"folder doesn't exist => {cmn_dir}")
+        out_name = cmn_dir + '.brres'
+        name = cmn_dir.rsplit('_', 1)[1].lower()
+        if name.startswith('extracted') or name.startswith('decomp'):
+            pass
         if not os.path.exists(brres):
             brres = input("drag and drop cmn_test_DECOMP.bin in this window then press enter\n")
         with open(brres, "r+b") as file:
@@ -896,7 +863,7 @@ def scan_directory():
         patched = Label(a, text=label_text, bg='#dfffaa', width=30)
         patched.grid(row=burow_extract[number], column=bucolumn[number])
 
-    def repack_file(brres, num):
+    def repack_folder(brres, num):
         repack(brres)
         repack_list[num].destroy()
         patched = Label(a, text=language[arc + 1], bg='#dfffaa', width=30)
@@ -952,15 +919,7 @@ def scan_directory():
     for dir_to_repack in os.listdir('./'):
         try:
             if os.path.isdir(dir_to_repack):
-                cmn_dir = os.listdir(dir_to_repack)
-                this_is_a_cmn_dir = True
-                for brres in brres_list:
-                    if brres not in cmn_dir:
-                        this_is_a_cmn_dir = False
-                        break
-                if not this_is_a_cmn_dir or i >= len(bucolumn):
-                    continue
-                run_repack_file = partial(repack_file, dir_to_repack, i)
+                run_repack_file = partial(repack_folder, dir_to_repack, i)
                 temp2 = Button(a, text=dir_to_repack, command=run_repack_file, activebackground='#a9ff91', width=30)
                 temp2.grid(row=burow_repack[i], column=bucolumn[i])
                 repack_list.append(temp2)
