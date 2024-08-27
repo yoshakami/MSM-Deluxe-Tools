@@ -167,7 +167,7 @@ def refresh():
     lbstick.config(text=language[start + 13])
     ltex.config(text=language[start + 14])
     lmappyw.config(text=language[start + 15])
-    lcmn.config(text=language[start + 16])
+    lmiku.config(text=language[start + 16])
     ltrib.config(text=language[start + 17])
     lcwd.config(text=language[start + 18])
     dirbutton.config(text=language[start + 19])
@@ -202,9 +202,10 @@ def enter():  # "Run Instant App (Enter)" Button
         return
     if app == language[start + 25]:
         return
-    app_name = app.split('(')[-1]
+    app_name = app.split('(')[-1][:-1]
     if app_name == 'kill-msm.bat':
         kill_msm()
+        return
     Popen(('wscript.exe', os.path.join(install_dir, f"{os.path.splitext(app_name)[0]}.vbs")))
 
 
@@ -269,8 +270,8 @@ def trib():
 def msmhelp():
     Popen(('wscript.exe', os.path.join(install_dir, "msmhelp.vbs")))
 
-def cmn():
-    Popen(('wscript.exe', os.path.join(install_dir, "cmn.vbs")))
+def miku():
+    Popen(('wscript.exe', os.path.join(install_dir, "miku.vbs")))
     
 taskkill = f'taskkill /im "python.exe"\n'
 for e in os.listdir(install_dir):
@@ -323,8 +324,8 @@ lmappyw = Button(a, text=language[start + 15], command=mappyw, width=30)
 lmappyw.grid(row=9, column=2)
 l4 = Label(a, text="", bg="#aecfee")
 l4.grid(row=10)
-lcmn = Button(a, text=language[start + 16], command=cmn, width=30)
-lcmn.grid(row=11, column=0)
+lmiku = Button(a, text=language[start + 16], command=miku, width=30)
+lmiku.grid(row=11, column=0)
 Run.config(width=30)
 Run.grid(row=11, column=1)
 ltrib = Button(a, text=language[start + 17], command=trib, width=30)
@@ -356,7 +357,7 @@ def no_color():
 
     lmappyw.config(activebackground="#d999ff", bg="#f0f0f0")
 
-    lcmn.config(activebackground="#ff99ff", bg="#f0f0f0")
+    lmiku.config(activebackground="#ff99ff", bg="#f0f0f0")
 
     Run.config(bg="#f0f0f0", activebackground="#f0f0f0")
 
@@ -388,7 +389,7 @@ def color_bb():
 
     lmappyw.config(bg="#ebbbff", activebackground="#ebbbff")
 
-    lcmn.config(bg="#ffbbff", activebackground="#ffbbff")
+    lmiku.config(bg="#ffbbff", activebackground="#ffbbff")
 
     Run.config(bg="#ffbbe4", activebackground="#ffbbe4")
 
@@ -420,7 +421,7 @@ def color_aa():
 
     lmappyw.config(bg="#dfaaff", activebackground="#dfaaff")
 
-    lcmn.config(bg="#ffaaff", activebackground="#ffaaff")
+    lmiku.config(bg="#ffaaff", activebackground="#ffaaff")
 
     Run.config(bg="#ffaadf", activebackground="#ffaadf")
 
@@ -452,7 +453,7 @@ def color_99():
 
     lmappyw.config(bg="#d999ff", activebackground="#d999ff")
 
-    lcmn.config(bg="#ff99ff", activebackground="#ff99ff")
+    lmiku.config(bg="#ff99ff", activebackground="#ff99ff")
 
     Run.config(bg="#ff99d9", activebackground="#ff99d9")
 
@@ -484,7 +485,7 @@ def color_90():
 
     lmappyw.config(bg="#d090ff", activebackground="#d090ff")
 
-    lcmn.config(bg="#ff90ff", activebackground="#ff90ff")
+    lmiku.config(bg="#ff90ff", activebackground="#ff90ff")
 
     Run.config(bg="#ff90d0", activebackground="#ff90d0")
 
@@ -516,7 +517,7 @@ def color_7f():
 
     lmappyw.config(bg="#cc7fff", activebackground="#cc7fff")
 
-    lcmn.config(bg="#ff7fff", activebackground="#ff7fff")
+    lmiku.config(bg="#ff7fff", activebackground="#ff7fff")
 
     Run.config(bg="#ff7fc4", activebackground="#ff7fc4")
 

@@ -19,15 +19,15 @@ arc = int(language[1].split(":")[7])
 start = int(language[1].split(":")[15])
 msm = int(language[1].split(":")[1])
 hashtag = int(language[1].split(":")[3])
-cmn = int(language[1].split(":")[33])
+miku = int(language[1].split(":")[33])
 a = Tk()
-a.title(language[start])
+a.title(language[miku])
 a.minsize(660, 440)
 a.config(bg='#dfffaa')
 ico = os.path.join('msm_stuff', 'miku.ico')
 a.iconbitmap(os.path.join(install_dir, ico))
-print(language[cmn + 9])
-print(language[cmn + 10])
+print(language[miku + 9])
+print(language[miku + 10])
 thrice = [b'U\xaa8-', b'bres', b'\x00 \xaf0', b'\x00\x00\x00\x00']  # arc, brres, tpl and rso files
 twice = thrice[:2]
 extensions = ['.mdl', '.bin', '.cmp']  # extensions of compressed files recognized
@@ -846,9 +846,9 @@ def scan_directory():
         try:
             extract_brres(file)
         except InterruptedError:
-            print(language[cmn + 11])  # message that it's not a brres
+            print(language[miku + 11])  # message that it's not a brres
         except FileNotFoundError:
-            print(language[cmn + 11])  # message that it's not a brres
+            print(language[miku + 11])  # message that it's not a brres
         print(language[arc + 1])
 
     def extract_file(file, number):
@@ -865,7 +865,7 @@ def scan_directory():
 
     patched = Label(a, text=language[arc + 1], bg='#dfffaa', width=30)
     patched.grid(row=5, column=0)
-    file_extract_label = Label(a, text=language[cmn + 5], font=300, bg='#dfffaa', height=2, width=45)
+    file_extract_label = Label(a, text=language[miku + 5], font=300, bg='#dfffaa', height=2, width=45)
     file_extract_label.grid(row=2, columnspan=20)
 
     explorer_extractbu = Button(a, text=language[msm + 19], activebackground='#96c7ff', bg='#c4e0ff', command=explorer_extract, width=87)
@@ -892,19 +892,19 @@ def scan_directory():
             print(error)
             continue
 
-    cmn_repack_label = Label(a, text=language[cmn + 6], font=300, bg='#dfffaa', height=2)
+    cmn_repack_label = Label(a, text=language[miku + 6], font=300, bg='#dfffaa', height=2)
     cmn_repack_label.grid(row=18, columnspan=20)
 
     manual_explorerbu = Button(a, text=language[msm + 19], command=explorer_repack, activebackground='#ffc773', bg='#ffe4bd', width=87)
     manual_explorerbu.grid(row=21, column=0, columnspan=3)
 
-    manual_label = Label(a, text=language[cmn + 7], bg='#dfffaa', width=30)
+    manual_label = Label(a, text=language[miku + 7], bg='#dfffaa', width=30)
     manual_label.grid(row=20, column=0)
 
     manual_entry = Entry(a, width=30)
     manual_entry.grid(row=20, column=1)
 
-    manual_button = Button(a, text=language[cmn + 8], activebackground='#a9ff91', bg='#c9ffba', width=30)
+    manual_button = Button(a, text=language[miku + 8], activebackground='#a9ff91', bg='#c9ffba', width=30)
     manual_repack = partial(repack, manual_entry.get())
     manual_button.config(command=manual_repack)
     manual_button.grid(row=20, column=2)
