@@ -33,12 +33,4 @@ with zipfile.ZipFile("Common.zip", 'w', compression=zipfile.ZIP_DEFLATED) as zip
         
         # Add the file to the ZIP file with the new path
         zipf.write('../' + file, zip_path)
-        
-with zipfile.ZipFile("exe.zip", 'w', compression=zipfile.ZIP_DEFLATED) as zipf:
-    for file in exe_files:
-        # Create the path inside the ZIP file (add 'Yosh/' prefix)
-        zip_path = os.path.join("Yosh", os.path.basename(file))
-        
-        # Add the file to the ZIP file with the new path
-        zipf.write('../' + file, zip_path)
-print("successfully created Common.zip and exe.zip")
+print("successfully created Common.zip")
