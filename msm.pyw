@@ -41,6 +41,8 @@ for lang in language_list:
     language_file = os.path.join('languages', f'{lang}.txt')
     if os.path.exists(os.path.join(install_dir, language_file)):
         languages.append(lang)
+    else:
+        languages.append(f'missing {lang}.txt')
 LANGUAGES = StringVar()
 LANGUAGES.set(language[start + 21])  # Change Language
 Languages = OptionMenu(a, LANGUAGES, *languages)
@@ -194,11 +196,15 @@ def enter():  # "Run Instant App (Enter)" Button
     os.chdir(cwd)
     if lang != language[start + 21]:
         language_file = os.path.join('languages', f'{lang}.txt')
-        with open(os.path.join(install_dir, language_file), 'rb') as txt1:
-            new_lang = txt1.read()
-        with open(current_language_file, 'wb') as txt2:
-            txt2.write(new_lang)
-        refresh()
+        language_file = os.path.join(install_dir, language_file)
+        if os.path.exists(language_file):
+            with open(language_file, 'rb') as txt1:
+                new_lang = txt1.read()
+            with open(current_language_file, 'wb') as txt2:
+                txt2.write(new_lang)
+            refresh()
+        else:
+            LANGUAGES.set(language[start + 21])  # Change Language
         return
     if app == language[start + 25]:
         return
