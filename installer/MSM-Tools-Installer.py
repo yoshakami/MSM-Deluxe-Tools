@@ -32,10 +32,10 @@ languages = (
 lang = [0]  # change it to your lang if you want : english is 0, french is 1, deutsch is 2 and so on (if someone adds it)
 # only lists can be changed in functions, not variables.
 english = [
-    'pip.exe not found. this file is included with python >= 3.7 (or you can manually install "pyperclip", "win10toast", and "Pillow" Modules)',
-    "Common.zip isn't in the same directory as this script,\nhow the heck do you want to use the tools without any script!?\npress enter to exit...",
-    "exe.zip isn't in the same directory as this script,\nI guess you don't want to use them then.\npress enter to continue...",
-    "you're missing jpg.zip, put it in the same directory as this script\nthe installer will not work without those images that I've spend an enormous amount of time to do.\npress enter to exit...",
+    'pip.exe not found. this file is included with python >= 3.7 (or you can manually install "pyperclip", "win10toast", and "Pillow" Modules)', # 0
+    "Common.zip isn't in the same directory as this script,\nhow the heck do you want to use the tools without any script!?\npress enter to exit...", # 1
+    "exe.zip isn't in the same directory as this script,\nI guess you don't want to use them then.\npress enter to continue...", # 2
+    "you're missing jpg.zip, put it in the same directory as this script\nthe installer will not work without those images that I've spend an enormous amount of time to do.\npress enter to exit...", # 3
     "Welcome to the console!", # 4
     "Here you can see what's happening behind the installer", # 5
     "the buttons are just here to separate actions to let them finish",
@@ -75,21 +75,22 @@ english = [
     "[requires admin perm]", # 40
     "\nanother msm folder is already added to PATH,\nplease check both USER and SYSTEM PATH variable", # 41
     "\ncurrent installation's msm folder is not added to PATH. You won't be\nable to launch scripts from the explorer menu if it's not added to PATH.", # 42
-    "Edit PATH manually" # 43
+    "Edit PATH manually", # 43
+    "Warnings" # 44
     ]
 
 french = [
-    'pip.exe introuvable. ce fichier est inclus avec python >= 3.7 (ou tu peux installer manuellement les modules "pyperclip", "win10toast" et "Pillow")',
-    "Common.zip est pas dans le même dossier que ce script,\ncomment veux-tu utiliser mon pack sans aucun script !?\nappuie sur Entrée pour quitter...",
-    "exe.zip est pas dans le même dossier que ce script,\nJe suppose que vous ne voulez pas les utiliser alors.\nappuie sur Entrée pour continuer...",
-    "il te manque jpg.zip, place-le dans le même dossier que ce script\nce script d'installation fonctionnera pas sans ces images que j'ai passé énormément de temps à faire.\nappuie sur Entrée pour quitter.. .",
+    'pip.exe introuvable. ce fichier est inclus avec python >= 3.7 (ou tu peux installer manuellement les modules "pyperclip", "win10toast" et "Pillow")', # 0
+    "Common.zip est pas dans le même dossier que ce script,\ncomment veux-tu utiliser mon pack sans aucun script !?\nappuie sur Entrée pour quitter...", # 1
+    "exe.zip est pas dans le même dossier que ce script,\nJe suppose que vous ne voulez pas les utiliser alors.\nappuie sur Entrée pour continuer...", # 2
+    "il te manque jpg.zip, place-le dans le même dossier que ce script\nce script d'installation fonctionnera pas sans ces images que j'ai passé énormément de temps à faire.\nappuie sur Entrée pour quitter...", # 3
     "Bienvenue dans la console !", # 4
     "Ici tu peux voir ce qui se passe derrière l'installateur - interface de hackeur - ", # 5
     "les boutons sont juste là pour séparer les actions pour les laisser finir en fait mdrr\nau moins t'as un peu d'intéraction hein", # 6
     f"Lorsque te cliqueras sur 'J'accepte', ça va redimentionner 18 jpg aux dimensions de ton écran, ({w}x{h})\nme remercie pas pour ces infos c'est cadeau", # 7
     "Pendant l'installation, le programme va extraire les zips (comme tu t'en doutes hein) et va déplacer son contenu vers le chemin d'installation que tu choisiras", # 8
     "Si tu veux, avec les permissions d'admin, tu peux ajouter ton installation à PATH (sur windows 10 ou 11 c'est mieux de faire à la main. et on va pas se mentir, c'est giga pratique PATH)", # 9
-    "ajouter à PATH, ça te permet de lancer les scripts depuis la barre de l'explorateur de fichier Windows ! plutôt chouette non ?" # 10
+    "ajouter à PATH, ça te permet de lancer les scripts depuis la barre de l'explorateur de fichier Windows ! plutôt chouette non ?", # 10
     "tu peux aussi installer la police d'écriture pour que l'application d'aide s'affiche correctement", # 11
     "Bienvenue dans l'installateur de mon pack de scripts\npour modder Mario Sports Mix !", # 12
     "scripts gratuitement développés par Yosh en Python", # 13
@@ -110,19 +111,20 @@ french = [
     "Local (version portable)", # 28
     "Autre OS que Windows", # 29
     "Lecteur invalide", # 30
-    "Clique sur ce bouton pour terminer l'installation :)  < " + '"CLIQUEZ, CLIQUEZ B"', # 31
+    "Clique sur ce bouton pour terminer l'installation :)  < " + 'CLIQUEZ, CLIQUEZ B', # 31
     "une fois que c'est fait, tu peux supprimer ce script d'installation\n^-^ profite bien des scripts :D", # 32
-    "Tu peux aussi installer la police d'écriture (font) qui est apparue dans ce dossier", # 33
-    "car l'application d'aide est spécialement conçue pour ce font", # 34
-    f"la police d'écriture pour msmhelp n'est pas installée (l'application va mal s'afficher sinon)\ntu peux l'installer manuellement, c'est le fichier otf dans le dossier actuel ({os.getcwd()})", # 35
+    "Tu peux aussi installer la police d'écriture (font) qui est apparue dans", # 33
+    "ce dossier, car l'application d'aide est spécialement conçue pour ce font", # 34
+    f"la police d'écriture pour msmhelp n'est pas installée\n(l'application va mal s'afficher sinon)\ntu peux l'installer manuellement, c'est le fichier otf dans\nle dossier actuel ({os.getcwd()})", # 35
     "installation dans le dossier", # 36
-    "Terminer l'installation" # 37
+    "Terminer l'installation", # 37
     "ajouter à PATH", # 38
-    "installer la police d'écriture" # 39
-    "[admin]" # 40
-    "un autre dossier de mes scripts est déjà ajouté dans PATH, il faudrait que tu regardes à la fois la vaiable PATH utilisateur, et la variable PATH système", # 41
-    "l'installation actuelle n'est pas ajoutée à PATH. Tu pourras pas lancer les scripts depuis la barre de l'explorateur sans ajouter le dossier à PATH",
-    "Modifier PATH manuellement" # 43
+    "installer la police d'écriture", # 39
+    "[admin]", # 40
+    "\nun autre dossier de mes scripts est déjà ajouté dans PATH,\nil faudrait que tu regardes à la fois la vaiable PATH utilisateur,\net la variable PATH système", # 41
+    "\nl'installation actuelle n'est pas ajoutée à PATH.\nTu pourras pas lancer les scripts depuis\nla barre de l'explorateur sans ajouter le dossier à PATH", # 42
+    "Modifier PATH manuellement", # 43
+    "Avertissements" # 44
     ]
 
 german = [
@@ -161,15 +163,16 @@ german = [
     "Sobald es fertig ist, können Sie das Installationsprogramm löschen und die Tools genießen :D", # 32
     "Sie können auch die in diesem Verzeichnis erschienene Schriftart installieren", # 33
     "da die Hilfe-App speziell dafür entwickelt wurde", # 34
-    f"Die Schriftart msmhelp ist nicht installiert (die Hilfe-App msmhelp funktioniert nicht wie vorgesehen). Sie können sie manuell installieren. Es handelt sich um die OTF-Datei im aktuellen Verzeichnis ({os.getcwd()})",
+    f"Die Schriftart msmhelp ist nicht installiert\n(die Hilfe-App msmhelp funktioniert nicht wie vorgesehen).\nSie können sie manuell installieren. Es handelt sich um die OTF-Datei\nim aktuellen Verzeichnis ({os.getcwd()})",
     "installieren auf", # 36
-    "Beende die Installation" # 37
+    "Beende die Installation", # 37
     "zu PATH hinzufügen", # 38
     "Schriftart installieren", # 39
     "[erfordert Administratorrechte]", # 40
-    "ein anderer Ordner msm wurde bereits zu PATH hinzugefügt. Bitte überprüfen Sie die Variablen USER und SYSTEM PATH", # 41
-    "der Ordner msm der aktuellen Installation wurde nicht zu PATH hinzugefügt. Sie können keine Skripts aus dem Explorer-Menü starten, wenn er nicht zu PATH hinzugefügt wurde.", # 42
-    "PATH manuell bearbeiten" # 43
+    "\nein anderer Ordner msm wurde bereits zu PATH hinzugefügt.\nBitte überprüfen Sie die Variablen USER und SYSTEM PATH", # 41
+    "\nder Ordner msm der aktuellen Installation wurde nicht zu PATH hinzugefügt. Sie können keine Skripts aus dem Explorer-Menü starten, wenn er nicht zu PATH hinzugefügt wurde.", # 42
+    "PATH manuell bearbeiten", # 43
+    "Warnungs" # 44
     ]
 
 spanish = []
@@ -578,8 +581,12 @@ def step3_drive(letter, clean_inst):
     if f'{letter}:\\Yosh' not in path:
         admin += language[lang[0]][42] + "\n"
         edit_path = True
-    title3 = Label(a, text=f"{language[lang[0]][31]}\n{admin}\n{language[lang[0]][32]}\n", bg="#aecfee", font=100)
-    title3.grid(row=1, rowspan=5)
+    title3 = Label(a, text=f"{language[lang[0]][31]}", bg="#aecfee", font=100)
+    title3.grid(row=1)
+    title4 = Label(a, text=f"{language[lang[0]][44]} :\n{admin}", fg="#0033ff", bg="#aecfee", font=100)
+    title4.grid(row=2)
+    title5 = Label(a, text=language[lang[0]][32], bg="#aecfee", font=100)
+    title5.grid(row=3)
     all_button_text = ""
     if edit_path or install_font:
         all_button_text += language[lang[0]][40] + " "  # requires admin perm
@@ -591,22 +598,23 @@ def step3_drive(letter, clean_inst):
             all_button_text += " + "
         all_button_text += language[lang[0]][39] # + install font
         font_step4 = partial(step4_drive, letter, clean_inst, edit_path=False, install_font=True)
-        button3_font = Button(a, text=language[lang[0]][40] + " " + language[lang[0]][37] + f" ({language[lang[0]][39]})", command=font_step4, bg="#ff9b69", activebackground="#a9ff91", width=30)
-        button3_font.grid(row=10)
+        button3_font = Button(a, text=language[lang[0]][40] + " " + language[lang[0]][37] + f" ({language[lang[0]][39]})", command=font_step4, bg="#ff9b69", activebackground="#a9ff91")
+        button3_font.grid(row=20)
     all_step4 = partial(step4_drive, letter, clean_inst, edit_path, install_font)
     
     all_button_text += ")"
-    button3 = Button(a, text=all_button_text, command=all_step4, bg="#ff9b69", activebackground="#a9ff91", width=30)
-    button3.grid(row=11, columnspan=2)
+    if all_button_text != language[lang[0]][37] + " ()":
+        button3 = Button(a, text=all_button_text, command=all_step4, bg="#ff9b69", activebackground="#a9ff91")
+        button3.grid(row=22)
     
     step4_no_admin = partial(step4_drive, letter, clean_inst)
-    button3_no_admin = Button(a, text=language[lang[0]][37], command=step4_no_admin, activebackground="#a9ff91", width=30)
-    button3_no_admin.grid(row=12, columnspan=4)
+    button3_no_admin = Button(a, text=language[lang[0]][37], command=step4_no_admin, activebackground="#a9ff91")
+    button3_no_admin.grid(row=24)
     
     
-    launch_path = partial(launch_path_app, clean_inst)
-    button3_launch_path = Button(a, text=language[lang[0]][37], command=launch_path, activebackground="#a9ff91", width=30)
-    button3_launch_path.grid(row=4, column=1, columnspan=2)
+    launch_path = partial(launch_path_app)
+    button3_launch_path = Button(a, text=language[lang[0]][43], command=launch_path, activebackground="#a9ff91")
+    button3_launch_path.grid(row=26)
 
 
 def step3_appdata(clean_inst):
@@ -634,10 +642,15 @@ def step3_appdata(clean_inst):
         admin += language[lang[0]][41] + "\n"
         edit_path = True
     if appdata not in path:
+        print(language, lang[0], len(language[lang[0]]))
         admin += language[lang[0]][42] + "\n"
         edit_path = True
-    title3 = Label(a, text=f"{language[lang[0]][31]}\n{admin}\n{language[lang[0]][32]}\n", bg="#aecfee", font=100)
-    title3.grid(row=1, rowspan=5)
+    title3 = Label(a, text=f"{language[lang[0]][31]}", bg="#aecfee", font=100)
+    title3.grid(row=1)
+    title4 = Label(a, text=f"{language[lang[0]][44]} :\n{admin}", fg="#0033ff", bg="#aecfee", font=100)
+    title4.grid(row=2)
+    title5 = Label(a, text=language[lang[0]][32], bg="#aecfee", font=100)
+    title5.grid(row=3)
     all_button_text = ""
     if edit_path or install_font:
         all_button_text += language[lang[0]][40] + " "  # requires admin perm
@@ -649,22 +662,24 @@ def step3_appdata(clean_inst):
             all_button_text += " + "
         all_button_text += language[lang[0]][39] # + install font
         font_step4 = partial(step4_appdata, clean_inst, edit_path=False, install_font=True)
-        button3_font = Button(a, text=language[lang[0]][40] + " " + language[lang[0]][37] + f" ({language[lang[0]][39]})", command=font_step4, bg="#ff9b69", activebackground="#a9ff91", width=30)
-        button3_font.grid(row=3, column=3)
+        button3_font = Button(a, text=language[lang[0]][40] + " " + language[lang[0]][37] + f" ({language[lang[0]][39]})", command=font_step4, bg="#ff9b69", activebackground="#a9ff91")
+        button3_font.grid(row=20)
     all_step4 = partial(step4_appdata, clean_inst, edit_path, install_font)
     
     all_button_text += ")"
-    button3 = Button(a, text=all_button_text, command=all_step4, bg="#ff9b69", activebackground="#a9ff91", width=30)
-    button3.grid(row=3, column=1, columnspan=2)
+    
+    if all_button_text != language[lang[0]][37] + " ()":
+        button3 = Button(a, text=all_button_text, command=all_step4, bg="#ff9b69", activebackground="#a9ff91")
+        button3.grid(row=22)
     
     step4_no_admin = partial(step4_appdata, clean_inst)
-    button3_no_admin = Button(a, text=language[lang[0]][37], command=step4_no_admin, activebackground="#a9ff91", width=30)
-    button3_no_admin.grid(row=3, column=4)
+    button3_no_admin = Button(a, text=language[lang[0]][37], command=step4_no_admin, activebackground="#a9ff91")
+    button3_no_admin.grid(row=24)
     
     
-    launch_path = partial(launch_path_app, clean_inst)
-    button3_launch_path = Button(a, text=language[lang[0]][37], command=launch_path, activebackground="#a9ff91", width=30)
-    button3_launch_path.grid(row=4, column=1, columnspan=2)
+    launch_path = partial(launch_path_app)
+    button3_launch_path = Button(a, text=language[lang[0]][43], command=launch_path, activebackground="#a9ff91")
+    button3_launch_path.grid(row=26)
 
 
 def step3_local():
@@ -836,6 +851,11 @@ def clearConsole():
         command = 'cls'
     os.system(command)
 
+if os.path.exists('MSM-tools-installer.bat'):
+    try:
+        os.remove('MSM-tools-installer.bat')
+    except:
+        pass
 
 LANGUAGES = StringVar()
 RUN = StringVar()
