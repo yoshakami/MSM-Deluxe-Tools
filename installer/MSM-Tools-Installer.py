@@ -17,8 +17,8 @@ root = sys.argv[0]
 root = os.path.splitext(root)[0]
 a = Tk()
 a.title("Mario Sports Mix Modding App Installer v1.0")
-a.minsize(660, 495)
-a.maxsize(660, 495)
+a.minsize(512, 512)
+#a.maxsize(660, 495)
 a.config(bg="#aecfee")  # go to line 500 for the next part of code, then at the bottom and move up through functions
 
 w = a.winfo_screenwidth()
@@ -73,8 +73,8 @@ english = [
     "add to PATH", # 38
     "install font", # 39
     "[requires admin perm]", # 40
-    "another msm folder is already added to PATH, please check both USER and SYSTEM PATH variable", # 41
-    "current installation's msm folder is not added to PATH. You won't be able to launch scripts from the explorer menu if it's not added to PATH.", # 42
+    "\nanother msm folder is already added to PATH,\nplease check both USER and SYSTEM PATH variable", # 41
+    "\ncurrent installation's msm folder is not added to PATH. You won't be\nable to launch scripts from the explorer menu if it's not added to PATH.", # 42
     "Edit PATH manually" # 43
     ]
 
@@ -592,21 +592,21 @@ def step3_drive(letter, clean_inst):
         all_button_text += language[lang[0]][39] # + install font
         font_step4 = partial(step4_drive, letter, clean_inst, edit_path=False, install_font=True)
         button3_font = Button(a, text=language[lang[0]][40] + " " + language[lang[0]][37] + f" ({language[lang[0]][39]})", command=font_step4, bg="#ff9b69", activebackground="#a9ff91", width=30)
-        button3_font.grid(row=3, col=3)
+        button3_font.grid(row=10)
     all_step4 = partial(step4_drive, letter, clean_inst, edit_path, install_font)
     
     all_button_text += ")"
     button3 = Button(a, text=all_button_text, command=all_step4, bg="#ff9b69", activebackground="#a9ff91", width=30)
-    button3.grid(row=3, col=1, columnspan=2)
+    button3.grid(row=11, columnspan=2)
     
     step4_no_admin = partial(step4_drive, letter, clean_inst)
     button3_no_admin = Button(a, text=language[lang[0]][37], command=step4_no_admin, activebackground="#a9ff91", width=30)
-    button3_no_admin.grid(row=3, col=4)
+    button3_no_admin.grid(row=12, columnspan=4)
     
     
     launch_path = partial(launch_path_app, clean_inst)
     button3_launch_path = Button(a, text=language[lang[0]][37], command=launch_path, activebackground="#a9ff91", width=30)
-    button3_launch_path.grid(row=4, col=1, columnspan=2)
+    button3_launch_path.grid(row=4, column=1, columnspan=2)
 
 
 def step3_appdata(clean_inst):
@@ -650,21 +650,21 @@ def step3_appdata(clean_inst):
         all_button_text += language[lang[0]][39] # + install font
         font_step4 = partial(step4_appdata, clean_inst, edit_path=False, install_font=True)
         button3_font = Button(a, text=language[lang[0]][40] + " " + language[lang[0]][37] + f" ({language[lang[0]][39]})", command=font_step4, bg="#ff9b69", activebackground="#a9ff91", width=30)
-        button3_font.grid(row=3, col=3)
+        button3_font.grid(row=3, column=3)
     all_step4 = partial(step4_appdata, clean_inst, edit_path, install_font)
     
     all_button_text += ")"
     button3 = Button(a, text=all_button_text, command=all_step4, bg="#ff9b69", activebackground="#a9ff91", width=30)
-    button3.grid(row=3, col=1, columnspan=2)
+    button3.grid(row=3, column=1, columnspan=2)
     
     step4_no_admin = partial(step4_appdata, clean_inst)
     button3_no_admin = Button(a, text=language[lang[0]][37], command=step4_no_admin, activebackground="#a9ff91", width=30)
-    button3_no_admin.grid(row=3, col=4)
+    button3_no_admin.grid(row=3, column=4)
     
     
     launch_path = partial(launch_path_app, clean_inst)
     button3_launch_path = Button(a, text=language[lang[0]][37], command=launch_path, activebackground="#a9ff91", width=30)
-    button3_launch_path.grid(row=4, col=1, columnspan=2)
+    button3_launch_path.grid(row=4, column=1, columnspan=2)
 
 
 def step3_local():
