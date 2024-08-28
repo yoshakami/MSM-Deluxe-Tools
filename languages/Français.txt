@@ -1,4 +1,4 @@
-/* msm.pyw :0:   hashtag :42:   short :54:   arc.py :95:   bstick.pyw :106:   dump.py :135:   isox.py :145:   lh.py :151:   map.pyw :162:   pack.py :170:   tex.py :180:   thp.pyw :187:   trib.py :219:    web.pyw :228:   old cli :244:   msmhelp.pyw :287: ---- */
+/* msm.pyw :0:   hashtag :46:   short :62:   arc.py :103:   bstick.pyw :114:   dump.py :143:   isox.py :153:   lh.py :159:   map.pyw :170:   pack.py :178:   tex.py :188:   thp.pyw :195:   trib.py :227:    web.pyw :236:   old cli :252:   msmhelp.pyw :295: miku :352: ---- */
 Mario Sports Mix Modding App
 Mario Sports Mix Modding App Menu
 Pack Textures
@@ -13,7 +13,7 @@ Extraire ou compresser les arc
 Changer la couleur de bstick
 Convertir png en tex0
 Symbol Map
-Fermer Toutes les Applications
+Miku Extractor
 Changer les attributs de l'os "root"
 le répertoire actuel est :
 Ouvrir l'explorateur
@@ -39,11 +39,15 @@ taille des fichiers C:/*.sys
 Quitter
 Entrée
 Changer le slot des Persos
+Extraire les fichiers de "External" dans le dossier "stage"
+convertir à la bonne fréquence d'échantillonnage avec ffmpeg
+récupérer les sons du dossier "stream"
+Fermer Toutes les Applications
 §§change entre les hashtags§§    # <- cette texture a # mipmaps tandis que # en a #
 §§change entre les hashtags§§    # <- cette texture est encodée dans le format # alors que # est en #
 # brstm patchés
 # textures extraites
-# textures remplacées :D
+# textures remplacées
 # textures changées en version 3
 dans # fichiers
 suppression de #
@@ -51,6 +55,10 @@ suppression de #
 qu'est-ce qui se passe avec >#< ?? ce fichier n'existe plus
 le fichier >#< ne rentre pas dans les données de la texture originale, ne changez pas la taille des images
 Tes dimensions d'écran §sont #x% pixels
+extraction réussie de # fichiers vers #/external
+De quel personnage veux tu les sons ? ils seront copiés dans #
+Es-tu prêt à mélanger tous les fichiers de # ? Il n'y a pas de retour en arrière.
+Mélange de # fichiers effectué avec succès
 Bienvenue ! cette application est un convertisseur de nombre hex-flottant (de 4 octets) en nombre décimal 
 nombre hex-flottant : 
 la valeur ci-dessous a été copié dans le presse papier
@@ -337,6 +345,19 @@ Cliquez sur les images pour les voir en plein écran
 50 36 Merci ¤21 2 §\t          à toutes les personnes présentes sur le discord, et bien sur à vous pour utiliser ces applications :) §§§¤20 22 Sans vous, la communauté n'existerait pas, c'est réellement un super projet et j'en suis plutôt fier§§§¤20 27 Ce projet est open-source, faites vous plaisir à l'éditer comme vous voulez ^-^
 *30 0 -Python\t-Windows\t-Linux§-Discord\t-Mes Amis§-Stack Overflow§-Notepad++          -utf-8§-HxD Hex Editor  -latin-1§-Pycharm  -Nuitka   -gcc§-Wiimms SZS Tools§-Wiimms ISO Tools§-Nintendo§¤30 19\t\t          yosh#0304
 
-you're done translating this text file :D feel free to put the two line below on the above lines to test the display and find the right color you want
+you're almost done translating this text file :D feel free to put the two line below on the above lines to test the display and find the right color you want
 *30 0 0 hello¤30 1 \t1 hello¤30 2 \t\t2 hello§¤30 3 3 hello¤30 4 \t4 hello¤30 5 \t\t5 hello§¤30 6 6 hello¤30 7 \t7 hello¤30 8 \t\t8 hello§¤30 9 9 hello¤30 10 \t10 hello¤30 11 \t\t11 hello§¤30 12 12 hello¤30 13 \t13 hello¤30 14 \t\t14 hello§¤30 15 15 hello¤30 16 \t16 hello¤30 17 \t\t17 hello§¤30 18 18 hello¤30 19 \t19 hello¤30 20 \t\t20 hello§¤30 21 21 hello¤30 22 \t22 hello¤30 23 \t\t23 hello§¤30 24 24 hello¤30 25 \t25 hello¤30 26 \t\t26 hello§¤30 27 27 hello¤30 28 \t28 hello¤30 29 \t\t29 hello§¤30 30 30 hello¤30 31 \t31 hello¤30 32 \t\t32 hello§¤30 33 33 hello¤30 34 \t34 hello¤30 35 \t\t35 hello§¤30 36 36 hello
 *30 0 0 hello¤30 1 \t1 hello¤30 2 \t\t2 hello§¤30 3 3 hello¤30 4 \t4 hello¤30 5 \t\t5 hello§¤30 6 6 hello¤30 7 \t7 hello¤30 8 \t\t8 hello§¤30 9 9 hello¤30 10 \t10 hello¤30 11 \t\t11 hello§¤30 12 12 hello¤30 13 \t13 hello¤30 14 \t\t14 hello§¤30 15 15 hello¤30 16 \t16 hello¤30 17 \t\t17 hello§¤30 18 18 hello¤30 19 \t19 hello¤30 20 \t\t20 hello§¤30 21 21 hello¤30 22 \t22 hello¤30 23 \t\t23 hello§¤30 24 24 hello¤30 25 \t25 hello¤30 26 \t\t26 hello§¤30 27 27 hello¤30 28 \t28 hello¤30 29 \t\t29 hello§¤30 30 30 hello¤30 31 \t31 hello¤30 32 \t\t32 hello§¤30 33 33 hello¤30 34 \t34 hello¤30 35 \t\t35 hello§¤30 36 36 hello
+
+pas de dossier "stage" dans le répertoire actuel.
+appuyez sur entrée pour quitter...
+veuillez entrer le chemin du dossier "stream" (vous pouvez aussi le glisser et le déposer ici. il est situé dans le dossier "snd") :
+Numéro de slot source
+appuyez sur entrée pour continuer.
+extraction de brres
+création de brres
+création manuelle ->
+création
+Cette application va écraser les fichiers _DECOMP.bin en fonction des fichiers que vous choisissez d'extraire
+elle va aussi écraser à la fois le fichier _DECOMP.bin et le fichier compressé en .bin, .mdl, .mot, ou .cmp si vous choississez de créer
+fichiers brres invalide!

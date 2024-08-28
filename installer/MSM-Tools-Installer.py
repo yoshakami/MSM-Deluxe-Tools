@@ -8,9 +8,10 @@ import string
 import sys
 import os
 
-apps = ['arc.py', 'brsar.pyw', 'bstick.pyw', 'c.py', 'dec.py', 'dump.py', 'hexf.py', 'int.py', 'iso.py', 'isox.py',
-        'lh.py', 'map.pyw', 'msm.pyw', 'msmhelp.pyw', 'p.py', 'pack.py', 'png.py', 'rEtUrN-tExT.py', 'sizeC.pyw',
-        'slot.py', 'stage.py', 'stream.py', 'gmk.py', 'cmn.py', 't.py', 'tex.py', 'tex3.pyw', 'thp.py', 'trib.py', 'vaporwave.py', 'web.pyw', 'x.py', 'yt.pyw']
+apps = ['arc.py', 'brsar.pyw', 'bstick.pyw', 'c.py', 'dec.py', 'dump.py', 'gmk.py', 'hexf.py', 'hz.py', 
+        'int.py', 'iso.py', 'isox.py', 'lh.py', 'map.pyw', 'miku.py', 'msm.pyw', 'msmhelp.pyw', 'p.py', 
+        'pack.py', 'png.py', 'rEtUrN-tExT.py', 'sizeC.pyw', 'slot.py', 'stage.py', 'stream.py', 't.py', 
+        'tex.py', 'tex3.pyw', 'thp.py', 'trib.py', 'vaporwave.py', 'web.pyw', 'x.py', 'yt.pyw']
 
 root = sys.argv[0]
 root = os.path.splitext(root)[0]
@@ -66,7 +67,7 @@ english = [
     "once it's done you can delete the installer and enjoy the tools :D", # 32
     "You can also install the font that appeared in this directory,", # 33
     "as the help app is specially designed for it", # 34
-    "msmhelp font is not installed (msmhelp help app won't work as intended)\nyou can install it manually, it's the otf file in the current directory ({os.getcwd()})",
+    f"msmhelp font is not installed (msmhelp help app won't work as intended)\nyou can install it manually, it's the otf file in the current directory ({os.getcwd()})",
     "installing to", # 36
     "Finish installation", # 37
     "add to PATH", # 38
@@ -74,7 +75,7 @@ english = [
     "[requires admin perm]", # 40
     "another msm folder is already added to PATH, please check both USER and SYSTEM PATH variable", # 41
     "current installation's msm folder is not added to PATH. You won't be able to launch scripts from the explorer menu if it's not added to PATH.", # 42
-    "Edit path manually" # 43
+    "Edit PATH manually" # 43
     ]
 
 french = [
@@ -82,78 +83,94 @@ french = [
     "Common.zip est pas dans le même dossier que ce script,\ncomment veux-tu utiliser mon pack sans aucun script !?\nappuie sur Entrée pour quitter...",
     "exe.zip est pas dans le même dossier que ce script,\nJe suppose que vous ne voulez pas les utiliser alors.\nappuie sur Entrée pour continuer...",
     "il te manque jpg.zip, place-le dans le même dossier que ce script\nce script d'installation fonctionnera pas sans ces images que j'ai passé énormément de temps à faire.\nappuie sur Entrée pour quitter.. .",
-    "Bienvenue dans la console !",
-    "Ici tu peux voir ce qui se passe derrière l'installateur - interface de hackeur - ",
-    "les boutons sont juste là pour séparer les actions pour les laisser finir en fait mdrr\nau moins t'as un peu d'intéraction hein",
-    f"Lorsque te cliqueras sur 'J'accepte', ça va redimentionner 18 jpg aux dimensions de ton écran, ({w}x{h})\nme remercie pas pour ces infos c'est cadeau",
-    "Pendant l'installation, le programme va extraire les zips (comme tu t'en doutes hein) et va déplacer son contenu vers le chemin d'installation que tu choisiras",
-    "à la fin, ce script va aussi supprimer les zips et les autres fichiers poubelle qu'il a pu laisser (sauf le programme d'installation car il ne peut pas se supprimer lol)",
-    "le dossier d'installation va être ajouté à PATH, en gros, c'est une variable windows qui permettra aux scripts d'être lancés de n'importe où ! plutôt chouette non?",
-    "Bienvenue dans l'installateur de mon pack de scripts\npour modder Mario Sports Mix !",
-    "scripts gratuitement développés par Yosh en Python",
-    "si t'as payé pour ce logiciel, t'es un gros pigeon\nabonné de cod forlan qui s'est fais arnaquer",
-    "Choisis ta langue",
-    "Rafraîchir",
-    "Termes et Conditions",
-    "J'accepte",
-    "l'application va faire le fameux (ne réponds pas) 1 minute\ncar elle redimensionne toutes les jpg aux dimensions de l'écran",
-    "Choisis ton chemin d'installation",
-    "Nettoyer le dossier d'installation",
-    "retirer les .ico (pour les autres OS qui connaissent pas ce format)",
-    "Remarque : 'Local' est uniquement destiné à être utilisé avec un ordinateur public (pas ton pc perso)\nsinon tu devras accéder à ce dossier pour lancer un script car le dossier ne sera pas ajouté à %PATH%.\n",
-    "v-- Sélectionne comment tu veux lancer les scripts (exe c'est mieux) --v",
-    'utiliser les .exe',
-    "utiliser les .bat (une putain de fenêtre noire s'ouvre une demi-seconde à chaque script lancé)",
-    "autres OS que Windows (tu pourras pas compresser les fichiers, sauf si n.exe marche avec Wine en CLI)",
-    "Local (version portable)",
-    "Autre OS que Windows",
-    "Lecteur invalide",
-    "Clique sur ce bouton pour terminer l'installation :)  < " + '"CLIQUEZ, CLIQUEZ B"',
-    "une fois que c'est fait, tu peux supprimer ce script d'installation\n^-^ profite bien des scripts :D",
-    "Tu peux aussi installer la police d'écriture (font) qui est apparue dans ce dossier",
-    "car l'application d'aide est spécialement conçue pour ce font",
-    "\ncliques sur oui pour donner les droits d'admin",
-    "installation dans le dossier",
-    "Finir l'installation"]
+    "Bienvenue dans la console !", # 4
+    "Ici tu peux voir ce qui se passe derrière l'installateur - interface de hackeur - ", # 5
+    "les boutons sont juste là pour séparer les actions pour les laisser finir en fait mdrr\nau moins t'as un peu d'intéraction hein", # 6
+    f"Lorsque te cliqueras sur 'J'accepte', ça va redimentionner 18 jpg aux dimensions de ton écran, ({w}x{h})\nme remercie pas pour ces infos c'est cadeau", # 7
+    "Pendant l'installation, le programme va extraire les zips (comme tu t'en doutes hein) et va déplacer son contenu vers le chemin d'installation que tu choisiras", # 8
+    "Si tu veux, avec les permissions d'admin, tu peux ajouter ton installation à PATH (sur windows 10 ou 11 c'est mieux de faire à la main. et on va pas se mentir, c'est giga pratique PATH)", # 9
+    "ajouter à PATH, ça te permet de lancer les scripts depuis la barre de l'explorateur de fichier Windows ! plutôt chouette non ?" # 10
+    "tu peux aussi installer la police d'écriture pour que l'application d'aide s'affiche correctement", # 11
+    "Bienvenue dans l'installateur de mon pack de scripts\npour modder Mario Sports Mix !", # 12
+    "scripts gratuitement développés par Yosh en Python", # 13
+    "si t'as payé pour ce logiciel, t'es un gros pigeon\nabonné de cod forlan qui s'est fais arnaquer", # 14
+    "Choisis ta langue", # 15
+    "Rafraîchir", # 16
+    "Termes et Conditions", # 17
+    "J'accepte", # 18
+    "l'application va faire le fameux (ne réponds pas) 1 minute\ncar elle redimensionne toutes les jpg aux dimensions de l'écran", # 19
+    "Choisis ton chemin d'installation", # 20
+    "Nettoyer le dossier d'installation", # 21
+    "retirer les .ico (pour les autres OS qui connaissent pas ce format)", # 22
+    "Remarque : 'Local' est uniquement destiné à être utilisé avec un ordinateur public (pas ton pc perso)\nsinon tu devras accéder à ce dossier pour lancer un script car le dossier ne sera pas ajouté à %PATH%.\n", # 23
+    "v-- Sélectionne comment tu veux lancer les scripts (exe c'est mieux) --v", # 24
+    'utiliser les .exe', # 25
+    "utiliser les .bat (une putain de fenêtre noire s'ouvre une demi-seconde à chaque script lancé)", # 26
+    "autres OS que Windows (tu pourras pas compresser les fichiers, sauf si n.exe marche avec Wine en CLI)", # 27
+    "Local (version portable)", # 28
+    "Autre OS que Windows", # 29
+    "Lecteur invalide", # 30
+    "Clique sur ce bouton pour terminer l'installation :)  < " + '"CLIQUEZ, CLIQUEZ B"', # 31
+    "une fois que c'est fait, tu peux supprimer ce script d'installation\n^-^ profite bien des scripts :D", # 32
+    "Tu peux aussi installer la police d'écriture (font) qui est apparue dans ce dossier", # 33
+    "car l'application d'aide est spécialement conçue pour ce font", # 34
+    f"la police d'écriture pour msmhelp n'est pas installée (l'application va mal s'afficher sinon)\ntu peux l'installer manuellement, c'est le fichier otf dans le dossier actuel ({os.getcwd()})", # 35
+    "installation dans le dossier", # 36
+    "Terminer l'installation" # 37
+    "ajouter à PATH", # 38
+    "installer la police d'écriture" # 39
+    "[admin]" # 40
+    "un autre dossier de mes scripts est déjà ajouté dans PATH, il faudrait que tu regardes à la fois la vaiable PATH utilisateur, et la variable PATH système", # 41
+    "l'installation actuelle n'est pas ajoutée à PATH. Tu pourras pas lancer les scripts depuis la barre de l'explorateur sans ajouter le dossier à PATH",
+    "Modifier PATH manuellement" # 43
+    ]
 
 german = [
     'pip.exe wurde nicht gefunden. Diese Datei ist in Python >= 3.7 enthalten (oder man kann die Module "pyperclip", "win10toast" und "Pillow" manuell installieren)',
     "Common.zip befindet sich nicht im selben Verzeichnis wie dieses Skript,\nwie zum Teufel wollen Sie die Tools ohne Skripts verwenden!?\nDrücke zum Beenden die Eingabetaste...",
     "exe.zip befindet sich nicht im selben Verzeichnis wie dieses Skript,\nIch nehme an, dass du sie dann nicht verwenden möchtest.\nDrücke die Eingabetaste, um fortzufahren...",
     "Es existiert keine jpg.zip, kopier es in das gleiche Verzeichnis wie dieses Skript\nDas Installationsprogramm funktioniert nicht ohne diese Bilder, für die ich viel Zeit gebraucht habe.\nDrücke zum Beenden die Eingabetaste.. .",
-    "Willkommen an der Konsole!",
-    "Hier siehst du, was hinter dem Installer passiert",
-    "Die Schaltflächen sind nur hier, um Aktionen zu trennen, damit sie beendet werden",
-    f"Wenn 'Ich stimme zu' geklickt wird, wird die Größe von 18 Bilder an deine Bildschirmgröße ({w}x{h}) angepasst",
-    "Während der Installation werden Zips entpackt und der Inhalt in den Installationspfad Ihres Verzeichnisses verschoben",
-    "Es löscht auch nutzlose Daten (außer dem Installationsprogramm, da es sich nicht selbst löschen kann)",
-    "Der Installer fügt das Installationsverzeichnis zu PATH hinzu, damit Skripte von überall gestartet werden können!",
-    "Willkommen zum Mario Sports Mix Modding Tool Installer!",
-    "ein paar Skripte, die von Yosh in Python entwickelt wurde",
-    "Wenn Sie für diese Software bezahlt haben, wurden Sie betrogen",
-    "Wähle deine Sprache",
-    "Aktualisierung",
-    "Vertragsbedingungen",
-    "Genau",
-    "(die App friert 1 Minute ein, da sie die Größe aller JPGs auf Ihre Bildschirmabmessungen ändert)",
-    "Bitte wählen Sie Ihr Installationsverzeichnis",
-    "Installationsverzeichnis bereinigen",
-    "Verwenden Sie keine .ico-Dateien (für andere Betriebssysteme, die sie nicht unterstützen)",
-    "Hinweis: 'Lokal' ist nur für die Verwendung mit einem öffentlichen Computer (nicht Ihrem persönlichen) vorgesehen.\nSie müssen in diesen Ordner gehen, um eine App zu starten, da sie nicht zum Pfad hinzugefügt wird.\n",
-    'v-- Wählen Sie aus, wie Sie die Apps über die Suchleiste von explorer.exe starten möchten --v',
-    'EXE verwenden (kann Windows Defender wütend machen)',
-    'Batch benutzen (ein schwarzes Fenster öffnet sich jedes Mal für eine halbe Sekunde, wenn du eine App startest)',
-    "anderes Betriebssystem als Windows (Sie können keine Dateien komprimieren oder dekomprimieren)",
-    "Lokal (bewegliches Verzeichnis)",
-    "Anderes Betriebssystem als Windows",
-    "Ungültiges Laufwerk",
-    "Klicken Sie auf diese Schaltfläche, um die Installation abzuschließen :)",
-    "Sobald es fertig ist, können Sie das Installationsprogramm löschen und die Tools genießen :D",
-    "Sie können auch die in diesem Verzeichnis erschienene Schriftart installieren",
-    "da die Hilfe-App speziell dafür entwickelt wurde",
-    "klicken Sie auf Ja, um cmd admin perm zu aktivieren",
-    "installieren auf",
-    "Beende die Installation"]
+    "Willkommen an der Konsole!", # 4
+    "Hier siehst du, was hinter dem Installer passiert", # 5
+    "Die Schaltflächen sind nur hier, um Aktionen zu trennen, damit sie beendet werden", # 6
+    f"Wenn 'Ich stimme zu' geklickt wird, wird die Größe von 18 Bilder an deine Bildschirmgröße ({w}x{h}) angepasst", # 7
+    "", # 8 outdated "Während der Installation werden Zips entpackt und der Inhalt in den Installationspfad Ihres Verzeichnisses verschoben",
+    "", # 9 outdated "Es löscht auch nutzlose Daten (außer dem Installationsprogramm, da es sich nicht selbst löschen kann)",
+    "", # 10 outdated "Der Installer fügt das Installationsverzeichnis zu PATH hinzu, damit Skripte von überall gestartet werden können!",
+    "", # 11 outdated 
+    "Willkommen zum Mario Sports Mix Modding Tool Installer!", # 12
+    "ein paar Skripte, die von Yosh in Python entwickelt wurde", # 13
+    "Wenn Sie für diese Software bezahlt haben, wurden Sie betrogen", # 14
+    "Wähle deine Sprache", # 15
+    "Aktualisierung", # 16
+    "Vertragsbedingungen", # 17
+    "Genau", # 18
+    "(die App friert 1 Minute ein, da sie die Größe aller JPGs auf Ihre Bildschirmabmessungen ändert)", # 19
+    "Bitte wählen Sie Ihr Installationsverzeichnis", # 20
+    "Installationsverzeichnis bereinigen", # 21
+    "Verwenden Sie keine .ico-Dateien (für andere Betriebssysteme, die sie nicht unterstützen)", # 22
+    "Hinweis: 'Lokal' ist nur für die Verwendung mit einem öffentlichen Computer (nicht Ihrem persönlichen) vorgesehen.\nSie müssen in diesen Ordner gehen, um eine App zu starten, da sie nicht zum Pfad hinzugefügt wird.\n", # 23
+    'v-- Wählen Sie aus, wie Sie die Apps über die Suchleiste von explorer.exe starten möchten --v', # 24
+    'EXE verwenden (kann Windows Defender wütend machen)', # 25
+    'Batch benutzen (ein schwarzes Fenster öffnet sich jedes Mal für eine halbe Sekunde, wenn du eine App startest)', # 26
+    "anderes Betriebssystem als Windows (Sie können keine Dateien komprimieren oder dekomprimieren)", # 27
+    "Lokal (bewegliches Verzeichnis)", # 28
+    "Anderes Betriebssystem als Windows", # 29
+    "Ungültiges Laufwerk", # 30
+    "Klicken Sie auf diese Schaltfläche, um die Installation abzuschließen :)", # 31
+    "Sobald es fertig ist, können Sie das Installationsprogramm löschen und die Tools genießen :D", # 32
+    "Sie können auch die in diesem Verzeichnis erschienene Schriftart installieren", # 33
+    "da die Hilfe-App speziell dafür entwickelt wurde", # 34
+    "", # 35 outdated "klicken Sie auf Ja, um cmd admin perm zu aktivieren", # 35
+    "installieren auf", # 36
+    "Beende die Installation" # 37
+    "", # 38
+    "", # 39
+    "", # 40
+    "", # 41
+    "", # 42
+    "" # 43
+    ]
 
 spanish = []
 italian = []

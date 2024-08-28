@@ -13,7 +13,7 @@ MSM arc extract and compress
 Change bstick colour
 Encode png to tex0
 MSM Symbol Map Viewer
-cmn_test.bin editor
+Miku Extractor
 Change root bone attributes
 Current working directory is :
 Open file Explorer
@@ -56,7 +56,7 @@ what's happening with >#< ?? this file no longer exists
 the file >#< doesn't fit in the texture data. you can't edit texture sizes
 Your screen dimensions §are #x% pixels
 successfully extracted # files into #/external
-Which character do you want the sounds to be copied to # ?
+Which character do you want the sounds from ? They'll be copied to # ?
 Are you ready to randomize all files content in # ? This is irreversible.
 Successfully randomized # files
 Welcome ! this app is used to convert hexadecimal float values to decimal float
@@ -345,7 +345,7 @@ Click on the pictures to view on fullscreen
 *50 36 Much Thanks §¤21 2 §§\t to everyone in the discord §\t server, and thanks to you §\t as well for using my apps :) §§§¤20 22 \t Without you, §the community would never exist, §it's really an awesome project §we can be proud of §§§¤20 29 This project is open source, ¤20 27 §feel free to edit it like you want ^-^
 *30 0 -Python\t-Windows\t-Linux§-Discord\t-My Friends§-Stack Overflow§-Notepad++\t-utf-8§-HxD Hex Editor\t-latin-1§-Pycharm  -Nuitka\t-gcc§-Wiimms SZS Tools§-Wiimms ISO Tools\t-plt0§-Nintendo§¤30 19\t\t          yoshakami
 
-you're done translating this text file :D feel free to put the two line below on the above lines to test the display and find the right color you want
+you're almost done translating this text file :D feel free to put the two line below on the above lines to test the display and find the right color you want
 *30 0 0 hello¤30 1 \t1 hello¤30 2 \t\t2 hello§¤30 3 3 hello¤30 4 \t4 hello¤30 5 \t\t5 hello§¤30 6 6 hello¤30 7 \t7 hello¤30 8 \t\t8 hello§¤30 9 9 hello¤30 10 \t10 hello¤30 11 \t\t11 hello§¤30 12 12 hello¤30 13 \t13 hello¤30 14 \t\t14 hello§¤30 15 15 hello¤30 16 \t16 hello¤30 17 \t\t17 hello§¤30 18 18 hello¤30 19 \t19 hello¤30 20 \t\t20 hello§¤30 21 21 hello¤30 22 \t22 hello¤30 23 \t\t23 hello§¤30 24 24 hello¤30 25 \t25 hello¤30 26 \t\t26 hello§¤30 27 27 hello¤30 28 \t28 hello¤30 29 \t\t29 hello§¤30 30 30 hello¤30 31 \t31 hello¤30 32 \t\t32 hello§¤30 33 33 hello¤30 34 \t34 hello¤30 35 \t\t35 hello§¤30 36 36 hello
 *30 0 0 hello¤30 1 \t1 hello¤30 2 \t\t2 hello§¤30 3 3 hello¤30 4 \t4 hello¤30 5 \t\t5 hello§¤30 6 6 hello¤30 7 \t7 hello¤30 8 \t\t8 hello§¤30 9 9 hello¤30 10 \t10 hello¤30 11 \t\t11 hello§¤30 12 12 hello¤30 13 \t13 hello¤30 14 \t\t14 hello§¤30 15 15 hello¤30 16 \t16 hello¤30 17 \t\t17 hello§¤30 18 18 hello¤30 19 \t19 hello¤30 20 \t\t20 hello§¤30 21 21 hello¤30 22 \t22 hello¤30 23 \t\t23 hello§¤30 24 24 hello¤30 25 \t25 hello¤30 26 \t\t26 hello§¤30 27 27 hello¤30 28 \t28 hello¤30 29 \t\t29 hello§¤30 30 30 hello¤30 31 \t31 hello¤30 32 \t\t32 hello§¤30 33 33 hello¤30 34 \t34 hello¤30 35 \t\t35 hello§¤30 36 36 hello
 
@@ -354,8 +354,8 @@ press enter to exit...
 please input the stream path (or drag and drop the stream folder here. it should be inside the snd folder) : 
 source slot number
 press enter to continue.
-cmn_test.bin extract
-cmn_test.bin repack
+brres extract
+brres repack
 Manual Repack ->
 Repack
 This app will overwrite the _DECOMP.bin version of the file you choose to extract
