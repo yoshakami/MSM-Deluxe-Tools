@@ -30,7 +30,7 @@ print(language[miku + 9])
 print(language[miku + 10])
 thrice = [b'U\xaa8-', b'bres', b'\x00 \xaf0', b'\x00\x00\x00\x00']  # arc, brres, tpl and rso files
 twice = thrice[:2]
-extensions = ['.mdl', '.bin', '.cmp']  # extensions of compressed files recognized
+extensions = ['.mdl', '.bin', '.cmp', '.mot']  # extensions of compressed files recognized
 # burow_extract = [6, 6, 6, 6, 7, 7, 7, 8, 8, 8, 9, 9, 9, 10, 10, 10] + [6, 7, 8, 9, 10] * 5 + [11] * 8 + [12] * 8 + [13] * 8 + [14] * 8 + [15] * 8 + [16] * 8 + [17] * 8
 # bucolumn = [0] + [0, 1, 2] * 5 + [3] * 5 + [4] * 5 + [5] * 5 + [6] * 5 + [7] * 5 + [0, 1, 2, 3, 4, 5, 6, 7] * 7
 burow_extract = []
@@ -816,9 +816,9 @@ def scan_directory():
             out_name = f"{out_name}_{number}.brres"
         else:
             out_name = f"{out_name}.brres"
-        
-        print(f"rebuilt file!\npress enter to exit...")
+        os.system(f'wszst c "{cmn_dir}" --brres --no-compress -d "{out_name}"')
         manual_entry.delete(0, 'end')
+        return language[arc + 1]
 
     def extract(brres):
         data = b''
@@ -839,7 +839,7 @@ def scan_directory():
     
     def explorer_repack():
         repack_dir = askdirectory(initialdir=cwd, title="Select a directory to repack")
-        repack(repack_dir)
+        print(repack(repack_dir))
 
     def explorer_extract():
         file = askopenfilename(initialdir=cwd)
@@ -858,9 +858,9 @@ def scan_directory():
         patched.grid(row=burow_extract[number], column=bucolumn[number])
 
     def repack_folder(brres, num):
-        repack(brres)
+        text = repack(brres)
         repack_list[num].destroy()
-        patched = Label(a, text=language[arc + 1], bg='#dfffaa', width=30)
+        patched = Label(a, text=text, bg='#dfffaa', width=30)
         patched.grid(row=burow_extract[num], column=bucolumn[num])
 
     patched = Label(a, text=language[arc + 1], bg='#dfffaa', width=30)
