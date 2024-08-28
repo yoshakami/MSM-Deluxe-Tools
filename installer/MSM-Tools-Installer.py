@@ -40,7 +40,7 @@ english = [
     "Here you can see what's happening behind the installer", # 5
     "the buttons are just here to separate actions to let them finish",
     f"When you'll click on 'I agree', it will resize 18 jpg's to your screen dimensions ({w}x{h})",
-    "During the installation, it will extract .zips and move their contents to your installation directory ",
+    "During the installation, it will extract .zips and move their contents to your installation directory ", # 8
     "If you desire, with admin permission, the installer could (optionnally) add the installation directory to PATH", # 9
     "so scripts will be able to be launched from everywhere !", # 10
     "you can also install a font for the help app to work as intended", # 11
@@ -134,10 +134,10 @@ german = [
     "Hier siehst du, was hinter dem Installer passiert", # 5
     "Die Schaltflächen sind nur hier, um Aktionen zu trennen, damit sie beendet werden", # 6
     f"Wenn 'Ich stimme zu' geklickt wird, wird die Größe von 18 Bilder an deine Bildschirmgröße ({w}x{h}) angepasst", # 7
-    "", # 8 outdated "Während der Installation werden Zips entpackt und der Inhalt in den Installationspfad Ihres Verzeichnisses verschoben",
-    "", # 9 outdated "Es löscht auch nutzlose Daten (außer dem Installationsprogramm, da es sich nicht selbst löschen kann)",
-    "", # 10 outdated "Der Installer fügt das Installationsverzeichnis zu PATH hinzu, damit Skripte von überall gestartet werden können!",
-    "", # 11 outdated 
+    "Während der Installation werden .zip-Dateien extrahiert und deren Inhalt in Ihr Installationsverzeichnis verschoben", # 8
+    "Wenn Sie möchten, kann das Installationsprogramm mit Administratorberechtigung das Installationsverzeichnis (optional) zu PATH hinzufügen", # 9
+    "so können Skripte von überall aus gestartet werden!", # 10
+    "Sie können auch eine Schriftart installieren, damit die Hilfe-App wie vorgesehen funktioniert", # 11
     "Willkommen zum Mario Sports Mix Modding Tool Installer!", # 12
     "ein paar Skripte, die von Yosh in Python entwickelt wurde", # 13
     "Wenn Sie für diese Software bezahlt haben, wurden Sie betrogen", # 14
@@ -161,15 +161,15 @@ german = [
     "Sobald es fertig ist, können Sie das Installationsprogramm löschen und die Tools genießen :D", # 32
     "Sie können auch die in diesem Verzeichnis erschienene Schriftart installieren", # 33
     "da die Hilfe-App speziell dafür entwickelt wurde", # 34
-    "", # 35 outdated "klicken Sie auf Ja, um cmd admin perm zu aktivieren", # 35
+    f"Die Schriftart msmhelp ist nicht installiert (die Hilfe-App msmhelp funktioniert nicht wie vorgesehen). Sie können sie manuell installieren. Es handelt sich um die OTF-Datei im aktuellen Verzeichnis ({os.getcwd()})",
     "installieren auf", # 36
     "Beende die Installation" # 37
-    "", # 38
-    "", # 39
-    "", # 40
-    "", # 41
-    "", # 42
-    "" # 43
+    "zu PATH hinzufügen", # 38
+    "Schriftart installieren", # 39
+    "[erfordert Administratorrechte]", # 40
+    "ein anderer Ordner msm wurde bereits zu PATH hinzugefügt. Bitte überprüfen Sie die Variablen USER und SYSTEM PATH", # 41
+    "der Ordner msm der aktuellen Installation wurde nicht zu PATH hinzugefügt. Sie können keine Skripts aus dem Explorer-Menü starten, wenn er nicht zu PATH hinzugefügt wurde.", # 42
+    "PATH manuell bearbeiten" # 43
     ]
 
 spanish = []
