@@ -12,7 +12,7 @@ start = int(language[1].split(":")[33])
 hashtag = int(language[1].split(":")[3])
 
 if not os.path.exists("./stage"):
-    input(language[start]+ "\n" + language[start + 1])
+    input(language[start + 12]+ "\n" + language[start + 1])
     exit()
 os.chdir("./stage")
 count = 0

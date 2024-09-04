@@ -111,7 +111,7 @@ Créer
 type de fichier d'archive en sortie
 compression
 défaut
-Mario Sports Mix Modding : Changer la couleur de bstick
+MSM Tools : Changer la couleur de bstick
 Terminé !
 Changeur de couleur de bstick
 Entrée manuelle ->
@@ -140,7 +140,7 @@ lancer cette appli
 à nouveau et fermer
 celle actuelle
 Sélecteur de couleur Windows
-Outil Mario Sports Mix Modding : extracteur de texture en png (Textures Dump to png)
+Outil MSM : extracteur de texture en png (Textures Dump to png)
 Extracteur de Textures
 Salut :D ! cette appli va afficher au max 192 brres ou arc dans le répertoire actuel.
 elle va copier en brute tex0 contenu dedans puis va les convertir en png avec wimgt
@@ -156,7 +156,7 @@ zut ! ce dossier n'est pas reconnu comme un jeu
 Supprimer le dossier Update
 format du fichier de sortie
 Le Processus peut durer 5 minutes
-Mario Sports Mix Modding : extraction et compression des fichiers mdl, bin, cmp, ou mot
+MSM Tools : extraction et compression des fichiers mdl, bin, cmp, ou mot
 Extraire un fichier
 extraire tous les fichiers
 extraire tous les mdl
@@ -167,7 +167,7 @@ Compresser un fichier
 Compression manuelle
 Compresser
 compresser tous les fichiers
-Mario Sports Mix Modding : Visionneuse de Symbol Map
+MSM Tools : Visionneuse de Symbol Map
 Mario Sports Mix Symbol Map de Main.dol
 Aide sur la Symbol Map
 Sauvegarder toutes les Symbol Map
@@ -185,7 +185,7 @@ Choisissez une méthode pour remplacer les TPL
 Auto
 Remplacement Hex de Yosh
 reconstruire l'arc avec wimgt
-Outil Mario Sports Mix Modding : Convertir png en tex0
+Outil MSM : Convertir png en tex0
 Convertir png en tex0
 Hey ! Cette app a une capacité maximale d'affichage de 192 png dans le dossier actuel.
 Accompli !
@@ -349,7 +349,7 @@ you're almost done translating this text file :D feel free to put the two line b
 *30 0 0 hello¤30 1 \t1 hello¤30 2 \t\t2 hello§¤30 3 3 hello¤30 4 \t4 hello¤30 5 \t\t5 hello§¤30 6 6 hello¤30 7 \t7 hello¤30 8 \t\t8 hello§¤30 9 9 hello¤30 10 \t10 hello¤30 11 \t\t11 hello§¤30 12 12 hello¤30 13 \t13 hello¤30 14 \t\t14 hello§¤30 15 15 hello¤30 16 \t16 hello¤30 17 \t\t17 hello§¤30 18 18 hello¤30 19 \t19 hello¤30 20 \t\t20 hello§¤30 21 21 hello¤30 22 \t22 hello¤30 23 \t\t23 hello§¤30 24 24 hello¤30 25 \t25 hello¤30 26 \t\t26 hello§¤30 27 27 hello¤30 28 \t28 hello¤30 29 \t\t29 hello§¤30 30 30 hello¤30 31 \t31 hello¤30 32 \t\t32 hello§¤30 33 33 hello¤30 34 \t34 hello¤30 35 \t\t35 hello§¤30 36 36 hello
 *30 0 0 hello¤30 1 \t1 hello¤30 2 \t\t2 hello§¤30 3 3 hello¤30 4 \t4 hello¤30 5 \t\t5 hello§¤30 6 6 hello¤30 7 \t7 hello¤30 8 \t\t8 hello§¤30 9 9 hello¤30 10 \t10 hello¤30 11 \t\t11 hello§¤30 12 12 hello¤30 13 \t13 hello¤30 14 \t\t14 hello§¤30 15 15 hello¤30 16 \t16 hello¤30 17 \t\t17 hello§¤30 18 18 hello¤30 19 \t19 hello¤30 20 \t\t20 hello§¤30 21 21 hello¤30 22 \t22 hello¤30 23 \t\t23 hello§¤30 24 24 hello¤30 25 \t25 hello¤30 26 \t\t26 hello§¤30 27 27 hello¤30 28 \t28 hello¤30 29 \t\t29 hello§¤30 30 30 hello¤30 31 \t31 hello¤30 32 \t\t32 hello§¤30 33 33 hello¤30 34 \t34 hello¤30 35 \t\t35 hello§¤30 36 36 hello
 
-pas de dossier "stage" dans le répertoire actuel.
+Extracteur Miku
 appuyez sur entrée pour quitter...
 veuillez entrer le chemin du dossier "stream" (vous pouvez aussi le glisser et le déposer ici. il est situé dans le dossier "snd") :
 Numéro de slot source
@@ -361,3 +361,4 @@ création
 Cette application va écraser les fichiers _DECOMP.bin en fonction des fichiers que vous choisissez d'extraire
 elle va aussi écraser à la fois le fichier _DECOMP.bin et le fichier compressé en .bin, .mdl, .mot, ou .cmp si vous choississez de créer
 fichiers brres invalide!
+pas de dossier "stage" dans le répertoire actuel.
