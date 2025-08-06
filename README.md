@@ -15,15 +15,10 @@ pip install win10toast_click
 ```
 (linux users have to do it with pip3, and probably install tkinter)
 
-if you plan looking at the source code, be aware that they are written to be used in C:/Yosh. the installer's job is to edit these paths (and also add assets)
-the reason why path is not relative is because the tools are being added to %path% environment variable, in order to be used everywhere
+if you plan looking at the source code, be aware that they are written to only be used in their installation folder, because of the external language txt. The tools are being added to %path% environment variable, in order to be used everywhere
 you can easily change the language with #language.txt or from the main menu
 
 All scripts have a special utility, sometimes it's just for fun, or very useful
-
-they are all independent scripts, they just need to access the config file named 'a' (bstick + checkbuttons), or some png (especially for msmhelp, I made all these png) and of course the icons and #language.txt
-
-if you want to know what's happening when you launch an app by the explorer navbar, it simply run an exe that will run a vbs which will state wether or not the app needs a console, make that console associated with the app on the taskbar, and will make it an alone process by launching a .lnk shortcut file of the python script, so there's a custom icon on the taskbar
 
 ## if the installer doesn't open
 check what the console says
@@ -33,6 +28,9 @@ the last option is to get in contact with me (yosh) either by discord, or your p
 ## why is there C programming here ?
 in order for the scripts to be launched from everywhere, I needed to use files with an extension in %pathext% BUT explorer.exe has a modified pathext environment variable that we can't edit, and it only contains .exe, .com, and .bat
 therefore, I developped programs in C that would launch the apps. It's been automated in a python scripts, but the two .c files in the source code are not automated and manually edited to launch msm_cli.py if any arg has been added after the exe name.
+
+if you want to know what's happening when you launch an app by the explorer navbar, it simply run an exe that will run a vbs which will state wether or not the app needs a console, make that console associated with the app on the taskbar, and will make it an alone process by launching a .lnk shortcut file of the python script, so there's a custom icon on the taskbar
+
 (yep, I programmed my own version of strcat, you shouldn't rely too much libraries if you're doing C programming, as strcat was splitting args randomly after a dot or some other characters)
 if you plan to use .bat instead of exe, you will need to type "msm_cli.py" instead of msm in order to use the command line tools.
 
@@ -48,6 +46,8 @@ c.py ------------- Compress files in cwd
 dump.py -------- Dump all textures to png
 
 hexf.py --------- Convert decimal to hex-float
+
+hz.py ----------- Convert wav files in cwd to their correct in-game sample rate.
 
 isox.py --------- MSM iso/wbfs extract and compress
 
@@ -86,3 +86,8 @@ web.pyw ------------ Website
 x.py ----------------- Extract files in cwd
 
 yt.pyw --------------- YT Videos Thumbnails Download
+
+## How to build an update
+Clone the repo, edit the files you want, then run "installer/Update Common.zip.py" <br>
+the update will now be composed of MSM-Deluxe-Tools-Installer.py, Common.zip, jpg.zip, and exe.zip <br>
+of course, this implies you don't need to edit jpg.zip and exe.zip, since jpg is only for the help app, and exe is litterally one for each app, so you can add yours using the other scripts in the installer dir.
